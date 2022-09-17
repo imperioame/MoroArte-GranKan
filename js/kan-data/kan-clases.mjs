@@ -4,36 +4,48 @@ export class Celda {
     // un índice de fila
     // uno de columna
     // la propiedad "vacío", como booleano.
-    
+
     constructor(row,col){
         this.id = `r${row}-c${col}`
         this.row = row;
         this.col = col;
-        this.empty = true;
+        this.sizex = 100;
+        this.sizey = 100;
     }
 
-    get row(){
+    getRow(){
         return this.row;
     }
 
-    get col(){
+    getCol(){
         return this.col;
     }
 
-    get empty(){
+    getEmpty(){
         return this.empty;
     }
-
-    set row(row){
-        this.row = row;
+    getSizeX(){
+        return this.sizex;
+    }
+    getSizeY(){
+        return this.sizey;
     }
 
-    set col(col){
-        this.col = col;
+    setRow(input){
+        this.row = input;
     }
 
-    set empty(value){
-        this.emtpy = value;
+    setCol(input){
+        this.col = input;
     }
 
+    setEmpty(input){
+        this.emtpy = input;
+    }
+    setSizeY(input){
+        this.sizey = input;
+    }
+    setSizeX(input){
+        this.sizex = input;
+    }
 }

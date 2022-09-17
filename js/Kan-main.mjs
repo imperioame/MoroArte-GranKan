@@ -1,4 +1,4 @@
-import {crearTablero} from './kan-modules/creacion-tablero.mjs';
+import {crearTablero, createDOMBoard} from './kan-modules/creacion-tablero.mjs';
 
     const MAINCANVAS = document.getElementById('maincanvas')
     const MAIN = document.getElementById('main')
@@ -18,6 +18,7 @@ import {crearTablero} from './kan-modules/creacion-tablero.mjs';
 
 
 window.onload = function() {
-    initialize();
-    crearTablero(MAINCANVAS);
+    //initialize();
+    createDOMBoard(MAINCANVAS);
+    crearTablero();
   };
