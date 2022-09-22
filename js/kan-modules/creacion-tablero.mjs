@@ -6,8 +6,8 @@ export function createDOMBoard(maincanvas) {
     let div = document.createElement('div');
     div.id = 'hexGrid';
     maincanvas.appendChild(div);
-    
-    
+
+
     /*
     let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
@@ -21,12 +21,15 @@ export function createDOMBoard(maincanvas) {
     */
 }
 
-export function createDomCell(ObjectCelda) {
+export function createDomCell(ObjectCelda, claseDeLaCelda = '') {
     //función que crea la celda en el DOM
     let grid = document.getElementById('hexGrid');
 
-    let hex= document.createElement('div');
-    hex.className = 'hex';
+    let hex = document.createElement('div');
+    hex.className = claseDeLaCelda;
+    hex.id = `hex${ObjectCelda.getRow()}-${ObjectCelda.getCol()}`
+    hex.dataset.row = ObjectCelda.getRow();
+    hex.dataset.col = ObjectCelda.getCol();
     grid.appendChild(hex);
 
 
@@ -45,55 +48,62 @@ export function createDomCell(ObjectCelda) {
     image.classList = 'hex';
     */
     /*image.setAttribute("transform", `translate(${ObjectCelda.getSizeX()/2},${ObjectCelda.getSizeY()/2}), rotate(45,${ObjectCelda.getSizeX()/2 + ObjectCelda.getRow() * 80},${ObjectCelda.getSizeY()/2 + ObjectCelda.getCol() * 80})`);*/
-    
+
     /*
     svg.appendChild(image);
     */
 }
 
 
-export function maxCeldaPorFila(row, col) {
+export function claseCorrespondientePorCelda(row, col) {
     //Función que valida si la celda debe existir
-    let validation;
+    let validacion;
+    row++;
+    col++;
 
     switch (row) {
-        case 0:
-            validation = col < 4;
-            break;
         case 1:
-            validation = col < 5;
+            validacion = col < 3 || col > 6;
             break;
         case 2:
-            validation = col < 6;
+            validacion = col < 2 || col > 6;
             break;
         case 3:
-            validation = col < 7;
+            validacion = col < 2;
             break;
+        /*
+        el caso 4 son todos positivos, pasa por el default;
         case 4:
-            validation = col < 6;
+            validacion = col < 7;
             break;
+            */
         case 5:
-            validation = col < 5;
+            validacion = col < 2 || col > 6;
             break;
         case 6:
-            validation = col < 4;
+            validacion = col < 2 || col > 6;
+            break;
+        case 7:
+            validacion = col < 4;
             break;
         default:
-            validation = false;
+            validacion = false;
     }
+
+    let clase = validacion == true ? 'emptyHex' : 'hex';
 
     /*
     Hay una lógica matemática más precisa para definir cual es el máximo de celdas por fila, pero no la estoy logrando pensar.
     if(row <= 4){
         //Esto está bien
-        validation = col == 3 + row
+        validacion = col == 3 + row
     }else {
         //Esto no está bien.
-        validation = col == row - 3
+        validacion = col == row - 3
     }*/
 
-    console.log(`fila ${row}, columna ${col}: validado ${validation}`);
-    return validation;
+    console.log(`fila ${row}, columna ${col}: clase ${clase}`);
+    return clase;
 }
 
 export function crearTablero() {
@@ -105,10 +115,9 @@ export function crearTablero() {
     for (let row = 0; row < 7; row++) {
         matrix[row] = [];
         for (let col = 0; col < 7; col++) {
-            if (maxCeldaPorFila(row, col)) {
-                matrix[row][col] = new Celda(row, col);
-                createDomCell(matrix[row][col]);
-            }
+            matrix[row][col] = new Celda(row, col, claseCorrespondientePorCelda(row, col) == 'hex');
+            createDomCell(matrix[row][col], claseCorrespondientePorCelda(row, col));
+
         }
     }
     console.log(matrix);

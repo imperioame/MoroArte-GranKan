@@ -12,7 +12,7 @@ body::-webkit-scrollbar {
 body::-webkit-scrollbar-thumb {
   background-color: #438ac9;
   border-radius: 10px;
-  box-shadow: inset 0 0 100px 50px #ff9a00;
+  box-shadow: inset 0 0 100px 50px #0c5492;
 }
 
 #hexGrid {
@@ -31,10 +31,9 @@ body::-webkit-scrollbar-thumb {
   clip-path: polygon(50% 0, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
 }
 
-.hex {
+.hex, .emptyHex {
   position: relative;
   height: 160px;
-  background-color: #438ac9;
   grid-column: 2 span;
   display: flex;
   align-items: center;
@@ -42,6 +41,10 @@ body::-webkit-scrollbar-thumb {
   font-weight: bold;
   font-style: italic;
   font-size: 40px;
+}
+
+.hex {
+  background-color: #438ac9;
   box-shadow: inset 0 0 80px 8px #0c5492;
   transition: background-color 300ms, -webkit-clip-path 300ms;
   transition: clip-path 300ms, background-color 300ms;
@@ -49,6 +52,10 @@ body::-webkit-scrollbar-thumb {
 }
 .hex:hover {
   background-color: #80bff7;
+}
+
+.emptyHex {
+  background-color: transparent;
 }
 
 @media screen and (max-width: 252px) {
