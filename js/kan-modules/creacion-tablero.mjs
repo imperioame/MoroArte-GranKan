@@ -30,7 +30,13 @@ export function createDomCell(ObjectCelda, claseDeLaCelda = '') {
     hex.id = `hex${ObjectCelda.getRow()}-${ObjectCelda.getCol()}`
     hex.dataset.row = ObjectCelda.getRow();
     hex.dataset.col = ObjectCelda.getCol();
+    hex.innerHTML = `r${ObjectCelda.getRow()}-c${ObjectCelda.getCol()}`;
+
+
+
+
     grid.appendChild(hex);
+
 
 
 

@@ -20,7 +20,7 @@ body::-webkit-scrollbar-thumb {
   width: auto;
   justify-content: center;
   grid-auto-flow: dense;
-  grid-template-columns: repeat(auto-fit, 80px);
+  grid-template-columns: repeat(14, 80px);
   grid-template-rows: repeat(auto-fit, minmax(128px, 128px));
   grid-auto-rows: 128px;
   margin-bottom: 48px;
@@ -40,7 +40,7 @@ body::-webkit-scrollbar-thumb {
   justify-content: center;
   font-weight: bold;
   font-style: italic;
-  font-size: 40px;
+  font-size: 26.6666666667px;
 }
 
 .hex {
@@ -49,6 +49,7 @@ body::-webkit-scrollbar-thumb {
   transition: background-color 300ms, -webkit-clip-path 300ms;
   transition: clip-path 300ms, background-color 300ms;
   transition: clip-path 300ms, background-color 300ms, -webkit-clip-path 300ms;
+  color: #156ab4;
 }
 .hex:hover {
   background-color: #80bff7;
@@ -56,11 +57,12 @@ body::-webkit-scrollbar-thumb {
 
 .emptyHex {
   background-color: transparent;
+  color: transparent;
 }
 
 @media screen and (max-width: 252px) {
   #hexGrid {
-    grid-template-columns: repeat(auto-fit, 80px);
+    grid-template-columns: repeat(14, 80px);
     grid-template-rows: 160px;
     grid-auto-rows: 160px;
     margin-bottom: 48px;
