@@ -3,44 +3,52 @@ import {
 } from '../kan-data/kan-clases.mjs';
 
 export function createDOMBoard(maincanvas) {
+    let div = document.createElement('div');
+    div.id = 'hexGrid';
+    maincanvas.appendChild(div);
+    
+    
+    /*
     let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
     svg.setAttribute('width', `100`);
     svg.setAttribute('height', `100`);
     svg.setAttribute('xmlns', `http://www.w3.org/2000/svg`);
     //svg.setAttribute("transform", `rotate(30)`);
-    svg.id = 'mainSVG';
+    svg.id = 'hexGrid';
 
     maincanvas.appendChild(svg);
+    */
 }
 
 export function createDomCell(ObjectCelda) {
     //función que crea la celda en el DOM
+    let grid = document.getElementById('hexGrid');
 
-    let svg = document.getElementById('mainSVG');
+    let hex= document.createElement('div');
+    hex.className = 'hex';
+    grid.appendChild(hex);
 
 
-    let image = document.createElementNS('http://www.w3.org/2000/svg','image');
-    image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', './imgs/Assets_KAN_CeldaTablero.svg');
-    image.setAttributeNS(null,'x', `${ObjectCelda.getRow() * 80}`);
-    image.setAttributeNS(null,'y', `${ObjectCelda.getCol() * 80}`);
-    image.setAttributeNS(null,'width', `${ObjectCelda.getSizeX()}`);
-    image.setAttributeNS(null,'height', `${ObjectCelda.getSizeY()}`);
-    image.setAttributeNS(null, "visibility", "visible");
-    image.setAttribute("transform", `translate(${ObjectCelda.getSizeX()/2},${ObjectCelda.getSizeY()/2}), rotate(45,${ObjectCelda.getSizeX()/2 + ObjectCelda.getRow() * 80},${ObjectCelda.getSizeY()/2 + ObjectCelda.getCol() * 80})`);
 
     /*
-    let circle = document.createElement('circle');
-    circle.setAttribute('cx', '-50');
-    circle.setAttribute('cy', '-50');
-    circle.setAttribute('r', '30');
-    circle.style = 'fill:red';
-    
-    svg.appendChild(circle);
+    let svg = document.getElementById('hexGrid');
+
+
+    let image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+    image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', './imgs/Assets_KAN_CeldaTablero.svg');
+    image.setAttributeNS(null, 'x', `${ObjectCelda.getRow() * 80}`);
+    image.setAttributeNS(null, 'y', `${ObjectCelda.getCol() * 80}`);
+    image.setAttributeNS(null, 'width', `${ObjectCelda.getSizeX()}`);
+    image.setAttributeNS(null, 'height', `${ObjectCelda.getSizeY()}`);
+    image.setAttributeNS(null, "visibility", "visible");
+    image.classList = 'hex';
     */
-
+    /*image.setAttribute("transform", `translate(${ObjectCelda.getSizeX()/2},${ObjectCelda.getSizeY()/2}), rotate(45,${ObjectCelda.getSizeX()/2 + ObjectCelda.getRow() * 80},${ObjectCelda.getSizeY()/2 + ObjectCelda.getCol() * 80})`);*/
+    
+    /*
     svg.appendChild(image);
-
+    */
 }
 
 
