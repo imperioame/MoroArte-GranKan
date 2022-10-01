@@ -60,6 +60,88 @@ export function createDomCell(ObjectCelda, claseDeLaCelda = '') {
     */
 }
 
+export function celdaDebeExistir(row, col) {
+    //Función que valida si la celda debe existir
+    let validacion;
+    row++;
+    col++;
+
+    switch (row) {
+        case 1:
+            validacion = col < 3 || col > 6;
+            break;
+        case 2:
+            validacion = col < 2 || col > 6;
+            break;
+        case 3:
+            validacion = col < 2;
+            break;
+        case 4:
+            ///En fila 4 son todos positivos    
+            validacion = false;
+            break;
+        case 5:
+            validacion = col < 2 || col > 6;
+            break;
+        case 6:
+            validacion = col < 2 || col > 6;
+            break;
+        case 7:
+            validacion = col < 4;
+            break;
+        default:
+            validacion = false;
+    }
+
+    return !validacion;
+
+    /*
+    Hay una lógica matemática más precisa para definir cual es el máximo de celdas por fila, pero no la estoy logrando pensar.
+    if(row <= 4){
+        //Esto está bien
+        validacion = col == 3 + row
+    }else {
+        //Esto no está bien.
+        validacion = col == row - 3
+    }*/
+
+}
+
+export function claseDeLaCelda(row, col) {
+    let claseAdicional;
+    row++;
+    col++;
+
+    switch (row) {
+        case 1:
+            claseAdicional = col == 6 ? 'jump-row' : '';
+            break;
+        case 2:
+            claseAdicional = col == 6 ? 'jump-row' : '';
+            break;
+        case 3:
+            claseAdicional = col == 2 ? 'jump-row' : '';
+            break;
+            /*        case 4:
+                        ///En fila 4 son todos positivos    
+                        claseAdicional = false;
+                        break;
+            */
+        case 5:
+            claseAdicional = col == 6 ? 'jump-row' : '';
+            break;
+        case 6:
+            claseAdicional = col == 6 ? 'jump-row' : '';
+            break;
+        case 7:
+            claseAdicional = col == 4 ? 'jump-row' : '';
+            break;
+        default:
+            claseAdicional = '';
+    }
+
+    return `hex ${claseAdicional}`
+}
 
 export function claseCorrespondientePorCelda(row, col) {
     //Función que valida si la celda debe existir
@@ -77,12 +159,12 @@ export function claseCorrespondientePorCelda(row, col) {
         case 3:
             validacion = col < 2;
             break;
-        /*
-        el caso 4 son todos positivos, pasa por el default;
-        case 4:
-            validacion = col < 7;
-            break;
-            */
+            /*
+            el caso 4 son todos positivos, pasa por el default;
+            case 4:
+                validacion = col < 7;
+                break;
+                */
         case 5:
             validacion = col < 2 || col > 6;
             break;
@@ -96,7 +178,9 @@ export function claseCorrespondientePorCelda(row, col) {
             validacion = false;
     }
 
-    let clase = validacion == true ? 'emptyHex' : 'hex';
+    let clase = validacion == true ? 'hex-jumper' : 'hex';
+    console.log(`fila ${row}, columna ${col}: clase ${clase}`);
+    return clase;
 
     /*
     Hay una lógica matemática más precisa para definir cual es el máximo de celdas por fila, pero no la estoy logrando pensar.
@@ -108,8 +192,6 @@ export function claseCorrespondientePorCelda(row, col) {
         validacion = col == row - 3
     }*/
 
-    console.log(`fila ${row}, columna ${col}: clase ${clase}`);
-    return clase;
 }
 
 export function crearTablero() {
@@ -121,9 +203,18 @@ export function crearTablero() {
     for (let row = 0; row < 7; row++) {
         matrix[row] = [];
         for (let col = 0; col < 7; col++) {
+            if (celdaDebeExistir(row, col)) {
+                matrix[row][col] = new Celda(row, col, true);
+                createDomCell(matrix[row][col], claseDeLaCelda(row, col));
+            }
+
+
+            /*
+            // El siguiente código funcionaría usando claseCorrespondientePorCelda.
+            // Esta lógica está pensada para crear una grilla cuadrada de celdas, y ocultar las que no corresponden.
             matrix[row][col] = new Celda(row, col, claseCorrespondientePorCelda(row, col) == 'hex');
             createDomCell(matrix[row][col], claseCorrespondientePorCelda(row, col));
-
+            */
         }
     }
     console.log(matrix);

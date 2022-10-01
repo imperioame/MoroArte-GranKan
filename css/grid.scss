@@ -36,7 +36,8 @@ body::-webkit-scrollbar-thumb {
 	clip-path: polygon(50% 0, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
 }
 
-.hex, .emptyHex {
+.hex,
+.emptyHex {
 	position: relative;
 	height: 2 * $block-size + px;
 	grid-column: 2 span;
@@ -48,7 +49,7 @@ body::-webkit-scrollbar-thumb {
 	font-size: ($block-size/3) + px;
 }
 
-.hex{
+.hex {
 	background-color: #438ac9;
 	//border: 2px solid #ffd203;
 	//Este método no permite border porque el hexágono se genera desde un clipping path, no es la forma real de la celda
@@ -61,7 +62,7 @@ body::-webkit-scrollbar-thumb {
 	}
 }
 
-.emptyHex{
+.emptyHex {
 	background-color: transparent;
 	color: transparent;
 }
@@ -80,20 +81,31 @@ body::-webkit-scrollbar-thumb {
 	}
 }
 
-@for $i from ($block-size * 3) through 2000 {
-	@if ($i % $block-size==0) {
-		$counter: $i / $block-size;
-
-		@media screen and (min-width: #{($counter) * $block-size + $scrollbar-size}px) and (max-width: #{($counter + 1) * $block-size - 1 + $scrollbar-size}px) {
-			$first: floor($counter / 2) + 1;
-
-			.hex:nth-child(#{$first}),
-			.hex:nth-child(#{$counter - 1}n + #{$counter + $first - 1}) {
-				grid-column: 2 / span 2;
-			}
-		}
-	}
+/*
+.hex-jumper{
+	grid-column: 2 / span 2;
 }
+*/
+
+.jump-row {
+	grid-column: 2 / span 2;
+	grid-column-start: 1
+}
+
+//@for $i from ($block-size * 3) through 2000 {
+//	@if ($i % $block-size==0) {
+//		$counter: $i / $block-size;
+//
+//		@media screen and (min-width: #{($counter) * $block-size + $scrollbar-size}px) and (max-width: #{($counter + 1) * $block-size - 1 + $scrollbar-size}px) {
+//			$first: floor($counter / 2) + 1;
+//
+//			.hex:nth-child(#{$first}),
+//			.hex:nth-child(#{$counter - 1}n + #{$counter + $first - 1}) {
+//				grid-column: 2 / span 2;
+//			}
+//		}
+//	}
+//}
 
 //CSS not relevant to the grid
 $pointer-offset: -63%;
