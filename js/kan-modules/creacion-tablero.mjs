@@ -178,7 +178,7 @@ export function claseCorrespondientePorCelda(row, col) {
             validacion = false;
     }
 
-    let clase = validacion == true ? 'hex-jumper' : 'hex';
+    let clase = validacion == true ? 'emptyHex' : 'hex';
     console.log(`fila ${row}, columna ${col}: clase ${clase}`);
     return clase;
 
@@ -203,18 +203,21 @@ export function crearTablero() {
     for (let row = 0; row < 7; row++) {
         matrix[row] = [];
         for (let col = 0; col < 7; col++) {
+            /*
             if (celdaDebeExistir(row, col)) {
+
                 matrix[row][col] = new Celda(row, col, true);
                 createDomCell(matrix[row][col], claseDeLaCelda(row, col));
+            
             }
+            */
 
 
-            /*
+
             // El siguiente código funcionaría usando claseCorrespondientePorCelda.
             // Esta lógica está pensada para crear una grilla cuadrada de celdas, y ocultar las que no corresponden.
             matrix[row][col] = new Celda(row, col, claseCorrespondientePorCelda(row, col) == 'hex');
             createDomCell(matrix[row][col], claseCorrespondientePorCelda(row, col));
-            */
         }
     }
     console.log(matrix);
