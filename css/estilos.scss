@@ -21,7 +21,8 @@ $hover_color: rgb(11, 98, 156);
     font-size: 3em;
     position: fixed;
     top: 3rem;
-    left: calc(50vw - 1em);
+    width: 100vw;
+    text-align: center;
     text-decoration: underline;
 }
 
