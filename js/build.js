@@ -11,16 +11,17 @@ const HEXMARGIN = 3;
 
 function createHex(center_X, center_Y) {
     //Creo el elemento y lo inserto en el dom con posición fijada.
+    let center_X_rounded = Math.round(center_X * 100) / 100;
+    let center_Y_rounded = Math.round(center_Y * 100) / 100;
 
     let hex = document.createElement('div');
     hex.className = "hex-clip";
     hex.id = `hex${center_X}-${center_Y}`;
-    hex.dataset.xPosition = center_X;
-    hex.dataset.yPosition = center_Y;
-    //hex.innerHTML = `xPos${center_X}-yPos${center_Y}`;
+    hex.dataset.xPosition = center_X_rounded;
+    hex.dataset.yPosition = center_Y_rounded;
     hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEXHEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEXWIDTH/2) + center_X}px`);
-
-
+    hex.innerHTML = `xPos${center_X_rounded}-yPos${center_Y_rounded}`;
+    
     /*
     // Fórmula para hacerlo con DIV + before y after
     let hex = document.createElement('div');

@@ -1,4 +1,9 @@
 @charset "UTF-8";
+/*
+//Método DIV + before y after
+$hex_width: 104px;
+$hex_height: 60px;
+*/
 * {
   margin: 0;
   padding: 0;
@@ -9,9 +14,6 @@
   height: 100vh;
   background-color: rgb(253, 249, 213);
 }
-#board:hover {
-  color: red;
-}
 
 /*
 // Método UNICODE
@@ -21,7 +23,7 @@
     //text-shadow: 0px 0px 5px black;
 
     &:hover {
-        color: $hovercolor;
+        color: $hover_color;
         transition: 1s;
     }
 }
@@ -61,10 +63,19 @@
 }
 */
 .hex-clip {
-  width: 104px;
-  height: 104px;
+  width: 100px;
+  height: 100px;
   background-color: rgb(20, 117, 182);
   position: fixed;
+  text-align: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hex-clip:hover {
+  background-color: rgb(11, 98, 156);
+  transition: 1s;
 }
 
 #board > * {

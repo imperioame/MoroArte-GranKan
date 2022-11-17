@@ -1,7 +1,15 @@
+/*
+//Método DIV + before y after
 $hex_width: 104px;
 $hex_height: 60px;
+*/
+//Método un solo div con clip
+$hex_size: 100px;
+
+
 $color: rgb(20, 117, 182);
-$hovercolor: rgb(11, 98, 156);
+$border_color: rgb(255, 242, 169);
+$hover_color: rgb(11, 98, 156);
 
 * {
     margin: 0;
@@ -12,10 +20,6 @@ $hovercolor: rgb(11, 98, 156);
     width: 100vw;
     height: 100vh;
     background-color: rgb(253, 249, 213);
-
-    &:hover {
-        color: red;
-    }
 }
 
 /*
@@ -26,7 +30,7 @@ $hovercolor: rgb(11, 98, 156);
     //text-shadow: 0px 0px 5px black;
 
     &:hover {
-        color: $hovercolor;
+        color: $hover_color;
         transition: 1s;
     }
 }
@@ -69,10 +73,20 @@ $hovercolor: rgb(11, 98, 156);
 
 // Método para hacerlo con un solo div y clipeado
 .hex-clip {
-    width: max($hex_width, $hex_height);
-    height: max($hex_width, $hex_height);
+    width: $hex_size;
+    height: $hex_size;
     background-color: $color;
     position: fixed;
+    text-align: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &:hover {
+        background-color: $hover_color;
+        transition: 1s;
+    }
 }
 
 #board>* {
