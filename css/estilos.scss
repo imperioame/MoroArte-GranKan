@@ -1,0 +1,95 @@
+/*
+//Método DIV + before y after
+$hex_width: 104px;
+$hex_height: 60px;
+*/
+//Método un solo div con clip
+$hex_size: 100px;
+
+
+$color: rgb(20, 117, 182);
+$border_color: rgb(255, 242, 169);
+$hover_color: rgb(11, 98, 156);
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#board {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(253, 249, 213);
+}
+
+/*
+// Método UNICODE
+.hex_unicode {
+    font-size: 135px;
+    color: $color;
+    //text-shadow: 0px 0px 5px black;
+
+    &:hover {
+        color: $hover_color;
+        transition: 1s;
+    }
+}
+*/
+
+/*
+// Método DIV + before y after
+.hex:hover{
+    transition: 1s;
+    color: red;
+}
+
+.hex:before {
+    content: " ";
+    width: 0; height: 0;
+    border-bottom: 30px solid $color;
+    border-left: 52px solid transparent;
+    border-right: 52px solid transparent;
+    position: absolute;
+    top: -30px;
+}
+
+.hex {
+    width: $hex_width;
+    height: $hex_height;
+    background-color: $color;
+    position: fixed;
+}
+
+.hex:after {
+    content: "";
+    width: 0;
+    position: absolute;
+    bottom: -30px;
+    border-top: 30px solid $color;
+    border-left: 52px solid transparent;
+    border-right: 52px solid transparent;
+}
+*/
+
+// Método para hacerlo con un solo div y clipeado
+.hex-clip {
+    width: $hex_size;
+    height: $hex_size;
+    background-color: $color;
+    position: fixed;
+    text-align: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &:hover {
+        background-color: $hover_color;
+        transition: 1s;
+    }
+}
+
+#board>* {
+    -webkit-clip-path: polygon(50% 0, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+    clip-path: polygon(50% 0, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+}
