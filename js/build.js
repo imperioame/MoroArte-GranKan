@@ -142,15 +142,18 @@ function movePiece(e) {
     const onMouseMove = (e) => {
         //Defines the function that allows piece to move to mouse
         element.style.position = 'fixed';
-        element.style.left = e.pageX + 'px';
-        element.style.top = e.pageY + 'px';
+        element.style.left = e.pageX /* - HEXWIDTH / 2 */ + 'px';
+        element.style.top = e.pageY /* - HEXHEIGHT / 2 */ + 'px';
     }
 
     function releasepiece(e) {
         //This removes the 'follow mouse' functionality when piece is selected
-        console.log('releasing piece');
-        console.log(e);
+        // console.log('releasing piece');
+        // console.log(e);
         document.removeEventListener('mousemove', onMouseMove);
+        if (e.target){
+            //TBD
+        }
     }
 
     document.addEventListener('mousemove', onMouseMove);
