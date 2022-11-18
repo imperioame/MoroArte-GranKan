@@ -99,10 +99,35 @@ function recursiveHexagon(center_X, center_Y, depth, r) {
 
 
 
+function createPieces() {
+    // Create all pieces in memory
+    let piecenumber = 1;
+    let playercolor = 'black';
+    for (let i = 0; i <= 24; i++) {
+        PIECEARRAY.push(new Piece(piecenumber, playercolor));
+        if (piecenumber == 12) {
+            piecenumber = 1;
+            playercolor = 'white';
+        } else {
+            piecenumber++;
+        }
+        //Create piece in DOM and distribute it in aside
+        createDomPiece(PIECEARRAY.length);
+    }
+    console.log(PIECEARRAY);
+}
+
+function createDomPiece(pieceObject){
+    //This creates a piece element and places it in the dom
+    //...
+    //TBD
+}
+
 function initialize(max_layers) {
     let center_X = 0;
     let center_Y = 0;
     recursiveHexagon(center_X, center_Y, max_layers, RAD);
+    createPieces();
 }
 
 window.onload = function () {
