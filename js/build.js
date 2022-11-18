@@ -136,19 +136,20 @@ function createDomPiece(pieceObject) {
 
 function movePiece(e) {
     //Adds the functionality, when called, to move object until it's released
-    //console.log('clicked piece');
+    console.log('clicked piece');
     let element = document.getElementById(e.target.id);
     e.stopPropagation();
     const onMouseMove = (e) => {
         //Defines the function that allows piece to move to mouse
+        element.style.position = 'fixed';
         element.style.left = e.pageX + 'px';
         element.style.top = e.pageY + 'px';
     }
 
     function releasepiece(e) {
         //This removes the 'follow mouse' functionality when piece is selected
-        //console.log('releasing piece');
-        //console.log(e);
+        console.log('releasing piece');
+        console.log(e);
         document.removeEventListener('mousemove', onMouseMove);
     }
 
