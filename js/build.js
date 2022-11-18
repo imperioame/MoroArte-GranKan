@@ -45,8 +45,7 @@ function createHex(center_X, center_Y, id) {
 }
 
 function saveToMemory(position_X, position_Y) {
-    //Creo un objeto, le asigno las posiciones y guardo en el array
-
+    //Creates an object, asignes position and save to array
     let cell = new Cell();
     cell.setPosX = position_X;
     cell.setPosY = position_Y;
@@ -56,7 +55,7 @@ function saveToMemory(position_X, position_Y) {
 }
 
 function checkEmptyPosition(position_X, position_Y) {
-    //Chequeo si la posición en el tablero está ocupada, de ser así falseo
+    //Checks if position in board is occupied, if so, reutns false
     //console.log('entro a consultar posiciones duplicadas');
     //console.log(CELLARRAY.length);
 
@@ -80,7 +79,7 @@ function checkEmptyPosition(position_X, position_Y) {
 let hexcount = 0;
 
 function recursiveHexagon(center_X, center_Y, depth, r) {
-    //Crea secuencialmente todos los hexágonos
+    //Creates recursively all hexagons
     if (depth == 0) {
         createHex(center_X, center_Y, hexcount++);
     } else {
@@ -111,9 +110,9 @@ function createPieces() {
             piecenumber++;
         }
         //Create piece in DOM and distribute it in aside
-        createDomPiece(PIECEARRAY[PIECEARRAY.length-1]);
+        createDomPiece(PIECEARRAY[PIECEARRAY.length - 1]);
     }
-    console.log(PIECEARRAY);
+    //console.log(PIECEARRAY);
 }
 
 function createDomPiece(pieceObject) {
@@ -121,19 +120,42 @@ function createDomPiece(pieceObject) {
     let piece = document.createElement('div');
     piece.className = "piece";
     piece.id = `Player_${pieceObject.getPlayer}-Piece_${pieceObject.getPieceId}`;
-    
 
-    let y_axis = Math.round(Math.random()*100 + 10);
-    let x_axis = Math.round(Math.random()*100 + 10);    
+
+    let y_axis = Math.round(Math.random() * 100 + 10);
+    let x_axis = Math.round(Math.random() * 100 + 10);
     piece.setAttribute('style', `bottom: ${y_axis}px; left: ${x_axis}px`);
     piece.innerHTML = pieceObject.getPieceId;
+    piece.addEventListener("click", movePiece);
 
 
     //Place it in correspondent players aside
-    let playerAside = pieceObject.getPlayer == 'black'? document.getElementById('player1').getElementsByClassName('pieces_board')[0] : document.getElementById('player2').getElementsByClassName('pieces_board')[0];
-    console.log(playerAside);
+    let playerAside = pieceObject.getPlayer == 'black' ? document.getElementById('player1').getElementsByClassName('pieces_board')[0] : document.getElementById('player2').getElementsByClassName('pieces_board')[0];
     playerAside.appendChild(piece);
 }
+
+function movePiece(e) {
+    //Adds the functionality, when called, to move object until it's released
+    //console.log('clicked piece');
+    let element = document.getElementById(e.target.id);
+    e.stopPropagation();
+    const onMouseMove = (e) => {
+        //Defines the function that allows piece to move to mouse
+        element.style.left = e.pageX + 'px';
+        element.style.top = e.pageY + 'px';
+    }
+
+    function releasepiece(e) {
+        //This removes the 'follow mouse' functionality when piece is selected
+        //console.log('releasing piece');
+        //console.log(e);
+        document.removeEventListener('mousemove', onMouseMove);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('click', releasepiece);
+}
+
 
 function initialize(max_layers) {
     let center_X = 0;
