@@ -147,10 +147,10 @@ class Piece {
     get getCellId() {
         return this.cellId;
     }
-    get PieceId() {
+    get getPieceId() {
         return this.pieceId;
     }
-    get Player() {
+    get getPlayer() {
         return this.player;
     }
     get getcolor_top_left() {

@@ -14,7 +14,8 @@ $hex_height: 60px;
   font-size: 3em;
   position: fixed;
   top: 3rem;
-  left: calc(50vw - 1em);
+  width: 100vw;
+  text-align: center;
   text-decoration: underline;
 }
 
@@ -29,7 +30,8 @@ aside h2 {
   background-color: rgb(253, 249, 213);
 }
 
-#player1, #player2 {
+#player1,
+#player2 {
   background-color: rgb(238, 200, 97);
   height: 100vh;
   width: 15vw;
@@ -51,11 +53,11 @@ aside h2 {
 // Método UNICODE
 .hex_unicode {
     font-size: 135px;
-    color: $color;
+    color: $cell_color;
     //text-shadow: 0px 0px 5px black;
 
     &:hover {
-        color: $hover_color;
+        color: $cell_hover_color;
         transition: 1s;
     }
 }
@@ -70,7 +72,7 @@ aside h2 {
 .hex:before {
     content: " ";
     width: 0; height: 0;
-    border-bottom: 30px solid $color;
+    border-bottom: 30px solid $cell_color;
     border-left: 52px solid transparent;
     border-right: 52px solid transparent;
     position: absolute;
@@ -80,7 +82,7 @@ aside h2 {
 .hex {
     width: $hex_width;
     height: $hex_height;
-    background-color: $color;
+    background-color: $cell_color;
     position: fixed;
 }
 
@@ -89,7 +91,7 @@ aside h2 {
     width: 0;
     position: absolute;
     bottom: -30px;
-    border-top: 30px solid $color;
+    border-top: 30px solid $cell_color;
     border-left: 52px solid transparent;
     border-right: 52px solid transparent;
 }
@@ -110,7 +112,34 @@ aside h2 {
   transition: 1s;
 }
 
-#board > * {
+#board > *,
+.pieces_board > * {
   -webkit-clip-path: polygon(50% 0, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
   clip-path: polygon(50% 0, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+}
+
+.pieces_board {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.piece {
+  width: 100px;
+  height: 100px;
+  background-color: rgb(26, 26, 26);
+  color: red;
+  position: absolute;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: inset 0 0 25px 15px rgba(177, 43, 43, 0.4431372549);
+}
+.piece:hover {
+  background-color: rgb(54, 54, 54);
+  transition: 1s;
 }/*# sourceMappingURL=estilos.css.map */
