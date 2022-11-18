@@ -69,7 +69,6 @@ function checkEmptyPosition(position_X, position_Y) {
         //console.log(`Xpos; ${CELLARRAY[i].getPosX} YPos ${CELLARRAY[i].getPosY}`);
         if (CELLARRAY[i].getPosX == position_X && CELLARRAY[i].getPosY == position_Y) {
             position_empty = false;
-            console.log('encontré posición duplicada')
             return position_empty;
         }
     }
@@ -99,14 +98,52 @@ function recursiveHexagon(center_X, center_Y, depth, r) {
 
 
 
+function createPieces() {
+    // Create all pieces in memory
+    let piecenumber = 1;
+    let playercolor = 'black';
+    for (let i = 1; i <= 24; i++) {
+        PIECEARRAY.push(new Piece(piecenumber, playercolor));
+        if (piecenumber == 12) {
+            piecenumber = 1;
+            playercolor = 'white';
+        } else {
+            piecenumber++;
+        }
+        //Create piece in DOM and distribute it in aside
+        createDomPiece(PIECEARRAY[PIECEARRAY.length-1]);
+    }
+    console.log(PIECEARRAY);
+}
+
+function createDomPiece(pieceObject) {
+    //This creates a piece element and places it in the dom
+    let piece = document.createElement('div');
+    piece.className = "piece";
+    piece.id = `Player_${pieceObject.getPlayer}-Piece_${pieceObject.getPieceId}`;
+    
+
+    let y_axis = Math.round(Math.random()*100 + 10);
+    let x_axis = Math.round(Math.random()*100 + 10);    
+    piece.setAttribute('style', `bottom: ${y_axis}px; left: ${x_axis}px`);
+    piece.innerHTML = pieceObject.getPieceId;
+
+
+    //Place it in correspondent players aside
+    let playerAside = pieceObject.getPlayer == 'black'? document.getElementById('player1').getElementsByClassName('pieces_board')[0] : document.getElementById('player2').getElementsByClassName('pieces_board')[0];
+    console.log(playerAside);
+    playerAside.appendChild(piece);
+}
+
 function initialize(max_layers) {
     let center_X = 0;
     let center_Y = 0;
     recursiveHexagon(center_X, center_Y, max_layers, RAD);
+    createPieces();
 }
 
 window.onload = function () {
     console.log('inicializando...');
     initialize(LAYERS);
-    console.log(CELLARRAY);
+    //console.log(CELLARRAY);
 };
