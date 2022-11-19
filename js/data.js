@@ -4,13 +4,15 @@ const RAD = w / 5;
 const TAU = Math.PI * 2;
 
 const LAYERS = 2;
-const HEXHEIGHT = 60;
-const HEXWIDTH = 104;
+const HEX_HEIGHT = 60;
+const HEX_WIDTH = 104;
 
-const CELLARRAY = [];
+const CELL_ARRAY = [];
 
-const PIECEARRAY = [];
-const COLORARRAY = [];
+const PIECE_ARRAY = [];
+const COLOR_ARRAY = [];
+
+let selected_piece;
 
 class Color {
     constructor(id, name, color) {
@@ -30,12 +32,12 @@ class Color {
 }
 
 // Define possible colors
-COLORARRAY.push(new Color(COLORARRAY.length, 'orange', '#ff5624')); //0 - Naranja
-COLORARRAY.push(new Color(COLORARRAY.length, 'magenta', '#872996')); //1 - Magenta
-COLORARRAY.push(new Color(COLORARRAY.length, 'green', '#44b94a')); //2 - Verde
-COLORARRAY.push(new Color(COLORARRAY.length, 'gray', '#c1cac8')); //3 - Gris
-COLORARRAY.push(new Color(COLORARRAY.length, 'yellow', '#ffe951')); //4 - Amarillo
-COLORARRAY.push(new Color(COLORARRAY.length, 'blue', '#162061')); //5 - azul
+COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'orange', '#ff5624')); //0 - Naranja
+COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'magenta', '#872996')); //1 - Magenta
+COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'green', '#44b94a')); //2 - Verde
+COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'gray', '#c1cac8')); //3 - Gris
+COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'yellow', '#ffe951')); //4 - Amarillo
+COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'blue', '#162061')); //5 - azul
 
 class Piece {
     constructor(pieceId, player) {
@@ -46,100 +48,100 @@ class Piece {
         //Pieces and color are defined and cannot be random. It must be like this.
         switch (pieceId) {
             case 1:
-                this.setcolor_top_left = COLORARRAY[0];
-                this.setcolor_top_right = COLORARRAY[1];
-                this.setcolor_middle_left = COLORARRAY[0];
-                this.setcolor_middle_right = COLORARRAY[1];
-                this.setcolor_bottom_left = COLORARRAY[2];
-                this.setcolor_bottom_right = COLORARRAY[3];
+                this.setcolor_top_left = COLOR_ARRAY[0];
+                this.setcolor_top_right = COLOR_ARRAY[1];
+                this.setcolor_middle_left = COLOR_ARRAY[0];
+                this.setcolor_middle_right = COLOR_ARRAY[1];
+                this.setcolor_bottom_left = COLOR_ARRAY[2];
+                this.setcolor_bottom_right = COLOR_ARRAY[3];
                 break;
             case 2:
-                this.setcolor_top_left = COLORARRAY[0];
-                this.setcolor_top_right = COLORARRAY[4];
-                this.setcolor_middle_left = COLORARRAY[3];
-                this.setcolor_middle_right = COLORARRAY[4];
-                this.setcolor_bottom_left = COLORARRAY[2];
-                this.setcolor_bottom_right = COLORARRAY[0];
+                this.setcolor_top_left = COLOR_ARRAY[0];
+                this.setcolor_top_right = COLOR_ARRAY[4];
+                this.setcolor_middle_left = COLOR_ARRAY[3];
+                this.setcolor_middle_right = COLOR_ARRAY[4];
+                this.setcolor_bottom_left = COLOR_ARRAY[2];
+                this.setcolor_bottom_right = COLOR_ARRAY[0];
                 break;
             case 3:
-                this.setcolor_top_left = COLORARRAY[0];
-                this.setcolor_top_right = COLORARRAY[4];
-                this.setcolor_middle_left = COLORARRAY[0];
-                this.setcolor_middle_right = COLORARRAY[2];
-                this.setcolor_bottom_left = COLORARRAY[3];
-                this.setcolor_bottom_right = COLORARRAY[1];
+                this.setcolor_top_left = COLOR_ARRAY[0];
+                this.setcolor_top_right = COLOR_ARRAY[4];
+                this.setcolor_middle_left = COLOR_ARRAY[0];
+                this.setcolor_middle_right = COLOR_ARRAY[2];
+                this.setcolor_bottom_left = COLOR_ARRAY[3];
+                this.setcolor_bottom_right = COLOR_ARRAY[1];
                 break;
             case 4:
-                this.setcolor_top_left = COLORARRAY[5];
-                this.setcolor_top_right = COLORARRAY[5];
-                this.setcolor_middle_left = COLORARRAY[0];
-                this.setcolor_middle_right = COLORARRAY[1];
-                this.setcolor_bottom_left = COLORARRAY[2];
-                this.setcolor_bottom_right = COLORARRAY[3];
+                this.setcolor_top_left = COLOR_ARRAY[5];
+                this.setcolor_top_right = COLOR_ARRAY[5];
+                this.setcolor_middle_left = COLOR_ARRAY[0];
+                this.setcolor_middle_right = COLOR_ARRAY[1];
+                this.setcolor_bottom_left = COLOR_ARRAY[2];
+                this.setcolor_bottom_right = COLOR_ARRAY[3];
                 break;
             case 5:
-                this.setcolor_top_left = COLORARRAY[3];
-                this.setcolor_top_right = COLORARRAY[2];
-                this.setcolor_middle_left = COLORARRAY[5];
-                this.setcolor_middle_right = COLORARRAY[1];
-                this.setcolor_bottom_left = COLORARRAY[4];
-                this.setcolor_bottom_right = COLORARRAY[0];
+                this.setcolor_top_left = COLOR_ARRAY[3];
+                this.setcolor_top_right = COLOR_ARRAY[2];
+                this.setcolor_middle_left = COLOR_ARRAY[5];
+                this.setcolor_middle_right = COLOR_ARRAY[1];
+                this.setcolor_bottom_left = COLOR_ARRAY[4];
+                this.setcolor_bottom_right = COLOR_ARRAY[0];
                 break;
             case 6:
-                this.setcolor_top_left = COLORARRAY[5];
-                this.setcolor_top_right = COLORARRAY[3];
-                this.setcolor_middle_left = COLORARRAY[4];
-                this.setcolor_middle_right = COLORARRAY[1];
-                this.setcolor_bottom_left = COLORARRAY[2];
-                this.setcolor_bottom_right = COLORARRAY[4];
+                this.setcolor_top_left = COLOR_ARRAY[5];
+                this.setcolor_top_right = COLOR_ARRAY[3];
+                this.setcolor_middle_left = COLOR_ARRAY[4];
+                this.setcolor_middle_right = COLOR_ARRAY[1];
+                this.setcolor_bottom_left = COLOR_ARRAY[2];
+                this.setcolor_bottom_right = COLOR_ARRAY[4];
                 break;
             case 7:
-                this.setcolor_top_left = COLORARRAY[5];
-                this.setcolor_top_right = COLORARRAY[4];
-                this.setcolor_middle_left = COLORARRAY[0];
-                this.setcolor_middle_right = COLORARRAY[1];
-                this.setcolor_bottom_left = COLORARRAY[2];
-                this.setcolor_bottom_right = COLORARRAY[0];
+                this.setcolor_top_left = COLOR_ARRAY[5];
+                this.setcolor_top_right = COLOR_ARRAY[4];
+                this.setcolor_middle_left = COLOR_ARRAY[0];
+                this.setcolor_middle_right = COLOR_ARRAY[1];
+                this.setcolor_bottom_left = COLOR_ARRAY[2];
+                this.setcolor_bottom_right = COLOR_ARRAY[0];
                 break;
             case 8:
-                this.setcolor_top_left = COLORARRAY[5];
-                this.setcolor_top_right = COLORARRAY[4];
-                this.setcolor_middle_left = COLORARRAY[0];
-                this.setcolor_middle_right = COLORARRAY[1];
-                this.setcolor_bottom_left = COLORARRAY[2];
-                this.setcolor_bottom_right = COLORARRAY[0];
+                this.setcolor_top_left = COLOR_ARRAY[5];
+                this.setcolor_top_right = COLOR_ARRAY[4];
+                this.setcolor_middle_left = COLOR_ARRAY[0];
+                this.setcolor_middle_right = COLOR_ARRAY[1];
+                this.setcolor_bottom_left = COLOR_ARRAY[2];
+                this.setcolor_bottom_right = COLOR_ARRAY[0];
                 break;
             case 9:
-                this.setcolor_top_left = COLORARRAY[2];
-                this.setcolor_top_right = COLORARRAY[2];
-                this.setcolor_middle_left = COLORARRAY[0];
-                this.setcolor_middle_right = COLORARRAY[1];
-                this.setcolor_bottom_left = COLORARRAY[5];
-                this.setcolor_bottom_right = COLORARRAY[0];
+                this.setcolor_top_left = COLOR_ARRAY[2];
+                this.setcolor_top_right = COLOR_ARRAY[2];
+                this.setcolor_middle_left = COLOR_ARRAY[0];
+                this.setcolor_middle_right = COLOR_ARRAY[1];
+                this.setcolor_bottom_left = COLOR_ARRAY[5];
+                this.setcolor_bottom_right = COLOR_ARRAY[0];
                 break;
             case 10:
-                this.setcolor_top_left = COLORARRAY[5];
-                this.setcolor_top_right = COLORARRAY[4];
-                this.setcolor_middle_left = COLORARRAY[1];
-                this.setcolor_middle_right = COLORARRAY[0];
-                this.setcolor_bottom_left = COLORARRAY[3];
-                this.setcolor_bottom_right = COLORARRAY[0];
+                this.setcolor_top_left = COLOR_ARRAY[5];
+                this.setcolor_top_right = COLOR_ARRAY[4];
+                this.setcolor_middle_left = COLOR_ARRAY[1];
+                this.setcolor_middle_right = COLOR_ARRAY[0];
+                this.setcolor_bottom_left = COLOR_ARRAY[3];
+                this.setcolor_bottom_right = COLOR_ARRAY[0];
                 break;
             case 11:
-                this.setcolor_top_left = COLORARRAY[5];
-                this.setcolor_top_right = COLORARRAY[4];
-                this.setcolor_middle_left = COLORARRAY[0];
-                this.setcolor_middle_right = COLORARRAY[1];
-                this.setcolor_bottom_left = COLORARRAY[2];
-                this.setcolor_bottom_right = COLORARRAY[0];
+                this.setcolor_top_left = COLOR_ARRAY[5];
+                this.setcolor_top_right = COLOR_ARRAY[4];
+                this.setcolor_middle_left = COLOR_ARRAY[0];
+                this.setcolor_middle_right = COLOR_ARRAY[1];
+                this.setcolor_bottom_left = COLOR_ARRAY[2];
+                this.setcolor_bottom_right = COLOR_ARRAY[0];
                 break;
             case 12:
-                this.setcolor_top_left = COLORARRAY[5];
-                this.setcolor_top_right = COLORARRAY[3];
-                this.setcolor_middle_left = COLORARRAY[4];
-                this.setcolor_middle_right = COLORARRAY[1];
-                this.setcolor_bottom_left = COLORARRAY[2];
-                this.setcolor_bottom_right = COLORARRAY[4];
+                this.setcolor_top_left = COLOR_ARRAY[5];
+                this.setcolor_top_right = COLOR_ARRAY[3];
+                this.setcolor_middle_left = COLOR_ARRAY[4];
+                this.setcolor_middle_right = COLOR_ARRAY[1];
+                this.setcolor_bottom_left = COLOR_ARRAY[2];
+                this.setcolor_bottom_right = COLOR_ARRAY[4];
                 break;
         }
 

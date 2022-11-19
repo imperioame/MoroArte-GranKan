@@ -10,7 +10,7 @@ function createHex(center_X, center_Y, id) {
         hex.id = id;
         hex.dataset.xPosition = center_X_rounded;
         hex.dataset.yPosition = center_Y_rounded;
-        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEXHEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEXWIDTH/2) + center_X}px`);
+        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH/2) + center_X}px`);
         hex.innerHTML = id;
         //hex.innerHTML = `xPos${center_X_rounded}-yPos${center_Y_rounded}`;
 
@@ -25,7 +25,7 @@ function createHex(center_X, center_Y, id) {
         hex.dataset.xPosition = center_X;
         hex.dataset.yPosition = center_Y;
         //hex.innerHTML = `xPos${center_X}-yPos${center_Y}`;
-        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEXHEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEXWIDTH/2) + center_X}px`);
+        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH/2) + center_X}px`);
         */
 
         /*
@@ -36,7 +36,7 @@ function createHex(center_X, center_Y, id) {
             hex.dataset.xPosition = center_X;
             hex.dataset.yPosition = center_Y;
             hex.innerHTML = '&#x2B22;';
-            hex.setAttribute('style', `position: fixed; top: ${window.innerHeight/2 - (HEXHEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEXWIDTH/2) + center_X}px;`);
+            hex.setAttribute('style', `position: fixed; top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH/2) + center_X}px;`);
         */
 
 
@@ -50,23 +50,23 @@ function saveToMemory(position_X, position_Y) {
     cell.setPosX = position_X;
     cell.setPosY = position_Y;
 
-    CELLARRAY.push(cell);
+    CELL_ARRAY.push(cell);
 
 }
 
 function checkEmptyPosition(position_X, position_Y) {
     //Checks if position in board is occupied, if so, reutns false
     //console.log('entro a consultar posiciones duplicadas');
-    //console.log(CELLARRAY.length);
+    //console.log(CELL_ARRAY.length);
 
     let position_empty = true;
 
 
 
-    for (let i = 0; i < CELLARRAY.length; i++) {
+    for (let i = 0; i < CELL_ARRAY.length; i++) {
         //console.log('consulto el array');
-        //console.log(`Xpos; ${CELLARRAY[i].getPosX} YPos ${CELLARRAY[i].getPosY}`);
-        if (CELLARRAY[i].getPosX == position_X && CELLARRAY[i].getPosY == position_Y) {
+        //console.log(`Xpos; ${CELL_ARRAY[i].getPosX} YPos ${CELL_ARRAY[i].getPosY}`);
+        if (CELL_ARRAY[i].getPosX == position_X && CELL_ARRAY[i].getPosY == position_Y) {
             position_empty = false;
             return position_empty;
         }
@@ -102,7 +102,7 @@ function createPieces() {
     let piecenumber = 1;
     let playercolor = 'black';
     for (let i = 1; i <= 24; i++) {
-        PIECEARRAY.push(new Piece(piecenumber, playercolor));
+        PIECE_ARRAY.push(new Piece(piecenumber, playercolor));
         if (piecenumber == 12) {
             piecenumber = 1;
             playercolor = 'white';
@@ -110,9 +110,9 @@ function createPieces() {
             piecenumber++;
         }
         //Create piece in DOM and distribute it in aside
-        createDomPiece(PIECEARRAY[PIECEARRAY.length - 1]);
+        createDomPiece(PIECE_ARRAY[PIECE_ARRAY.length - 1]);
     }
-    //console.log(PIECEARRAY);
+    //console.log(PIECE_ARRAY);
 }
 
 function createDomPiece(pieceObject) {
@@ -126,6 +126,8 @@ function createDomPiece(pieceObject) {
     let x_axis = Math.round(Math.random() * 100 + 10);
     piece.setAttribute('style', `bottom: ${y_axis}px; left: ${x_axis}px`);
     piece.innerHTML = pieceObject.getPieceId;
+    //Removes previous event listeners (if it had)
+    //piece.replaceWith(piece.cloneNode(true));
     piece.addEventListener("click", movePiece);
 
 
@@ -137,22 +139,35 @@ function createDomPiece(pieceObject) {
 function movePiece(e) {
     //Adds the functionality, when called, to move object until it's released
     console.log('clicked piece');
-    let element = document.getElementById(e.target.id);
+    // selected_piece is defined in data.js
+    selected_piece = document.getElementById(e.target.id);
     e.stopPropagation();
+    selected_piece.style.position = 'fixed';
     const onMouseMove = (e) => {
         //Defines the function that allows piece to move to mouse
-        element.style.position = 'fixed';
-        element.style.left = e.pageX /* - HEXWIDTH / 2 */ + 'px';
-        element.style.top = e.pageY /* - HEXHEIGHT / 2 */ + 'px';
+        selected_piece.style.left = e.pageX /* - HEX_WIDTH / 2 */ + 'px';
+        selected_piece.style.top = e.pageY /* - HEX_HEIGHT / 2 */ + 'px';
     }
 
     function releasepiece(e) {
         //This removes the 'follow mouse' functionality when piece is selected
         // console.log('releasing piece');
         // console.log(e);
+        e.stopPropagation();
         document.removeEventListener('mousemove', onMouseMove);
-        if (e.target){
-            //TBD
+
+        console.log(e.target);
+
+        if (e.target.className == 'hex-clip') {
+            console.log('es una celda');
+            // Clicked piece ID
+            selected_piece.id;
+            // Cell's ID
+            e.target.id
+            // Mouse position
+            e.pageX
+            e.pageY
+
         }
     }
 
@@ -171,5 +186,5 @@ function initialize(max_layers) {
 window.onload = function () {
     console.log('inicializando...');
     initialize(LAYERS);
-    //console.log(CELLARRAY);
+    //console.log(CELL_ARRAY);
 };
