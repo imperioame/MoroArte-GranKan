@@ -14,8 +14,7 @@ function createHex(center_X, center_Y, id) {
         hex.innerHTML = id;
         //hex.innerHTML = `xPos${center_X_rounded}-yPos${center_Y_rounded}`;
 
-        saveToMemory(center_X_rounded, center_Y_rounded);
-
+        saveToMemory(center_X_rounded, center_Y_rounded, id);
 
         /*
         // Fórmula para hacerlo con DIV + before y after
@@ -44,28 +43,115 @@ function createHex(center_X, center_Y, id) {
     }
 }
 
-function saveToMemory(position_X, position_Y) {
+function saveToMemory(position_X, position_Y, id) {
     //Creates an object, asignes position and save to array
-    let cell = new Cell();
-    cell.setPosX = position_X;
-    cell.setPosY = position_Y;
+    let cell = new Cell(position_X, position_Y, id);
+    defineCellSurroundings(cell);
 
     CELL_ARRAY.push(cell);
+    //console.log(`guardé id ${id}`);
+
+}
+
+function defineCellSurroundings(cellToBeSaved) {
+    // checks all surroundings to set attributes
+    // Does path tracing
+    for (let direction = 1; direction <= 6; direction++) {
+        // Direction is used as math factor.
+        // Direction Datasheet:
+        // 1 = top_right;
+        // 2 = middle_right;
+        // 3 = bottom_right;
+        // 4 = bottom_left;
+        // 5 = middle_left;
+        // 6 = top_left;
+
+        let dY = 0;
+        if (direction != 2 && direction != 5) {
+            dY = Math.round((HEX_HEIGHT + ((direction == 1 || direction == 6 ? -1 : 1) * cellToBeSaved.getPosY)) * 100) / 100;
+        }
+        let dX = Math.round((HEX_WIDTH + ((direction < 4 ? 1 : -1) * cellToBeSaved.getPosX)) * 100) / 100;
+
+        console.log(`rango dx: ${dX - 10} - ${dX + 10}`);
+        console.log(`rango dy: ${dY - 10} - ${dY + 10}`);
+
+
+        CELL_ARRAY.forEach(looped_cell => {
+            // checks if this cell's position is near (dx;dy)
+
+            //console.log('intento definir el surrounding');
+            console.log(`%c looped cell x pos: ${looped_cell.getPosX}`, 'color: #ff0000;');
+            console.log(`%c looped cell y pos: ${looped_cell.getPosY}`, 'color: #ff0000;');
+
+            if (looped_cell.getPosX < dX + 10 && looped_cell.getPosX > dX - 10) {
+                console.log('validé dX')
+                if (looped_cell.getPosY < dY + 10 && looped_cell.getPosY > dY - 10) {
+                    console.log('encontré una celda que es contigua a la celda que se está guardano.');
+                    //saves in cellToBeSaved the proximity attribute corresponding to what DIRECTION defines 
+                    switch (direction) {
+                        case 1:
+                            cellToBeSaved.setcell_top_right = looped_cell.getCellId;
+                            break;
+                        case 2:
+                            cellToBeSaved.setcell_middle_right = looped_cell.getCellId;
+                            break;
+                        case 3:
+                            cellToBeSaved.setcell_bottom_right = looped_cell.getCellId;
+                            break;
+                        case 4:
+                            cellToBeSaved.setcell_bottom_left = looped_cell.getCellId;
+                            break;
+                        case 5:
+                            cellToBeSaved.setcell_middle_left = looped_cell.getCellId;
+                            break;
+                        case 6:
+                            cellToBeSaved.setcell_top_left = looped_cell.getCellId;
+                            break;
+                    }
+                    // Now, saves OPPOSITE direction in looped_cell
+                    // remember that this function detects proximity for pieces previously saved. That means if there was a match in the ifs statements, the looped_cell did not have saved the proximity information
+
+                    switch (direction) {
+                        case 1:
+                            looped_cell.setcell_bottom_left = cellToBeSaved.getCellId;
+                            break;
+                        case 2:
+                            looped_cell.setcell_middle_left = cellToBeSaved.getCellId;
+                            break;
+                        case 3:
+                            looped_cell.setcell_top_left = cellToBeSaved.getCellId;
+                            break;
+                        case 4:
+                            looped_cell.setcell_top_right = cellToBeSaved.getCellId;
+                            break;
+                        case 5:
+                            looped_cell.setcell_middle_right = cellToBeSaved.getCellId;
+                            break;
+                        case 6:
+                            looped_cell.setcell_bottom_right = cellToBeSaved.getCellId;
+                            break;
+                    }
+
+                    console.log(cellToBeSaved);
+                    console.log(looped_cell);
+
+                }
+            }
+
+
+
+        });
+
+
+    }
 
 }
 
 function checkEmptyPosition(position_X, position_Y) {
     //Checks if position in board is occupied, if so, reutns false
-    //console.log('entro a consultar posiciones duplicadas');
-    //console.log(CELL_ARRAY.length);
-
     let position_empty = true;
 
-
-
     for (let i = 0; i < CELL_ARRAY.length; i++) {
-        //console.log('consulto el array');
-        //console.log(`Xpos; ${CELL_ARRAY[i].getPosX} YPos ${CELL_ARRAY[i].getPosY}`);
         if (CELL_ARRAY[i].getPosX == position_X && CELL_ARRAY[i].getPosY == position_Y) {
             position_empty = false;
             return position_empty;
@@ -150,29 +236,69 @@ function movePiece(e) {
     }
 
     function releasepiece(e) {
-        //This removes the 'follow mouse' functionality when piece is selected
-        // console.log('releasing piece');
-        // console.log(e);
+        // This places a piece over a board cell. It does not validates if this movement can be done. For that, it calls the validation function
+        // Also, it removes the 'follow mouse' functionality when piece is selected
         e.stopPropagation();
         document.removeEventListener('mousemove', onMouseMove);
 
-        console.log(e.target);
-
-        if (e.target.className == 'hex-clip') {
+        if (validPiecePlacing(e.target)) {
+            // The movement is acceptable, it places the piece over the board cell
+            console.log(e.target);
             console.log('es una celda');
             // Clicked piece ID
             selected_piece.id;
+
+
             // Cell's ID
             e.target.id
+
+
             // Mouse position
             e.pageX
             e.pageY
 
+
+            //Saves the cell id in piece info
+            selected_piece.setCellId(e.target.id);
+            console.log(`the piece was placed and new cell id is ${e.target.id}`);
+
+
+        } else {
+            // cannot be placed here. it moves over to the the player's aside
         }
+
     }
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('click', releasepiece);
+}
+
+function validPiecePlacing(clickedElement) {
+    // Checks surrounding pieces and defines if this movement is correct.
+    // returns true or false.
+
+    //Firt. it checks if the user clicked a board cell. If so, continue checks
+    if (clickedElement.className == 'hex-clip') {
+        //checks if this cell is empty.
+        let cell_data = CELL_ARRAY.filter((cell) => cell.getCellId == clickedElement.id);
+        console.log(`la celda encontrada es`);
+        console.log(cell_data);
+        if (cell_data.getIsEmpty) {
+            // Then, it checks if surroundings are empty, if so, it's an automatic true
+            if (false) {
+                return true;
+            } else {
+                // Then, it checks if surrounding pieces matches color with current piece
+            }
+        } else {
+            return false;
+        }
+
+
+    } else {
+        return false;
+    }
+    return true;
 }
 
 

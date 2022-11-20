@@ -200,10 +200,17 @@ class Piece {
 
 
 class Cell {
-    constructor() {
-        this.posX = 0;
-        this.posY = 0;
+    constructor(posX, posY, cellId) {
+        this.posX = posX;
+        this.posY = posY;
+        this.cellId = cellId;
         this.isEmpty = true;
+        this.cell_top_left = null;
+        this.cell_top_right = null;
+        this.cell_middle_left = null;
+        this.cell_middle_right = null;
+        this.cell_bottom_left = null;
+        this.cell_bottom_right = null;
     }
 
     get getPosX() {
@@ -215,6 +222,28 @@ class Cell {
     get getIsEmpty() {
         return this.isEmpty;
     }
+    get getCellId() {
+        return this.cellId;
+    }
+    get getcell_top_left() {
+        return this.cell_top_left;
+    }
+    get getcell_top_right() {
+        return this.cell_top_right;
+    }
+    get getcell_middle_left() {
+        return this.cell_middle_left;
+    }
+    get getcell_middle_right() {
+        return this.cell_middle_right;
+    }
+    get getcell_bottom_left() {
+        return this.cell_bottom_left;
+    }
+    get getcell_bottom_right() {
+        return this.cell_bottom_right;
+    }
+
 
     set setPosX(newPos) {
         this.posX = newPos;
@@ -222,8 +251,28 @@ class Cell {
     set setPosY(newPos) {
         this.posY = newPos;
     }
-
     set setIsEmpty(newValue) {
         this.isEmpty = newValue;
+    }
+    set setCellId(newCellId) {
+        this.cellId = newCellId;
+    }
+    set setcell_top_left(newCell) {
+        this.cell_top_left = newCell;
+    }
+    set setcell_top_right(newCell) {
+        this.cell_top_right = newCell;
+    }
+    set setcell_middle_left(newCell) {
+        this.cell_middle_left = newCell;
+    }
+    set setcell_middle_right(newCell) {
+        this.cell_middle_right = newCell;
+    }
+    set setcell_bottom_left(newCell) {
+        this.cell_bottom_left = newCell;
+    }
+    set setcell_bottom_right(newCell) {
+        this.cell_bottom_right = newCell;
     }
 }
