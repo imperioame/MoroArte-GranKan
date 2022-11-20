@@ -10,7 +10,7 @@ function createHex(center_X, center_Y, id) {
         hex.id = id;
         hex.dataset.xPosition = center_X_rounded;
         hex.dataset.yPosition = center_Y_rounded;
-        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH/2) + center_X}px`);
+        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH / 2) + center_X}px`);
         hex.innerHTML = id;
         //hex.innerHTML = `xPos${center_X_rounded}-yPos${center_Y_rounded}`;
 
@@ -24,7 +24,7 @@ function createHex(center_X, center_Y, id) {
         hex.dataset.xPosition = center_X;
         hex.dataset.yPosition = center_Y;
         //hex.innerHTML = `xPos${center_X}-yPos${center_Y}`;
-        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH/2) + center_X}px`);
+        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH / 2) + center_X}px`);
         */
 
         /*
@@ -35,7 +35,7 @@ function createHex(center_X, center_Y, id) {
             hex.dataset.xPosition = center_X;
             hex.dataset.yPosition = center_Y;
             hex.innerHTML = '&#x2B22;';
-            hex.setAttribute('style', `position: fixed; top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH/2) + center_X}px;`);
+            hex.setAttribute('style', `position: fixed; top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH / 2) + center_X}px;`);
         */
 
 
@@ -46,10 +46,10 @@ function createHex(center_X, center_Y, id) {
 function saveToMemory(position_X, position_Y, id) {
     //Creates an object, asignes position and save to array
     let cell = new Cell(position_X, position_Y, id);
-    defineCellSurroundings(cell);
+    CELL_ARRAY.length != 0 ? defineCellSurroundings(cell) : '';
 
     CELL_ARRAY.push(cell);
-    //console.log(`guardé id ${id}`);
+    console.log(CELL_ARRAY);
 
 }
 
@@ -68,12 +68,16 @@ function defineCellSurroundings(cellToBeSaved) {
 
         let dY = 0;
         if (direction != 2 && direction != 5) {
+            console.log('NO es desplazamiento horizontal');
             dY = Math.round((HEX_HEIGHT + ((direction == 1 || direction == 6 ? -1 : 1) * cellToBeSaved.getPosY)) * 100) / 100;
         }
         let dX = Math.round((HEX_WIDTH + ((direction < 4 ? 1 : -1) * cellToBeSaved.getPosX)) * 100) / 100;
 
-        console.log(`rango dx: ${dX - 10} - ${dX + 10}`);
-        console.log(`rango dy: ${dY - 10} - ${dY + 10}`);
+        console.log(`Dirección a la que estoy apuntando: ${direction}`);
+        console.log(`rango dx: ${dX - HEX_WIDTH / 2 + 5 } - ${dX + HEX_WIDTH / 2 + 5 }`);
+        console.log(`rango dy: ${dY - HEX_HEIGHT / 2 +5} - ${dY + HEX_HEIGHT / 2 +5}`);
+        console.log(`%c Current cell ID: ${cellToBeSaved.getCellId}`, 'color: #FF00FF;');
+
 
 
         CELL_ARRAY.forEach(looped_cell => {
@@ -82,69 +86,53 @@ function defineCellSurroundings(cellToBeSaved) {
             //console.log('intento definir el surrounding');
             console.log(`%c looped cell x pos: ${looped_cell.getPosX}`, 'color: #ff0000;');
             console.log(`%c looped cell y pos: ${looped_cell.getPosY}`, 'color: #ff0000;');
+            console.log(`%c looped cell ID: ${looped_cell.getCellId}`, 'color: #FF00FF;');
 
-            if (looped_cell.getPosX < dX + 10 && looped_cell.getPosX > dX - 10) {
+            if (looped_cell.getPosX <= dX + HEX_WIDTH / 2 + 5  && looped_cell.getPosX >= dX - HEX_WIDTH / 2 + 5 ) {
                 console.log('validé dX')
-                if (looped_cell.getPosY < dY + 10 && looped_cell.getPosY > dY - 10) {
+                if (looped_cell.getPosY <= dY + HEX_HEIGHT / 2 +5 && looped_cell.getPosY >= dY - HEX_HEIGHT / 2 +5) {
                     console.log('encontré una celda que es contigua a la celda que se está guardano.');
-                    //saves in cellToBeSaved the proximity attribute corresponding to what DIRECTION defines 
+                    //saves in cellToBeSaved the proximity attribute corresponding to what DIRECTION defines
+                    // It also saves OPPOSITE direction in looped_cell
+                    // remember that this function detects proximity for pieces previously saved. That means if there was a match in the ifs statements, the looped_cell did not have saved the proximity information
                     switch (direction) {
                         case 1:
                             cellToBeSaved.setcell_top_right = looped_cell.getCellId;
-                            break;
-                        case 2:
-                            cellToBeSaved.setcell_middle_right = looped_cell.getCellId;
-                            break;
-                        case 3:
-                            cellToBeSaved.setcell_bottom_right = looped_cell.getCellId;
-                            break;
-                        case 4:
-                            cellToBeSaved.setcell_bottom_left = looped_cell.getCellId;
-                            break;
-                        case 5:
-                            cellToBeSaved.setcell_middle_left = looped_cell.getCellId;
-                            break;
-                        case 6:
-                            cellToBeSaved.setcell_top_left = looped_cell.getCellId;
-                            break;
-                    }
-                    // Now, saves OPPOSITE direction in looped_cell
-                    // remember that this function detects proximity for pieces previously saved. That means if there was a match in the ifs statements, the looped_cell did not have saved the proximity information
-
-                    switch (direction) {
-                        case 1:
                             looped_cell.setcell_bottom_left = cellToBeSaved.getCellId;
                             break;
                         case 2:
+                            cellToBeSaved.setcell_middle_right = looped_cell.getCellId;
                             looped_cell.setcell_middle_left = cellToBeSaved.getCellId;
                             break;
                         case 3:
+                            cellToBeSaved.setcell_bottom_right = looped_cell.getCellId;
                             looped_cell.setcell_top_left = cellToBeSaved.getCellId;
                             break;
                         case 4:
+                            cellToBeSaved.setcell_bottom_left = looped_cell.getCellId;
                             looped_cell.setcell_top_right = cellToBeSaved.getCellId;
                             break;
                         case 5:
+                            cellToBeSaved.setcell_middle_left = looped_cell.getCellId;
                             looped_cell.setcell_middle_right = cellToBeSaved.getCellId;
                             break;
                         case 6:
+                            cellToBeSaved.setcell_top_left = looped_cell.getCellId;
                             looped_cell.setcell_bottom_right = cellToBeSaved.getCellId;
                             break;
+                        default:
+                            break;
                     }
+
+
 
                     console.log(cellToBeSaved);
                     console.log(looped_cell);
 
                 }
             }
-
-
-
         });
-
-
     }
-
 }
 
 function checkEmptyPosition(position_X, position_Y) {
