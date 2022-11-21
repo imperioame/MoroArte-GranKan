@@ -10,7 +10,8 @@ function createHex(center_X, center_Y, id) {
         hex.id = id;
         hex.dataset.xPosition = center_X_rounded;
         hex.dataset.yPosition = center_Y_rounded;
-        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH / 2) + center_X}px`);
+        //hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH / 2) + center_X}px`);
+        hex.setAttribute('style', `top: ${center_Y}px; left: ${center_X}px`);
         hex.innerHTML = id;
         //hex.innerHTML = `xPos${center_X_rounded}-yPos${center_Y_rounded}`;
 
@@ -46,10 +47,13 @@ function createHex(center_X, center_Y, id) {
 function saveToMemory(position_X, position_Y, id) {
     //Creates an object, asignes position and save to array
     let cell = new Cell(position_X, position_Y, id);
+    //console.warn(cell.getCellId);
+    //console.warn(cell.getPosX);
+    //console.warn(cell.getPosY);
     CELL_ARRAY.length != 0 ? defineCellSurroundings(cell) : '';
 
     CELL_ARRAY.push(cell);
-    console.log(CELL_ARRAY);
+    //console.log(CELL_ARRAY);
 
 }
 
@@ -66,32 +70,33 @@ function defineCellSurroundings(cellToBeSaved) {
         // 5 = middle_left;
         // 6 = top_left;
 
-        let dY = 0;
+        let dY = cellToBeSaved.getPosY;
         if (direction != 2 && direction != 5) {
-            console.log('NO es desplazamiento horizontal');
-            dY = Math.round((HEX_HEIGHT + ((direction == 1 || direction == 6 ? -1 : 1) * cellToBeSaved.getPosY)) * 100) / 100;
+            //console.log('NO es desplazamiento horizontal');
+            dY = Math.round((cellToBeSaved.getPosY + (direction == 1 || direction == 6 ? -1 : 1) * HEX_HEIGHT) * 100) / 100;
         }
-        let dX = Math.round((HEX_WIDTH + ((direction < 4 ? 1 : -1) * cellToBeSaved.getPosX)) * 100) / 100;
+        let dX = Math.round((cellToBeSaved.getPosX + (direction < 4 ? 1 : -1) * HEX_WIDTH / 2) * 100) / 100;
 
-        console.log(`Dirección a la que estoy apuntando: ${direction}`);
-        console.log(`rango dx: ${dX - HEX_WIDTH / 2 + 5 } - ${dX + HEX_WIDTH / 2 + 5 }`);
-        console.log(`rango dy: ${dY - HEX_HEIGHT / 2 +5} - ${dY + HEX_HEIGHT / 2 +5}`);
-        console.log(`%c Current cell ID: ${cellToBeSaved.getCellId}`, 'color: #FF00FF;');
+
+        //console.log(`Checking direction N°: ${direction}`);
+        //console.log(`dx betweeng: ${dX - HEX_WIDTH / 2 - 5 } - ${dX + HEX_WIDTH / 2 + 5 }`);
+        //console.log(`dy betweeng: ${dY - HEX_WIDTH / 2 - 5} - ${dY + HEX_WIDTH / 2 + 5}`);
+        //console.log(`%c Current cell ID: ${cellToBeSaved.getCellId}`, 'color: #FF00FF;');
 
 
 
         CELL_ARRAY.forEach(looped_cell => {
-            // checks if this cell's position is near (dx;dy)
+            //Checks if this cell's position is near (dx;dy)
 
             //console.log('intento definir el surrounding');
-            console.log(`%c looped cell x pos: ${looped_cell.getPosX}`, 'color: #ff0000;');
-            console.log(`%c looped cell y pos: ${looped_cell.getPosY}`, 'color: #ff0000;');
-            console.log(`%c looped cell ID: ${looped_cell.getCellId}`, 'color: #FF00FF;');
+            //console.log(`%c looped cell x pos: ${looped_cell.getPosX}`, 'color: #ff0000;');
+            //console.log(`%c looped cell y pos: ${looped_cell.getPosY}`, 'color: #ff0000;');
+            //console.log(`%c looped cell ID: ${looped_cell.getCellId}`, 'color: #FF00FF;');
 
-            if (looped_cell.getPosX <= dX + HEX_WIDTH / 2 + 5  && looped_cell.getPosX >= dX - HEX_WIDTH / 2 + 5 ) {
-                console.log('validé dX')
-                if (looped_cell.getPosY <= dY + HEX_HEIGHT / 2 +5 && looped_cell.getPosY >= dY - HEX_HEIGHT / 2 +5) {
-                    console.log('encontré una celda que es contigua a la celda que se está guardano.');
+            if (looped_cell.getPosX <= dX + HEX_WIDTH / 2 + 5 && looped_cell.getPosX >= dX - HEX_WIDTH / 2 - 5) {
+                //console.log('validé dX')
+                if (looped_cell.getPosY <= dY + HEX_WIDTH / 2 + 5 && looped_cell.getPosY >= dY - HEX_WIDTH / 2 - 5) {
+                    //console.log('encontré una celda que es contigua a la celda que se está guardano.');
                     //saves in cellToBeSaved the proximity attribute corresponding to what DIRECTION defines
                     // It also saves OPPOSITE direction in looped_cell
                     // remember that this function detects proximity for pieces previously saved. That means if there was a match in the ifs statements, the looped_cell did not have saved the proximity information
@@ -126,8 +131,8 @@ function defineCellSurroundings(cellToBeSaved) {
 
 
 
-                    console.log(cellToBeSaved);
-                    console.log(looped_cell);
+                    //console.log(cellToBeSaved);
+                    //console.log(looped_cell);
 
                 }
             }
@@ -291,8 +296,8 @@ function validPiecePlacing(clickedElement) {
 
 
 function initialize(max_layers) {
-    let center_X = 0;
-    let center_Y = 0;
+    let center_X = window.innerWidth/2 - (HEX_WIDTH / 2);
+    let center_Y = window.innerHeight/2 - (HEX_HEIGHT/2);
     recursiveHexagon(center_X, center_Y, max_layers, RAD);
     createPieces();
 }
