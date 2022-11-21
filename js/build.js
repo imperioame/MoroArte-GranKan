@@ -236,8 +236,6 @@ function movePiece(e) {
 
         if (validPiecePlacing(e.target)) {
             // The movement is acceptable, it places the piece over the board cell
-            console.log(e.target);
-            console.log('es una celda');
             // Clicked piece ID
             selected_piece.id;
 
@@ -252,7 +250,7 @@ function movePiece(e) {
 
 
             //Saves the cell id in piece info
-            selected_piece.setCellId(e.target.id);
+            selected_piece.setCellId = e.target.id;
             console.log(`the piece was placed and new cell id is ${e.target.id}`);
 
 
@@ -271,33 +269,45 @@ function validPiecePlacing(clickedElement) {
     // returns true or false.
 
     //Firt. it checks if the user clicked a board cell. If so, continue checks
-    if (clickedElement.className == 'hex-clip') {
-        //checks if this cell is empty.
-        let cell_data = CELL_ARRAY.filter((cell) => cell.getCellId == clickedElement.id);
-        console.log(`la celda encontrada es`);
-        console.log(cell_data);
-        if (cell_data.getIsEmpty) {
-            // Then, it checks if surroundings are empty, if so, it's an automatic true
-            if (false) {
-                return true;
-            } else {
-                // Then, it checks if surrounding pieces matches color with current piece
-            }
-        } else {
-            return false;
-        }
-
-
-    } else {
+    if (clickedElement.className != 'hex-clip') {
         return false;
     }
+
+    //checks if this cell is empty.
+    let cell_data = CELL_ARRAY.find((cell) => cell.getCellId == clickedElement.id);
+    if (!cell_data.getIsEmpty) {
+        return false;
+    }
+
+    // Then, it checks if surroundings are empty, if so, it's an automatic true
+    if (checkIfSurroundingsAreEmpty(cell_data)) {
+        console.log('empty surroundings');
+        return true;
+    } else {
+        // Then, it checks if surrounding pieces matches color with current piece
+    }
+
     return true;
+}
+
+function checkIfSurroundingsAreEmpty(cellObject) {
+    //Recieves a cell and generates an array with the surroundings id
+    const ID_VALUES_TO_CHECK = [cellObject.cell_top_left, cellObject.cell_top_right, cellObject.cell_middle_left, cellObject.cell_middle_right, cellObject.cell_bottom_left, cellObject.cell_bottom_right];
+
+    //Filters main cell array and gets only cells surrunding current cell
+    const filteredArray = CELL_ARRAY.filter((cellArrayElement) => {
+        return ID_VALUES_TO_CHECK.some((idNumber) => {
+            return cellArrayElement.getCellId === idNumber;
+        })
+    });
+
+    return filteredArray.some((element) => element.getIsEmpty);
 }
 
 
 function initialize(max_layers) {
-    let center_X = window.innerWidth/2 - (HEX_WIDTH / 2);
-    let center_Y = window.innerHeight/2 - (HEX_HEIGHT/2);
+    let center_X = window.innerWidth / 2 - (HEX_WIDTH / 2);
+    let center_Y = window.innerHeight / 2 - (HEX_HEIGHT / 2);
     recursiveHexagon(center_X, center_Y, max_layers, RAD);
     createPieces();
 }
