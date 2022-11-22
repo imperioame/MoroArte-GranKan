@@ -8,9 +8,13 @@ const HEX_HEIGHT = 60;
 const HEX_WIDTH = 104;
 
 const CELL_ARRAY = [];
-
 const PIECE_ARRAY = [];
 const COLOR_ARRAY = [];
+
+const DATA_TYPES = {
+    CELL: 'CELL',
+    PIECE: 'PIECE',
+}
 
 let selected_piece;
 
