@@ -17,6 +17,7 @@ function createHex(center_X, center_Y, id) {
 
         saveToMemory(center_X_rounded, center_Y_rounded, id);
 
+
         /*
         // Fórmula para hacerlo con DIV + before y after
         let hex = document.createElement('div');
@@ -204,14 +205,24 @@ function createDomPiece(pieceObject) {
     piece.dataset.piece_number = pieceObject.getPieceId;
     piece.dataset.piece_player_color = pieceObject.getPlayer;
 
-
     let y_axis = Math.round(Math.random() * 100 + 10);
     let x_axis = Math.round(Math.random() * 100 + 10);
     piece.setAttribute('style', `bottom: ${y_axis}px; left: ${x_axis}px`);
-    piece.innerHTML = pieceObject.getPieceId;
+
+    let image = document.createElement('img');
+    image.src = pieceObject.getimgTitle;
+    piece.appendChild(image);
+    //piece.innerHTML = pieceObject.getPieceId;
+    
+    //Creates a transparent element to cover svg, and hosts functionality (onclicks)
+    let coverDiv = document.createElement('div');
+    coverDiv.className = 'cover_div';
+
     //Removes previous event listeners (if it had)
     //piece.replaceWith(piece.cloneNode(true));
-    piece.addEventListener("click", movePiece);
+    coverDiv.addEventListener("click", movePiece);
+
+    piece.appendChild(coverDiv);
 
 
     //Place it in correspondent players aside
@@ -221,11 +232,14 @@ function createDomPiece(pieceObject) {
 
 function movePiece(e) {
     //Adds the functionality, when called, to move object until it's released
-    const selected_piece_element = document.getElementById(e.target.id);
+    const correct_target_piece = e.target.parentNode;
+    const selected_piece_element = document.getElementById(correct_target_piece.id);
+    console.warn(selected_piece_element)
     const selected_piece_object = PIECE_ARRAY.find((piece) => {
         return piece.getPieceId == selected_piece_element.dataset.piece_number &&
             piece.getPlayer == selected_piece_element.dataset.piece_player_color;
     });
+    console.log(selected_piece_object);
 
     //Disables piece movement over all other pieces. Cannot move more than one piece at a time.
     const allDomPieces = document.getElementsByClassName('piece');

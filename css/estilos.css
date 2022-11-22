@@ -135,11 +135,19 @@ aside h2 {
   flex-direction: column;
   justify-content: center;
   cursor: pointer;
-  box-shadow: inset 0 0 25px 15px rgb(121, 190, 255);
 }
 .piece:hover {
   transition: 1s;
   background-color: rgb(128, 128, 128);
+}
+
+.cover_div {
+  width: 100px !important;
+  height: 100px !important;
+  position: absolute;
+}
+.cover_div::before {
+  content: " ";
 }
 
 .black_player_piece {
