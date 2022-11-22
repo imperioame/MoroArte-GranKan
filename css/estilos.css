@@ -28,6 +28,7 @@ aside h2 {
   width: 100vw;
   height: 100vh;
   background-color: rgb(253, 249, 213);
+  overflow: auto;
 }
 
 #player1,

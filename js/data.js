@@ -47,7 +47,7 @@ class Piece {
     constructor(pieceId, player) {
         this.pieceId = pieceId;
         this.player = player;
-        this.cellId = 0;
+        this.cellId = null;
         //Define Colours depending on piece
         //Pieces and color are defined and cannot be random. It must be like this.
         switch (pieceId) {
@@ -104,6 +104,7 @@ class Piece {
                 }
                 break;
             case 5:
+                //QUDAK PIECE !!
                 this.setcolor_top_left = COLOR_ARRAY[3];
                 this.setcolor_top_right = COLOR_ARRAY[2];
                 this.setcolor_middle_left = COLOR_ARRAY[5];
