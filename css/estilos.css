@@ -38,6 +38,7 @@ aside h2 {
   width: 15vw;
   position: fixed;
   top: 0;
+  z-index: 0;
 }
 
 #player1 {
