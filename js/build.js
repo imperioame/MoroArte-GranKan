@@ -54,20 +54,9 @@ function defineCellSurroundings(cellToBeSaved) {
         let dX = Math.round((cellToBeSaved.getPosX + (direction < 4 ? 1 : -1) * HEX_WIDTH / 2) * 100) / 100;
 
 
-        //console.log(`Checking direction N°: ${direction}`);
-        //console.log(`dx betweeng: ${dX - HEX_WIDTH / 2 - 5 } - ${dX + HEX_WIDTH / 2 + 5 }`);
-        //console.log(`dy betweeng: ${dY - HEX_WIDTH / 2 - 5} - ${dY + HEX_WIDTH / 2 + 5}`);
-        //console.log(`%c Current cell ID: ${cellToBeSaved.getCellId}`, 'color: #FF00FF;');
-
-
 
         CELL_ARRAY.forEach(looped_cell => {
             //Checks if this cell's position is near (dx;dy)
-
-            //console.log('intento definir el surrounding');
-            //console.log(`%c looped cell x pos: ${looped_cell.getPosX}`, 'color: #ff0000;');
-            //console.log(`%c looped cell y pos: ${looped_cell.getPosY}`, 'color: #ff0000;');
-            //console.log(`%c looped cell ID: ${looped_cell.getCellId}`, 'color: #FF00FF;');
 
             if (looped_cell.getPosX <= dX + HEX_WIDTH / 2 + 5 && looped_cell.getPosX >= dX - HEX_WIDTH / 2 - 5) {
                 //console.log('validé dX')

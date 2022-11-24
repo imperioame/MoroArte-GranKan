@@ -12,8 +12,16 @@ const PIECE_ARRAY = [];
 const COLOR_ARRAY = [];
 
 const DATA_TYPES = {
-    CELL: 'CELL',
-    PIECE: 'PIECE',
+    CELL:   'CELL',
+    PIECE:  'PIECE',
+}
+const DIRECTION_TYPES = {
+    TOP_LEFT:       'top_left',
+    TOP_RIGHT:      'top_right',
+    MIDDLE_LEFT:    'middle_left',
+    MIDDLE_RIGHT:   'middle_right',
+    BOTTOM_LEFT:    'bottom_left',
+    BOTTOM_RIGHT:   'bottom_right',
 }
 
 let selected_piece;

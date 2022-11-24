@@ -2,11 +2,7 @@ function movePiece(e) {
     //Adds the functionality, when called, to move object until it's released
     const correct_target_piece = e.target.parentNode;
     const selected_piece_element = document.getElementById(correct_target_piece.id);
-    console.warn(selected_piece_element)
-    const selected_piece_object = PIECE_ARRAY.find((piece) => {
-        return piece.getPieceId == selected_piece_element.dataset.piece_number &&
-            piece.getPlayer == selected_piece_element.dataset.piece_player_color;
-    });
+    const selected_piece_object = returnPieceObjectFromElementEquivalent(selected_piece_element);
 
     updatePieceZIndex(selected_piece_object);
 
@@ -40,7 +36,7 @@ function movePiece(e) {
         e.stopPropagation();
         document.removeEventListener('mousemove', onMouseMove);
 
-        if (validPiecePlacing(e.target)) {
+        if (validPiecePlacing(e.target, selected_piece_object)) {
             // The movement is acceptable, it places the piece over the board cell
 
             //Saves cell id on piece.getCellId on piece OBJECT
@@ -73,56 +69,17 @@ function movePiece(e) {
     document.addEventListener('click', releasepiece);
 }
 
-function sychronizeWithArray(arrayToBeSynchronized, updatedObject, dataType) {
-    //This function receives an array and an object that should be same type as array objects, finds it's own position in array and updates itself 
-    arrayToBeSynchronized.forEach((element, index) => {
-        if (dataType === DATA_TYPES.PIECE) {
-
-            // This works only for pieces
-            if (element.getPieceId === updatedObject.getPieceId &&
-                element.getPlayer === updatedObject.getPlayer) {
-                console.warn('Ojo, si ubicas fichas de distinto color de jugador se eliminan')
-                arrayToBeSynchronized[index] = updatedObject;
-            }
-        }
-
-        if (dataType === DATA_TYPES.CELL) {
-            // This works only for cells
-            if (element.cellId === updatedObject.cellId) {
-                arrayToBeSynchronized[index] = updatedObject;
-            }
-        }
-
-    });
-    localStorage.setItem(DATA_TYPES.PIECE, JSON.stringify(PIECE_ARRAY))
-
-};
-
-function updatePieceZIndex(piece_object) {
-
-    for (let piece of document.getElementsByClassName('piece')) {
-        if (piece.dataset.piece_number == piece_object.getPieceId && piece.dataset.piece_player_color == piece_object.getPlayer) {
-            piece.dataset.z_index = PIECE_ARRAY.length;
-            piece.style.zIndex = `${PIECE_ARRAY.length}`;
-            console.log(`nuevo zindex ${piece.dataset.z_index}`);
-        } else {
-            piece.dataset.z_index = piece.dataset.z_index - 1;
-            piece.style.zIndex = `${piece.dataset.z_index}`;
-        }
-    }
-}
-
-function validPiecePlacing(clickedElement) {
+function validPiecePlacing(clickedCellElement, movingPieceObject) {
     // Checks surrounding pieces and defines if this movement is correct.
     // returns true or false.
 
     //Firt. it checks if the user clicked a board cell. If so, continue checks
-    if (clickedElement.className != 'hex-clip') {
+    if (clickedCellElement.className != 'hex-clip') {
         return false;
     }
 
     //checks if this cell is empty.
-    let cell_data = CELL_ARRAY.find((cell) => cell.getCellId == clickedElement.id);
+    let cell_data = CELL_ARRAY.find((cell) => cell.getCellId == clickedCellElement.id);
     if (!cell_data.getIsEmpty) {
         return false;
     }
@@ -134,7 +91,25 @@ function validPiecePlacing(clickedElement) {
         return true;
     } else {
         // Then, it checks if surrounding pieces matches color with current piece
-        // surroundingPiecesArray
+        const surroundingPiecesArray = orderSurroundingPieces(cell_data, piecesPlacedInSurroundingCellsArray);
+
+        let validPlacing;
+        surroundingPiecesArray.forEach((value, key) => {
+            //Checks every direction, if this direction has a piece (not null), then matches colours form this piece, and clicked piece.
+            //Remember that this comparison is done by checking OPPOSITE directions, e.g. clickedpiece.top_left with direction.bottom_right
+            //If there's at least one NON MATCHING COLOUR, then this is an INVALID movement. Returns false.
+            if (value != null) {
+                const defined_getter = `getcolor_${key}`;
+                const defined_oposite_getter = `getcolor_${getOppositeDirection(key)}`;
+                validPlacing = movingPieceObject[defined_getter] == value[defined_oposite_getter];
+
+                if (!validPlacing) {
+                    return false;
+                }
+            }
+        });
+
+        console.log(validPlacing);
 
     }
 
@@ -165,4 +140,22 @@ function checkSurroundingsPieces(cellObject) {
     //returns array with surroudning pieces
     //Returns an empty array if there are no surrounding pieces
     return piecesPlacedInSurroundingCellsArray;
+}
+
+function orderSurroundingPieces(cellObject, piecesArray) {
+    //Recieves a pre-filtered array and a cell, and sorts the elements in the array according to position relative to cell.
+    //Returns new associative array with correct positions (relative to cell) 
+
+    const surroundingPiecesArray = new Map([
+        [DIRECTION_TYPES.TOP_LEFT, piecesArray.find((piece) => piece.getCellId === cellObject.getcell_top_left) || null],
+        [DIRECTION_TYPES.TOP_RIGHT, piecesArray.find((piece) => piece.getCellId === cellObject.getcell_top_right) || null],
+        [DIRECTION_TYPES.MIDDLE_LEFT, piecesArray.find((piece) => piece.getCellId === cellObject.getcell_middle_left) || null],
+        [DIRECTION_TYPES.MIDDLE_RIGHT, piecesArray.find((piece) => piece.getCellId === cellObject.getcell_middle_right) || null],
+        [DIRECTION_TYPES.BOTTOM_LEFT, piecesArray.find((piece) => piece.getCellId === cellObject.getcell_bottom_left) || null],
+        [DIRECTION_TYPES.BOTTOM_RIGHT, piecesArray.find((piece) => piece.getCellId === cellObject.getcell_bottom_right) || null],
+    ]);
+
+    console.log(surroundingPiecesArray);
+
+    return surroundingPiecesArray;
 }
