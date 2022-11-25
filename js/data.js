@@ -9,7 +9,6 @@ const HEX_WIDTH = 104;
 
 const CELL_ARRAY = [];
 const PIECE_ARRAY = [];
-const COLOR_ARRAY = [];
 
 const DATA_TYPES = {
     CELL:   'CELL',
@@ -24,32 +23,14 @@ const DIRECTION_TYPES = {
     BOTTOM_RIGHT:   'bottom_right',
 }
 
-let selected_piece;
-
-class Color {
-    constructor(id, name, color) {
-        this.id = id;
-        this.name = name;
-        this.color = color;
-    }
-    get getId() {
-        return this.id;
-    }
-    get getName() {
-        return this.name;
-    }
-    get getColor() {
-        return this.color;
-    }
+const COLORS = {
+    ORANGE: {color: 'orange', hex: '#ff5624'},
+    MAGENTA: {color: 'orange', hex: '#872996'},
+    GREEN: {color: 'orange', hex: '#44b94a'},
+    GRAY: {color: 'orange', hex: '#c1cac8'},
+    YELLOW: {color: 'orange', hex: '#ffe951'},
+    BLUE: {color: 'orange', hex: '#162061'},
 }
-
-// Define possible colors
-COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'orange', '#ff5624')); //0 - Naranja
-COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'magenta', '#872996')); //1 - Magenta
-COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'green', '#44b94a')); //2 - Verde
-COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'gray', '#c1cac8')); //3 - Gris
-COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'yellow', '#ffe951')); //4 - Amarillo
-COLOR_ARRAY.push(new Color(COLOR_ARRAY.length, 'blue', '#162061')); //5 - azul
 
 class Piece {
     constructor(pieceId, player) {
@@ -60,160 +41,161 @@ class Piece {
         //Pieces and color are defined and cannot be random. It must be like this.
         switch (pieceId) {
             case 1:
-                this.setcolor_top_left = COLOR_ARRAY[0];
-                this.setcolor_top_right = COLOR_ARRAY[1];
-                this.setcolor_middle_left = COLOR_ARRAY[0];
-                this.setcolor_middle_right = COLOR_ARRAY[1];
-                this.setcolor_bottom_left = COLOR_ARRAY[2];
-                this.setcolor_bottom_right = COLOR_ARRAY[3];
+                this.setcolor_top_left = COLORS.ORANGE;
+                this.setcolor_top_right = COLORS.MAGENTA;
+                this.setcolor_middle_left = COLORS.ORANGE;
+                this.setcolor_middle_right = COLORS.MAGENTA;
+                this.setcolor_bottom_left = COLORS.GREEN;
+                this.setcolor_bottom_right = COLORS.GRAY;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-12.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-01.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-01.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-01.svg"
                 }
                 break;
             case 2:
-                this.setcolor_top_left = COLOR_ARRAY[0];
-                this.setcolor_top_right = COLOR_ARRAY[4];
-                this.setcolor_middle_left = COLOR_ARRAY[3];
-                this.setcolor_middle_right = COLOR_ARRAY[4];
-                this.setcolor_bottom_left = COLOR_ARRAY[2];
-                this.setcolor_bottom_right = COLOR_ARRAY[0];
+                this.setcolor_top_left = COLORS.ORANGE;
+                this.setcolor_top_right = COLORS.YELLOW;
+                this.setcolor_middle_left = COLORS.GRAY;
+                this.setcolor_middle_right = COLORS.YELLOW;
+                this.setcolor_bottom_left = COLORS.GREEN;
+                this.setcolor_bottom_right = COLORS.ORANGE;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-13.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-02.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-02.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-02.svg"
                 }
                 break;
             case 3:
-                this.setcolor_top_left = COLOR_ARRAY[0];
-                this.setcolor_top_right = COLOR_ARRAY[4];
-                this.setcolor_middle_left = COLOR_ARRAY[0];
-                this.setcolor_middle_right = COLOR_ARRAY[2];
-                this.setcolor_bottom_left = COLOR_ARRAY[3];
-                this.setcolor_bottom_right = COLOR_ARRAY[1];
+                this.setcolor_top_left = COLORS.ORANGE;
+                this.setcolor_top_right = COLORS.YELLOW;
+                this.setcolor_middle_left = COLORS.ORANGE;
+                this.setcolor_middle_right = COLORS.GREEN;
+                this.setcolor_bottom_left = COLORS.GRAY;
+                this.setcolor_bottom_right = COLORS.MAGENTA;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-14.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-03.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-03.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-03.svg"
                 }
                 break;
             case 4:
-                this.setcolor_top_left = COLOR_ARRAY[5];
-                this.setcolor_top_right = COLOR_ARRAY[5];
-                this.setcolor_middle_left = COLOR_ARRAY[0];
-                this.setcolor_middle_right = COLOR_ARRAY[1];
-                this.setcolor_bottom_left = COLOR_ARRAY[2];
-                this.setcolor_bottom_right = COLOR_ARRAY[3];
+                this.setcolor_top_left = COLORS.BLUE;
+                this.setcolor_top_right = COLORS.BLUE;
+                this.setcolor_middle_left = COLORS.ORANGE;
+                this.setcolor_middle_right = COLORS.MAGENTA;
+                this.setcolor_bottom_left = COLORS.GREEN;
+                this.setcolor_bottom_right = COLORS.GRAY;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-15.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-04.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-04.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-04.svg"
                 }
                 break;
             case 5:
                 //QUDAK PIECE !!
-                this.setcolor_top_left = COLOR_ARRAY[3];
-                this.setcolor_top_right = COLOR_ARRAY[2];
-                this.setcolor_middle_left = COLOR_ARRAY[5];
-                this.setcolor_middle_right = COLOR_ARRAY[1];
-                this.setcolor_bottom_left = COLOR_ARRAY[4];
-                this.setcolor_bottom_right = COLOR_ARRAY[0];
+                this.setcolor_top_left = COLORS.GRAY;
+                this.setcolor_top_right = COLORS.GREEN;
+                this.setcolor_middle_left = COLORS.BLUE;
+                this.setcolor_middle_right = COLORS.MAGENTA;
+                this.setcolor_bottom_left = COLORS.YELLOW;
+                this.setcolor_bottom_right = COLORS.ORANGE;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/Assets_KAN_FickaQudakNegra.svg"
+                    this.imgTitle = "./imgs/FichasNegras/black-Qudak.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/Assets_KAN_FickaQudakBlanca.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/white-Qudak.svg"
                 }
                 break;
             case 6:
-                this.setcolor_top_left = COLOR_ARRAY[5];
-                this.setcolor_top_right = COLOR_ARRAY[3];
-                this.setcolor_middle_left = COLOR_ARRAY[4];
-                this.setcolor_middle_right = COLOR_ARRAY[1];
-                this.setcolor_bottom_left = COLOR_ARRAY[2];
-                this.setcolor_bottom_right = COLOR_ARRAY[4];
+                this.setcolor_top_left = COLORS.BLUE;
+                this.setcolor_top_right = COLORS.GRAY;
+                this.setcolor_middle_left = COLORS.YELLOW;
+                this.setcolor_middle_right = COLORS.MAGENTA;
+                this.setcolor_bottom_left = COLORS.GREEN;
+                this.setcolor_bottom_right = COLORS.YELLOW;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-16.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-06.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-05.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-06.svg"
                 }
                 break;
             case 7:
-                this.setcolor_top_left = COLOR_ARRAY[5];
-                this.setcolor_top_right = COLOR_ARRAY[4];
-                this.setcolor_middle_left = COLOR_ARRAY[0];
-                this.setcolor_middle_right = COLOR_ARRAY[1];
-                this.setcolor_bottom_left = COLOR_ARRAY[2];
-                this.setcolor_bottom_right = COLOR_ARRAY[0];
+                this.setcolor_top_left = COLORS.BLUE;
+                this.setcolor_top_right = COLORS.YELLOW;
+                this.setcolor_middle_left = COLORS.ORANGE;
+                this.setcolor_middle_right = COLORS.MAGENTA;
+                this.setcolor_bottom_left = COLORS.GREEN;
+                this.setcolor_bottom_right = COLORS.ORANGE;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-17.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-07.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-06.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-07.svg"
                 }
                 break;
             case 8:
-                this.setcolor_top_left = COLOR_ARRAY[5];
-                this.setcolor_top_right = COLOR_ARRAY[4];
-                this.setcolor_middle_left = COLOR_ARRAY[0];
-                this.setcolor_middle_right = COLOR_ARRAY[1];
-                this.setcolor_bottom_left = COLOR_ARRAY[2];
-                this.setcolor_bottom_right = COLOR_ARRAY[0];
+                // Esta pieza está duplicada
+                this.setcolor_top_left = COLORS.BLUE;
+                this.setcolor_top_right = COLORS.YELLOW;
+                this.setcolor_middle_left = COLORS.ORANGE;
+                this.setcolor_middle_right = COLORS.MAGENTA;
+                this.setcolor_bottom_left = COLORS.GREEN;
+                this.setcolor_bottom_right = COLORS.ORANGE;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-18.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-08.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-07.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-08.svg"
                 }
                 break;
             case 9:
-                this.setcolor_top_left = COLOR_ARRAY[2];
-                this.setcolor_top_right = COLOR_ARRAY[2];
-                this.setcolor_middle_left = COLOR_ARRAY[0];
-                this.setcolor_middle_right = COLOR_ARRAY[1];
-                this.setcolor_bottom_left = COLOR_ARRAY[5];
-                this.setcolor_bottom_right = COLOR_ARRAY[0];
+                this.setcolor_top_left = COLORS.GREEN;
+                this.setcolor_top_right = COLORS.GREEN;
+                this.setcolor_middle_left = COLORS.ORANGE;
+                this.setcolor_middle_right = COLORS.MAGENTA;
+                this.setcolor_bottom_left = COLORS.BLUE;
+                this.setcolor_bottom_right = COLORS.ORANGE;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-19.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-09.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-08.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-09.svg"
                 }
                 break;
             case 10:
-                this.setcolor_top_left = COLOR_ARRAY[5];
-                this.setcolor_top_right = COLOR_ARRAY[4];
-                this.setcolor_middle_left = COLOR_ARRAY[1];
-                this.setcolor_middle_right = COLOR_ARRAY[0];
-                this.setcolor_bottom_left = COLOR_ARRAY[3];
-                this.setcolor_bottom_right = COLOR_ARRAY[0];
+                this.setcolor_top_left = COLORS.BLUE;
+                this.setcolor_top_right = COLORS.YELLOW;
+                this.setcolor_middle_left = COLORS.MAGENTA;
+                this.setcolor_middle_right = COLORS.ORANGE;
+                this.setcolor_bottom_left = COLORS.GRAY;
+                this.setcolor_bottom_right = COLORS.ORANGE;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-20.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-10.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-09.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-10.svg"
                 }
                 break;
             case 11:
-                this.setcolor_top_left = COLOR_ARRAY[5];
-                this.setcolor_top_right = COLOR_ARRAY[4];
-                this.setcolor_middle_left = COLOR_ARRAY[0];
-                this.setcolor_middle_right = COLOR_ARRAY[1];
-                this.setcolor_bottom_left = COLOR_ARRAY[2];
-                this.setcolor_bottom_right = COLOR_ARRAY[0];
+                this.setcolor_top_left = COLORS.BLUE;
+                this.setcolor_top_right = COLORS.YELLOW;
+                this.setcolor_middle_left = COLORS.ORANGE;
+                this.setcolor_middle_right = COLORS.MAGENTA;
+                this.setcolor_bottom_left = COLORS.GREEN;
+                this.setcolor_bottom_right = COLORS.ORANGE;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-21.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-11.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-10.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-11.svg"
                 }
                 break;
             case 12:
-                this.setcolor_top_left = COLOR_ARRAY[5];
-                this.setcolor_top_right = COLOR_ARRAY[3];
-                this.setcolor_middle_left = COLOR_ARRAY[4];
-                this.setcolor_middle_right = COLOR_ARRAY[1];
-                this.setcolor_bottom_left = COLOR_ARRAY[2];
-                this.setcolor_bottom_right = COLOR_ARRAY[4];
+                this.setcolor_top_left = COLORS.GREEN;
+                this.setcolor_top_right = COLORS.YELLOW;
+                this.setcolor_middle_left = COLORS.ORANGE;
+                this.setcolor_middle_right = COLORS.ORANGE;
+                this.setcolor_bottom_left = COLORS.BLUE;
+                this.setcolor_bottom_right = COLORS.MAGENTA;
                 if (this.player == 'black') {
-                    this.imgTitle = "./imgs/FichasNegras/AssetsTodas_las_fichas-22.svg"
+                    this.imgTitle = "./imgs/FichasNegras/Black-12.svg"
                 } else {
-                    this.imgTitle = "./imgs/FichasBlancas/AssetsTodas_las_fichas-11.svg"
+                    this.imgTitle = "./imgs/FichasBlancas/White-12.svg"
                 }
                 break;
         }

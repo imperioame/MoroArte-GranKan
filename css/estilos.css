@@ -51,53 +51,6 @@ aside h2 {
   border-left: 10px double rgb(77, 6, 6);
 }
 
-/*
-// Método UNICODE
-.hex_unicode {
-    font-size: 135px;
-    color: $cell_color;
-    //text-shadow: 0px 0px 5px black;
-
-    &:hover {
-        color: $cell_hover_color;
-        transition: 1s;
-    }
-}
-*/
-/*
-// Método DIV + before y after
-.hex:hover{
-    transition: 1s;
-    color: red;
-}
-
-.hex:before {
-    content: " ";
-    width: 0; height: 0;
-    border-bottom: 30px solid $cell_color;
-    border-left: 52px solid transparent;
-    border-right: 52px solid transparent;
-    position: absolute;
-    top: -30px;
-}
-
-.hex {
-    width: $hex_width;
-    height: $hex_height;
-    background-color: $cell_color;
-    position: fixed;
-}
-
-.hex:after {
-    content: "";
-    width: 0;
-    position: absolute;
-    bottom: -30px;
-    border-top: 30px solid $cell_color;
-    border-left: 52px solid transparent;
-    border-right: 52px solid transparent;
-}
-*/
 .hex-clip {
   width: 100px;
   height: 100px;
@@ -166,4 +119,33 @@ aside h2 {
 }
 .white_player_piece:hover {
   color: white;
+}
+
+.invalidPiecePlacement {
+  -webkit-animation: redHighlight 1s;
+          animation: redHighlight 1s;
+}
+
+@-webkit-keyframes redHighlight {
+  0% {
+    background-color: rgb(20, 117, 182);
+  }
+  50% {
+    background-color: rgb(158, 6, 6);
+  }
+  100% {
+    background-color: rgb(20, 117, 182);
+  }
+}
+
+@keyframes redHighlight {
+  0% {
+    background-color: rgb(20, 117, 182);
+  }
+  50% {
+    background-color: rgb(158, 6, 6);
+  }
+  100% {
+    background-color: rgb(20, 117, 182);
+  }
 }/*# sourceMappingURL=estilos.css.map */

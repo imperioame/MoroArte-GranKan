@@ -32,9 +32,19 @@ function movePiece(e) {
 
     function releasepiece(e) {
         // This places a piece over a board cell. It does not validates if this movement can be done. For that, it calls the validation function
-        // Also, it removes the 'follow mouse' functionality when piece is selected
+
         e.stopPropagation();
-        document.removeEventListener('mousemove', onMouseMove);
+        if (!e.target.classList.contains('hex-clip')) {
+            console.log('estoy sacandole mousemove y releasepiece')
+            // If it's not a board cell, then the piece is dropped, but not snapped to any cell.
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('click', releasepiece);
+            //Placing is done, enables movePiece again
+            for (let i = 0; i < allDomPieces.length; i++) {
+                allDomPieces[i].addEventListener("click", movePiece); 
+            }
+            return;
+        }
 
         if (validPiecePlacing(e.target, selected_piece_object)) {
             // The movement is acceptable, it places the piece over the board cell
@@ -54,15 +64,25 @@ function movePiece(e) {
             //Syncrhonices with CELL_ARRAY
             sychronizeWithArray(CELL_ARRAY, selected_cell_object, DATA_TYPES.CELL);
 
+
+            // Movement done, it removes the 'follow mouse' functionality when piece is selected
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('click', releasepiece);
+            //Placing is done, enables movePiece again
+            for (let i = 0; i < allDomPieces.length; i++) {
+                allDomPieces[i].addEventListener("click", movePiece);
+            }
+
         } else {
-            // cannot be placed here. it moves over to the the player's aside
+            //Cannot be placed here. The current cell is highghted in red. li
+            const selected_cell = document.getElementById(e.target.id);
+            if (selected_cell.classList.contains('hex-clip')) {
+                selected_cell.classList.remove("invalidPiecePlacement");
+                selected_cell.classList.add("invalidPiecePlacement");
+            }
         }
 
-        document.removeEventListener('click', releasepiece);
-        //Placing is done, enables movePiece again
-        for (let i = 0; i < allDomPieces.length; i++) {
-            allDomPieces[i].addEventListener("click", movePiece);
-        }
+
     }
 
     document.addEventListener('mousemove', onMouseMove);
@@ -72,9 +92,8 @@ function movePiece(e) {
 function validPiecePlacing(clickedCellElement, movingPieceObject) {
     // Checks surrounding pieces and defines if this movement is correct.
     // returns true or false.
-
     //Firt. it checks if the user clicked a board cell. If so, continue checks
-    if (clickedCellElement.className != 'hex-clip') {
+    if (!clickedCellElement.classList.contains('hex-clip')) {
         return false;
     }
 
@@ -93,27 +112,21 @@ function validPiecePlacing(clickedCellElement, movingPieceObject) {
         // Then, it checks if surrounding pieces matches color with current piece
         const surroundingPiecesArray = orderSurroundingPieces(cell_data, piecesPlacedInSurroundingCellsArray);
 
-        let validPlacing;
+        let validPlacing = true;
         surroundingPiecesArray.forEach((value, key) => {
             //Checks every direction, if this direction has a piece (not null), then matches colours form this piece, and clicked piece.
             //Remember that this comparison is done by checking OPPOSITE directions, e.g. clickedpiece.top_left with direction.bottom_right
             //If there's at least one NON MATCHING COLOUR, then this is an INVALID movement. Returns false.
-            if (value != null) {
+            if (value != null && validPlacing) {
                 const defined_getter = `getcolor_${key}`;
                 const defined_oposite_getter = `getcolor_${getOppositeDirection(key)}`;
                 validPlacing = movingPieceObject[defined_getter] == value[defined_oposite_getter];
-
-                if (!validPlacing) {
-                    return false;
-                }
             }
         });
 
         console.log(validPlacing);
-
+        return validPlacing;
     }
-
-    return true;
 }
 
 function checkSurroundingsPieces(cellObject) {
