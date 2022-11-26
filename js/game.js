@@ -79,7 +79,7 @@ function movePiece(e) {
             }
 
             //Checks if it's win condition
-            checkWinCondition();
+            checkWinCondition(selected_piece_object);
 
 
             removeRotationButtons();
@@ -116,7 +116,6 @@ function validPiecePlacing(clickedCellElement, movingPieceObject) {
     const piecesPlacedInSurroundingCellsArray = checkSurroundingsPieces(cell_data);
     // Then, it checks if surroundings are empty, if so, it's an automatic true
     if (!piecesPlacedInSurroundingCellsArray.length) {
-        console.log('empty surroundings');
         return true;
     } else {
         // Then, it checks if surrounding pieces matches color with current piece
@@ -134,7 +133,6 @@ function validPiecePlacing(clickedCellElement, movingPieceObject) {
             }
         });
 
-        console.log(validPlacing);
         return validPlacing;
     }
 }
@@ -178,8 +176,6 @@ function orderSurroundingPieces(cellObject, piecesArray) {
         [DIRECTION_TYPES.BOTTOM_RIGHT, piecesArray.find((piece) => piece.getCellId === cellObject.getcell_bottom_right) || null],
     ]);
 
-    console.log(surroundingPiecesArray);
-
     return surroundingPiecesArray;
 }
 
@@ -211,7 +207,6 @@ function removeRotationButtons() {
 
 function rotatePieceRight() {
     //This function rotates a piece
-    console.warn('rotating right');
     if (!selected_piece_element && !selected_piece_object) {
         console.error("Trying to rotate something that's not corretly saved");
         return;
@@ -225,21 +220,16 @@ function rotatePieceRight() {
     selected_piece_object.setcolor_bottom_left = selected_piece_object.getcolor_bottom_right;
     selected_piece_object.setcolor_bottom_right = selected_piece_object.getcolor_middle_right;
     selected_piece_object.setcolor_middle_right = auxiliary_color;
-    console.log('after to rotation:');
-    console.log(selected_piece_object);
 
     //Then, rotates the element
     selected_piece_element.dataset.rotation = parseInt(selected_piece_element.dataset.rotation) + 60;
     selected_piece_element.style.transform = `rotate(${selected_piece_element.dataset.rotation}deg)`;
-    console.log('transformed piece element');
-    console.log(selected_piece_element);
-
+    
     sychronizeWithArray(PIECE_ARRAY, selected_piece_object, DATA_TYPES.PIECE);
 }
 
 function rotatePieceLeft() {
     //This function rotates a piece
-    console.warn('rotating left');
     if (!selected_piece_element && !selected_piece_object) {
         console.error("Trying to rotate something that's not corretly saved");
         return;
@@ -253,21 +243,72 @@ function rotatePieceLeft() {
     selected_piece_object.setcolor_bottom_left = selected_piece_object.getcolor_middle_left;
     selected_piece_object.setcolor_middle_left = selected_piece_object.getcolor_top_left;
     selected_piece_object.setcolor_top_left = auxiliary_color;
-    console.log('after to rotation:');
-    console.log(selected_piece_object);
 
     //Then, rotates the element
     selected_piece_element.dataset.rotation = parseInt(selected_piece_element.dataset.rotation) - 60;
     selected_piece_element.style.transform = `rotate(${selected_piece_element.dataset.rotation}deg)`;
-    console.log('transformed piece element');
-    console.log(selected_piece_element);
 
     sychronizeWithArray(PIECE_ARRAY, selected_piece_object, DATA_TYPES.PIECE);
 }
 
 
-
-function checkWinCondition(){
+function checkWinCondition(placed_piece_object){
     //This function checks if the current movement made the player win.
+    //First, it checks the flower, since it doesnt need all pieces, just 7 to be made.
+    let playerwon_by_gran_kan_flower = checkGranKanFlower(placed_piece_object);
+    if (playerwon_by_gran_kan_flower){
+        console.warn(`${placed_piece_object.getPlayer} player won by gran kan flower`);
+        return true;
+
+    }
+
+    const player = selected_piece_object.getPlayer;
+
+
+    const at_least_one_piece_not_placed = PIECE_ARRAY.some((piece) => piece.getCellId == null && piece.getPlayer == placed_piece_object.getPlayer);
+
+    const cell = CELL_ARRAY.find((cell) => cell.getCellId == placed_piece_object.getCellId);
+
+    console.log(checkSurroundingsPieces(cell));
+
+    if (at_least_one_piece_not_placed){
+        return false;
+    }
     
+    const at_least_one_surrounding_pieces_does_not_match_player = checkSurroundingsPieces(cell).some((piece) => piece.getPlayer != placed_piece_object.getPlayer);
+    console.warn(at_least_one_surrounding_pieces_does_not_match_player);
+    if (at_least_one_surrounding_pieces_does_not_match_player){
+        return false;
+    }
+
+    console.warn(`${placed_piece_object.getPlayer} player won by all pieces`);
+    return true;
+
+}
+
+
+function checkGranKanFlower(piece){
+    //Checks if all placed pieces made the "Gran Kan flower".
+    //The condition of Gran Kan flower is that 7 pieces must be clustered together, 
+    //it must include the Qudak piece,
+    // There must be a center piece, and the remaining 6 pieces surrounding that piece.
+    let granKanMade = false;
+    let cellObject = CELL_ARRAY.find((cell) => cell.getCellId == piece.getCellId);
+
+    console.log('entro a validar flor gran kan')
+
+    const surrounding_pieces = checkSurroundingsPieces(cellObject);
+    surrounding_pieces.some((recursive_piece) => {
+        const recursive_cell_object = CELL_ARRAY.find((recursive_cell) => recursive_cell.getCellId == recursive_piece.getCellId);
+        const recursive_surrounding = checkSurroundingsPieces(recursive_cell_object);
+        console.log(recursive_surrounding);
+        if (recursive_surrounding.length == 6){
+            //it needs to check if the qudak is included
+            if(recursive_surrounding.some((piece) => piece.getPieceId == 5) || recursive_piece.getPieceId == 5){
+                granKanMade = true;
+            }
+        }
+        return granKanMade;
+    });
+    return granKanMade;
 }

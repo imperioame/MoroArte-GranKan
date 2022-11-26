@@ -142,12 +142,12 @@ function createPieces() {
 
     console.error('Tenemos que consultar si el usuario ya jugó antes (es decir, verificar si existe algo en el localStorage. Si es así, no debemos cargar el tablero de cero, sino utilizar la data que se encuentra en el localStorage.');
     let piecenumber = 1;
-    let playercolor = 'black';
+    let playercolor = PLAYERS.BLACK;
     for (let i = 1; i <= 24; i++) {
         PIECE_ARRAY.push(new Piece(piecenumber, playercolor));
         if (piecenumber == 12) {
             piecenumber = 1;
-            playercolor = 'white';
+            playercolor = PLAYERS.WHITE;
         } else {
             piecenumber++;
         }
@@ -160,7 +160,7 @@ function createPieces() {
 function createDomPiece(pieceObject) {
     //This creates a piece element and places it in the dom
     let piece = document.createElement('div');
-    piece.className = `piece ${pieceObject.player == 'black' ? 'black_player_piece' : 'white_player_piece'}`;
+    piece.className = `piece ${pieceObject.player == PLAYERS.BLACK ? 'black_player_piece' : 'white_player_piece'}`;
     piece.id = `Player_${pieceObject.getPlayer}-Piece_${pieceObject.getPieceId}`;
     piece.dataset.piece_number = pieceObject.getPieceId;
     piece.dataset.rotation = 0;
@@ -193,7 +193,7 @@ function createDomPiece(pieceObject) {
 
 
     //Place it in correspondent players aside
-    let playerAside = pieceObject.getPlayer == 'black' ? document.getElementById('player1').getElementsByClassName('pieces_board')[0] : document.getElementById('player2').getElementsByClassName('pieces_board')[0];
+    let playerAside = pieceObject.getPlayer == PLAYERS.BLACK ? document.getElementById('player1').getElementsByClassName('pieces_board')[0] : document.getElementById('player2').getElementsByClassName('pieces_board')[0];
     playerAside.appendChild(piece);
 }
 

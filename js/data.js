@@ -12,6 +12,11 @@ const HEX_WIDTH = 100;
 const CELL_ARRAY = [];
 const PIECE_ARRAY = [];
 
+const PLAYERS = {
+    BLACK: 'black',
+    WHITE: 'white',
+}
+
 const DATA_TYPES = {
     CELL:   'CELL',
     PIECE:  'PIECE',
@@ -49,7 +54,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.MAGENTA;
                 this.setcolor_bottom_left = COLORS.GREEN;
                 this.setcolor_bottom_right = COLORS.GRAY;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-01.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-01.svg"
@@ -62,7 +67,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.YELLOW;
                 this.setcolor_bottom_left = COLORS.GREEN;
                 this.setcolor_bottom_right = COLORS.ORANGE;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-02.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-02.svg"
@@ -75,7 +80,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.GREEN;
                 this.setcolor_bottom_left = COLORS.GRAY;
                 this.setcolor_bottom_right = COLORS.MAGENTA;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-03.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-03.svg"
@@ -88,7 +93,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.MAGENTA;
                 this.setcolor_bottom_left = COLORS.GREEN;
                 this.setcolor_bottom_right = COLORS.GRAY;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-04.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-04.svg"
@@ -102,7 +107,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.MAGENTA;
                 this.setcolor_bottom_left = COLORS.YELLOW;
                 this.setcolor_bottom_right = COLORS.ORANGE;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-Qudak.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-Qudak.svg"
@@ -115,7 +120,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.MAGENTA;
                 this.setcolor_bottom_left = COLORS.GREEN;
                 this.setcolor_bottom_right = COLORS.YELLOW;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-06.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-06.svg"
@@ -128,7 +133,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.MAGENTA;
                 this.setcolor_bottom_left = COLORS.GREEN;
                 this.setcolor_bottom_right = COLORS.ORANGE;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-07.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-07.svg"
@@ -142,7 +147,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.MAGENTA;
                 this.setcolor_bottom_left = COLORS.GREEN;
                 this.setcolor_bottom_right = COLORS.ORANGE;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-08.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-08.svg"
@@ -155,7 +160,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.MAGENTA;
                 this.setcolor_bottom_left = COLORS.BLUE;
                 this.setcolor_bottom_right = COLORS.ORANGE;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-09.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-09.svg"
@@ -168,7 +173,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.ORANGE;
                 this.setcolor_bottom_left = COLORS.GRAY;
                 this.setcolor_bottom_right = COLORS.ORANGE;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-10.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-10.svg"
@@ -181,7 +186,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.MAGENTA;
                 this.setcolor_bottom_left = COLORS.GREEN;
                 this.setcolor_bottom_right = COLORS.ORANGE;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-11.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-11.svg"
@@ -194,7 +199,7 @@ class Piece {
                 this.setcolor_middle_right = COLORS.ORANGE;
                 this.setcolor_bottom_left = COLORS.BLUE;
                 this.setcolor_bottom_right = COLORS.MAGENTA;
-                if (this.player == 'black') {
+                if (this.player == PLAYERS.BLACK) {
                     this.imgTitle = "./imgs/FichasNegras/black-12.svg"
                 } else {
                     this.imgTitle = "./imgs/FichasBlancas/white-12.svg"
