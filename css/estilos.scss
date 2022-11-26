@@ -4,7 +4,7 @@ $hex_width: 104px;
 $hex_height: 60px;
 */
 //Método un solo div con clip
-$hex_size: 100px;
+$hex_size: 5vw;
 
 
 $cell_color: rgb(20, 117, 182);
@@ -154,3 +154,30 @@ aside h2 {
         background-color: $cell_color;
     }
 }
+
+#controls{
+    width: 100vw;
+    height: calc($hex_size + 50px);
+    padding: 25px 0;
+    border-top: 5px solid rgb(245, 216, 135);
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.rotation_buttons{
+    width: $hex_size;
+    height: $hex_size;
+    background-color: rgb(204, 204, 204);
+    border: 2px solid dimgray;
+    border-radius: 8px;
+    box-shadow: 0 0 2px black;
+    text-align: center;
+    display: flex;
+    justify-content:space-around;
+    flex-direction: column;
+    cursor: pointer;
+
+}
+

@@ -163,6 +163,7 @@ function createDomPiece(pieceObject) {
     piece.className = `piece ${pieceObject.player == 'black' ? 'black_player_piece' : 'white_player_piece'}`;
     piece.id = `Player_${pieceObject.getPlayer}-Piece_${pieceObject.getPieceId}`;
     piece.dataset.piece_number = pieceObject.getPieceId;
+    piece.dataset.rotation = 0;
     if (pieceObject.getPieceId == 5 || pieceObject.getPieceId == 16){
         piece.dataset.z_index = 24;
     }else{

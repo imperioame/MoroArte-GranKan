@@ -1,10 +1,14 @@
+let selected_piece_element;
+let selected_piece_object;
+
 function movePiece(e) {
     //Adds the functionality, when called, to move object until it's released
     const correct_target_piece = e.target.parentNode;
-    const selected_piece_element = document.getElementById(correct_target_piece.id);
-    const selected_piece_object = returnPieceObjectFromElementEquivalent(selected_piece_element);
+    selected_piece_element = document.getElementById(correct_target_piece.id);
+    selected_piece_object = returnPieceObjectFromElementEquivalent(selected_piece_element);
 
     updatePieceZIndex(selected_piece_object);
+    addRotationButtons();
 
     //Checks if this piece was placed in a cell. If so, that cell should now be 'empty'
     if (selected_piece_object.getCellId) {
@@ -34,15 +38,16 @@ function movePiece(e) {
         // This places a piece over a board cell. It does not validates if this movement can be done. For that, it calls the validation function
 
         e.stopPropagation();
-        if (!e.target.classList.contains('hex-clip')) {
+        if (!e.target.classList.contains('hex-clip') && !e.target.classList.contains('rotation_buttons')) {
             console.log('estoy sacandole mousemove y releasepiece')
             // If it's not a board cell, then the piece is dropped, but not snapped to any cell.
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('click', releasepiece);
             //Placing is done, enables movePiece again
             for (let i = 0; i < allDomPieces.length; i++) {
-                allDomPieces[i].addEventListener("click", movePiece); 
+                allDomPieces[i].addEventListener("click", movePiece);
             }
+            removeRotationButtons();
             return;
         }
 
@@ -73,6 +78,11 @@ function movePiece(e) {
                 allDomPieces[i].addEventListener("click", movePiece);
             }
 
+            //Checks if it's win condition
+            checkWinCondition();
+
+
+            removeRotationButtons();
         } else {
             //Cannot be placed here. The current cell is highghted in red. li
             const selected_cell = document.getElementById(e.target.id);
@@ -171,4 +181,93 @@ function orderSurroundingPieces(cellObject, piecesArray) {
     console.log(surroundingPiecesArray);
 
     return surroundingPiecesArray;
+}
+
+
+
+function addRotationButtons() {
+    //Buttons are not present, here they will be created, assigned functionality, and placed
+    let rotate_left_button_element = document.createElement('div');
+    rotate_left_button_element.id = 'rotate_left';
+    rotate_left_button_element.classList.add('rotation_buttons');
+    rotate_left_button_element.innerHTML = 'Rotate <br> left';
+    rotate_left_button_element.addEventListener('click', rotatePieceLeft);
+    CONTROLS_SELECTION.appendChild(rotate_left_button_element);
+
+    let rotate_right_button_element = document.createElement('div');
+    rotate_right_button_element.id = 'rotate_right';
+    rotate_right_button_element.classList.add('rotation_buttons');
+    rotate_right_button_element.innerHTML = 'Rotate <br> right';
+    rotate_right_button_element.addEventListener('click', rotatePieceRight);
+    CONTROLS_SELECTION.appendChild(rotate_right_button_element);
+}
+
+function removeRotationButtons() {
+    //Removes the buttons that allows rotation.
+    const CONTROLS_SELECTION = document.getElementById('controls');
+    CONTROLS_SELECTION.removeChild(document.getElementById('rotate_right'));
+    CONTROLS_SELECTION.removeChild(document.getElementById('rotate_left'));
+}
+
+function rotatePieceRight() {
+    //This function rotates a piece
+    console.warn('rotating right');
+    if (!selected_piece_element && !selected_piece_object) {
+        console.error("Trying to rotate something that's not corretly saved");
+        return;
+    }
+
+    //First rotates its color properties
+    let auxiliary_color = selected_piece_object.getcolor_top_right;
+    selected_piece_object.setcolor_top_right = selected_piece_object.getcolor_top_left;
+    selected_piece_object.setcolor_top_left = selected_piece_object.getcolor_middle_left;
+    selected_piece_object.setcolor_middle_left = selected_piece_object.getcolor_bottom_left;
+    selected_piece_object.setcolor_bottom_left = selected_piece_object.getcolor_bottom_right;
+    selected_piece_object.setcolor_bottom_right = selected_piece_object.getcolor_middle_right;
+    selected_piece_object.setcolor_middle_right = auxiliary_color;
+    console.log('after to rotation:');
+    console.log(selected_piece_object);
+
+    //Then, rotates the element
+    selected_piece_element.dataset.rotation = parseInt(selected_piece_element.dataset.rotation) + 60;
+    selected_piece_element.style.transform = `rotate(${selected_piece_element.dataset.rotation}deg)`;
+    console.log('transformed piece element');
+    console.log(selected_piece_element);
+
+    sychronizeWithArray(PIECE_ARRAY, selected_piece_object, DATA_TYPES.PIECE);
+}
+
+function rotatePieceLeft() {
+    //This function rotates a piece
+    console.warn('rotating left');
+    if (!selected_piece_element && !selected_piece_object) {
+        console.error("Trying to rotate something that's not corretly saved");
+        return;
+    }
+
+    //First rotates its color properties
+    let auxiliary_color = selected_piece_object.getcolor_top_right;
+    selected_piece_object.setcolor_top_right = selected_piece_object.getcolor_middle_right;
+    selected_piece_object.setcolor_middle_right = selected_piece_object.getcolor_bottom_right;
+    selected_piece_object.setcolor_bottom_right = selected_piece_object.getcolor_bottom_left;
+    selected_piece_object.setcolor_bottom_left = selected_piece_object.getcolor_middle_left;
+    selected_piece_object.setcolor_middle_left = selected_piece_object.getcolor_top_left;
+    selected_piece_object.setcolor_top_left = auxiliary_color;
+    console.log('after to rotation:');
+    console.log(selected_piece_object);
+
+    //Then, rotates the element
+    selected_piece_element.dataset.rotation = parseInt(selected_piece_element.dataset.rotation) - 60;
+    selected_piece_element.style.transform = `rotate(${selected_piece_element.dataset.rotation}deg)`;
+    console.log('transformed piece element');
+    console.log(selected_piece_element);
+
+    sychronizeWithArray(PIECE_ARRAY, selected_piece_object, DATA_TYPES.PIECE);
+}
+
+
+
+function checkWinCondition(){
+    //This function checks if the current movement made the player win.
+    
 }

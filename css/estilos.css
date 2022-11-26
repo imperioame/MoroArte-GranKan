@@ -52,8 +52,8 @@ aside h2 {
 }
 
 .hex-clip {
-  width: 100px;
-  height: 100px;
+  width: 5vw;
+  height: 5vw;
   background-color: rgb(20, 117, 182);
   position: fixed;
   text-align: center;
@@ -82,8 +82,8 @@ aside h2 {
 }
 
 .piece {
-  width: 100px;
-  height: 100px;
+  width: 5vw;
+  height: 5vw;
   position: absolute;
   text-align: center;
   display: flex;
@@ -97,8 +97,8 @@ aside h2 {
 }
 
 .cover_div {
-  width: 100px !important;
-  height: 100px !important;
+  width: 5vw !important;
+  height: 5vw !important;
   position: absolute;
 }
 .cover_div::before {
@@ -148,4 +148,28 @@ aside h2 {
   100% {
     background-color: rgb(20, 117, 182);
   }
+}
+#controls {
+  width: 100vw;
+  height: calc(5vw + 50px);
+  padding: 25px 0;
+  border-top: 5px solid rgb(245, 216, 135);
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.rotation_buttons {
+  width: 5vw;
+  height: 5vw;
+  background-color: rgb(204, 204, 204);
+  border: 2px solid dimgray;
+  border-radius: 8px;
+  box-shadow: 0 0 2px black;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  cursor: pointer;
 }/*# sourceMappingURL=estilos.css.map */

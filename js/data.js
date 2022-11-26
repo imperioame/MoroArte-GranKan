@@ -1,11 +1,13 @@
 const BOARD = document.getElementById('board');
+const CONTROLS_SELECTION = document.getElementById('controls');
+
 let w = Math.min(window.innerWidth, window.innerHeight);
 const RAD = w / 5;
 const TAU = Math.PI * 2;
 
 const LAYERS = 2;
-const HEX_HEIGHT = 60;
-const HEX_WIDTH = 104;
+const HEX_HEIGHT = 100;
+const HEX_WIDTH = 100;
 
 const CELL_ARRAY = [];
 const PIECE_ARRAY = [];
@@ -25,11 +27,11 @@ const DIRECTION_TYPES = {
 
 const COLORS = {
     ORANGE: {color: 'orange', hex: '#ff5624'},
-    MAGENTA: {color: 'orange', hex: '#872996'},
-    GREEN: {color: 'orange', hex: '#44b94a'},
-    GRAY: {color: 'orange', hex: '#c1cac8'},
-    YELLOW: {color: 'orange', hex: '#ffe951'},
-    BLUE: {color: 'orange', hex: '#162061'},
+    MAGENTA: {color: 'magenta', hex: '#872996'},
+    GREEN: {color: 'green', hex: '#44b94a'},
+    GRAY: {color: 'gray', hex: '#c1cac8'},
+    YELLOW: {color: 'yellow', hex: '#ffe951'},
+    BLUE: {color: 'blue', hex: '#162061'},
 }
 
 class Piece {
