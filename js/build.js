@@ -120,6 +120,7 @@ function checkEmptyPosition(position_X, position_Y) {
 }
 
 let hexcount = 0;
+
 function recursiveHexagon(center_X, center_Y, depth, r) {
     //Creates recursively all hexagons
     if (depth == 0) {
@@ -164,23 +165,31 @@ function createDomPiece(pieceObject) {
     piece.id = `Player_${pieceObject.getPlayer}-Piece_${pieceObject.getPieceId}`;
     piece.dataset.piece_number = pieceObject.getPieceId;
     piece.dataset.rotation = 0;
-    if (pieceObject.getPieceId == 5 || pieceObject.getPieceId == 16){
+    if (pieceObject.getPieceId == 5 || pieceObject.getPieceId == 16) {
         piece.dataset.z_index = 24;
-    }else{
-        piece.dataset.z_index = PIECE_ARRAY.length - 1;  
+    } else {
+        piece.dataset.z_index = PIECE_ARRAY.length - 1;
     }
     piece.style.zIndex = piece.dataset.z_index;
-    piece.dataset.piece_player_color = pieceObject.getPlayer;  
+    piece.dataset.piece_player_color = pieceObject.getPlayer;
 
-    let y_axis = Math.round(Math.random() * 100 + 10);
-    let x_axis = Math.round(Math.random() * 100 + 10);
-    piece.setAttribute('style', `bottom: ${y_axis}px; left: ${x_axis}px`);
+    piece.style.position = 'absolute';
+    let y_axis = Math.ceil(pieceObject.getPieceId / 2) * (HEX_HEIGHT * 1.15) + document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - (HEX_HEIGHT * 3 * 1.15) + document.querySelectorAll('#player1 h2')[0].offsetHeight;
+    //let y_axis = Math.ceil(pieceObject.getPieceId / 2) * (HEX_HEIGHT * 2) + document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - (HEX_HEIGHT * 3 * 2) + document.querySelectorAll('#player1 h2')[0].offsetHeight;
+    let x_axis = (PIECE_ARRAY.indexOf(pieceObject) % 2) * (HEX_WIDTH * 1.15) + (HEX_WIDTH / 6);
+    piece.style.top = `${y_axis}px`;
+
+    if (pieceObject.getPlayer == PLAYERS.BLACK) {
+        piece.style.left = `${x_axis}px`;
+    } else {
+        piece.style.right = `${x_axis}px`;
+    }
 
     let image = document.createElement('img');
     image.src = pieceObject.getimgTitle;
     piece.appendChild(image);
     //piece.innerHTML = pieceObject.getPieceId;
-    
+
     //Creates a transparent element to cover svg, and hosts functionality (onclicks)
     let coverDiv = document.createElement('div');
     coverDiv.className = 'cover_div';
@@ -198,9 +207,7 @@ function createDomPiece(pieceObject) {
 }
 
 function initialize(max_layers) {
-    let center_X = window.innerWidth / 2 - (HEX_WIDTH / 2);
-    let center_Y = window.innerHeight / 2 - (HEX_HEIGHT / 2);
-    recursiveHexagon(center_X, center_Y, max_layers, RAD);
+    recursiveHexagon(CENTER_X, CENTER_Y, max_layers, RAD);
     createPieces();
 }
 

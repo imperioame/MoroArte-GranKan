@@ -39,7 +39,6 @@ function movePiece(e) {
 
         e.stopPropagation();
         if (!e.target.classList.contains('hex-clip') && !e.target.classList.contains('rotation_buttons')) {
-            console.log('estoy sacandole mousemove y releasepiece')
             // If it's not a board cell, then the piece is dropped, but not snapped to any cell.
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('click', releasepiece);
@@ -262,21 +261,20 @@ function checkWinCondition(placed_piece_object){
 
     }
 
-    const player = selected_piece_object.getPlayer;
+    //const player = selected_piece_object.getPlayer;
 
 
     const at_least_one_piece_not_placed = PIECE_ARRAY.some((piece) => piece.getCellId == null && piece.getPlayer == placed_piece_object.getPlayer);
 
     const cell = CELL_ARRAY.find((cell) => cell.getCellId == placed_piece_object.getCellId);
 
-    console.log(checkSurroundingsPieces(cell));
+    //console.log(checkSurroundingsPieces(cell));
 
     if (at_least_one_piece_not_placed){
         return false;
     }
     
     const at_least_one_surrounding_pieces_does_not_match_player = checkSurroundingsPieces(cell).some((piece) => piece.getPlayer != placed_piece_object.getPlayer);
-    console.warn(at_least_one_surrounding_pieces_does_not_match_player);
     if (at_least_one_surrounding_pieces_does_not_match_player){
         return false;
     }
@@ -297,14 +295,26 @@ function checkGranKanFlower(piece){
 
     console.log('entro a validar flor gran kan')
 
+    //Gets an array based an all surrounding pieces.
     const surrounding_pieces = checkSurroundingsPieces(cellObject);
-    surrounding_pieces.some((recursive_piece) => {
-        const recursive_cell_object = CELL_ARRAY.find((recursive_cell) => recursive_cell.getCellId == recursive_piece.getCellId);
-        const recursive_surrounding = checkSurroundingsPieces(recursive_cell_object);
-        console.log(recursive_surrounding);
-        if (recursive_surrounding.length == 6){
+    console.log('valido las siguientes celdas');
+    console.log(surrounding_pieces);
+    surrounding_pieces.some((surrounding_piece) => {
+        //Checks for each surrounding piece it's surroundings
+        const surrounding_piece_cell_position_object = CELL_ARRAY.find((recursive_cell) => recursive_cell.getCellId == surrounding_piece.getCellId);
+        const surroundings_pieces_of_surrounding_cell = checkSurroundingsPieces(surrounding_piece_cell_position_object);
+        console.log(`checking cell: ${surrounding_piece_cell_position_object.getCellId}`);
+        console.log(surroundings_pieces_of_surrounding_cell);
+
+        //Checks if all pieces are of the same player
+        let different_player = surroundings_pieces_of_surrounding_cell.some((piece) => piece.getPlayer != surrounding_piece.getPlayer);
+        if (different_player){
+            return false;
+        }
+
+        if (surroundings_pieces_of_surrounding_cell.length == 6){
             //it needs to check if the qudak is included
-            if(recursive_surrounding.some((piece) => piece.getPieceId == 5) || recursive_piece.getPieceId == 5){
+            if(surroundings_pieces_of_surrounding_cell.some((piece) => piece.getPieceId == 5) || surrounding_piece.getPieceId == 5){
                 granKanMade = true;
             }
         }
