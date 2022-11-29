@@ -6,6 +6,11 @@ function returnPieceObjectFromElementEquivalent(piece_element) {
     });
 }
 
+function returnPieceElementFromObjectEquivalent(piece_object) {
+    //Recieves a piece object and returns it's equivalent's element
+    return document.getPieceId(`Player_${piece_object.getPlayer}-Piece_${piece_object.getPieceId}`);
+}
+
 function sychronizeWithArray(arrayToBeSynchronized, updatedObject, dataType) {
     //This function receives an array and an object that should be same type as array objects, finds it's own position in array and updates itself 
     arrayToBeSynchronized.forEach((element, index) => {
@@ -63,4 +68,9 @@ function getOppositeDirection(direction) {
         default:
             return 'ERROR';
     }
+}
+
+
+function reset_game(){
+    location.reload();
 }

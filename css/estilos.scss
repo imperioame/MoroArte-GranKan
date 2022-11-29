@@ -179,3 +179,70 @@ aside h2 {
 
 }
 
+#gray_overlay{
+    background-color: rgba(105, 105, 105, 0.473);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.notification_modal{
+    width: 50vw;
+    height: 30vh;
+    position: fixed;
+    left: calc(50vw - 25vw);
+    top: calc(50vh - 30vh);
+    border: 2px solid $cell_border_color;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgb(247, 245, 228);
+
+    & div, header{
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+#notifications #notification_header{
+    padding: 0.5em;
+    font-size: 2em;
+}
+
+#notifications .notification_header_victory{
+    color: green;
+    font-weight: bold;
+}
+
+#notifications #notification_body{
+    //text-align: center;
+    //display: flex;
+    //justify-content: center;
+}
+
+#notification_footer{
+    padding: 1em;
+}
+
+#notification_footer button{
+    padding: 1em;
+    border: 0;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.575);
+    border-radius: 8px;
+}
+
+#notification_close_button {
+    position: absolute;
+    right: -1em;
+    top: -1em;
+    color: red;
+    background-color: rgb(247, 245, 228);
+    border: 1px solid red;
+    border-radius: 50%;
+    padding: 1em;
+    cursor: pointer;
+}

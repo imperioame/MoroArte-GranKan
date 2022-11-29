@@ -11,7 +11,7 @@ function movePiece(e) {
     addRotationButtons();
 
     //Checks if this piece was placed in a cell. If so, that cell should now be 'empty'
-    if (selected_piece_object.getCellId) {
+    if (selected_piece_object.getCellId != null) {
         let cell_where_piece_was_placed = CELL_ARRAY.find((cell) => cell.getCellId === selected_piece_object.getCellId);
         cell_where_piece_was_placed.setIsEmpty = true;
         selected_piece_object.setCellId = null;
@@ -25,7 +25,6 @@ function movePiece(e) {
         allDomPieces[i].removeEventListener("click", movePiece);
     }
 
-    //console.warn(selected_piece_object);
     e.stopPropagation();
     selected_piece_element.style.position = 'fixed';
     const onMouseMove = (e) => {
@@ -78,7 +77,11 @@ function movePiece(e) {
             }
 
             //Checks if it's win condition
-            checkWinCondition(selected_piece_object);
+            let win_message = checkWinCondition(selected_piece_object);
+            if (win_message) {
+                showNotification(win_message, NOTIFICATION_TYPES.VICTORY_MODAL);
+                console.warn(win_message);
+            }
 
 
             removeRotationButtons();
@@ -132,23 +135,28 @@ function validPiecePlacing(clickedCellElement, movingPieceObject) {
             }
         });
 
+        //If placing was valid, checks if it should remove an adversary piece
+        if (validPlacing) {
+            checkAndRemoveAdversaryPiece(selected_piece_object, piecesPlacedInSurroundingCellsArray);
+        }
+
         return validPlacing;
     }
 }
 
 function checkSurroundingsPieces(cellObject) {
     //Recieves a cell and generates an array with the surroundings cell ids
-    const ID_VALUES_TO_CHECK = [cellObject.cell_top_left, cellObject.cell_top_right, cellObject.cell_middle_left, cellObject.cell_middle_right, cellObject.cell_bottom_left, cellObject.cell_bottom_right];
+    const ID_VALUES_TO_CHECK = [cellObject.getcell_top_left, cellObject.getcell_top_right, cellObject.getcell_middle_left, cellObject.getcell_middle_right, cellObject.getcell_bottom_left, cellObject.getcell_bottom_right];
 
     //Filters main cell array and gets only cells surrunding current cell
-    const surroundingCellsArray = nonEmptyCellArray = CELL_ARRAY.filter((cellArrayElement) => {
-        return ID_VALUES_TO_CHECK.some((idNumber) => {
-            return cellArrayElement.getCellId == idNumber;
-        })
+    const surroundingCellsArray = CELL_ARRAY.filter((cellArrayElement) => {
+        return ID_VALUES_TO_CHECK.some((cell_id_Number) => {
+            return cellArrayElement.getCellId == cell_id_Number;
+        });
     });
 
     // Filters this previous array and generates a new array with only NON empty cells
-    const nonEmptyCellsArray = surroundingCellsArray.filter((cell) => cell.getIsEmpty === false);
+    const nonEmptyCellsArray = surroundingCellsArray.filter((cell) => cell.getIsEmpty == false);
 
     // Checks what pieces are placed in these surrounding cells
     const piecesPlacedInSurroundingCellsArray = PIECE_ARRAY.filter((piece) => {
@@ -179,31 +187,6 @@ function orderSurroundingPieces(cellObject, piecesArray) {
 }
 
 
-
-function addRotationButtons() {
-    //Buttons are not present, here they will be created, assigned functionality, and placed
-    let rotate_left_button_element = document.createElement('div');
-    rotate_left_button_element.id = 'rotate_left';
-    rotate_left_button_element.classList.add('rotation_buttons');
-    rotate_left_button_element.innerHTML = 'Rotate <br> left';
-    rotate_left_button_element.addEventListener('click', rotatePieceLeft);
-    CONTROLS_SELECTION.appendChild(rotate_left_button_element);
-
-    let rotate_right_button_element = document.createElement('div');
-    rotate_right_button_element.id = 'rotate_right';
-    rotate_right_button_element.classList.add('rotation_buttons');
-    rotate_right_button_element.innerHTML = 'Rotate <br> right';
-    rotate_right_button_element.addEventListener('click', rotatePieceRight);
-    CONTROLS_SELECTION.appendChild(rotate_right_button_element);
-}
-
-function removeRotationButtons() {
-    //Removes the buttons that allows rotation.
-    const CONTROLS_SELECTION = document.getElementById('controls');
-    CONTROLS_SELECTION.removeChild(document.getElementById('rotate_right'));
-    CONTROLS_SELECTION.removeChild(document.getElementById('rotate_left'));
-}
-
 function rotatePieceRight() {
     //This function rotates a piece
     if (!selected_piece_element && !selected_piece_object) {
@@ -223,7 +206,7 @@ function rotatePieceRight() {
     //Then, rotates the element
     selected_piece_element.dataset.rotation = parseInt(selected_piece_element.dataset.rotation) + 60;
     selected_piece_element.style.transform = `rotate(${selected_piece_element.dataset.rotation}deg)`;
-    
+
     sychronizeWithArray(PIECE_ARRAY, selected_piece_object, DATA_TYPES.PIECE);
 }
 
@@ -251,74 +234,151 @@ function rotatePieceLeft() {
 }
 
 
-function checkWinCondition(placed_piece_object){
+function checkWinCondition(placed_piece_object) {
     //This function checks if the current movement made the player win.
+    //If true, returns win message.
     //First, it checks the flower, since it doesnt need all pieces, just 7 to be made.
+    console.log('checking win condition');
     let playerwon_by_gran_kan_flower = checkGranKanFlower(placed_piece_object);
-    if (playerwon_by_gran_kan_flower){
-        console.warn(`${placed_piece_object.getPlayer} player won by gran kan flower`);
-        return true;
+    if (playerwon_by_gran_kan_flower) {
+        return `${placed_piece_object.getPlayer} player won by gran kan flower`;
 
     }
-
-    //const player = selected_piece_object.getPlayer;
-
 
     const at_least_one_piece_not_placed = PIECE_ARRAY.some((piece) => piece.getCellId == null && piece.getPlayer == placed_piece_object.getPlayer);
 
     const cell = CELL_ARRAY.find((cell) => cell.getCellId == placed_piece_object.getCellId);
 
-    //console.log(checkSurroundingsPieces(cell));
-
-    if (at_least_one_piece_not_placed){
+    if (at_least_one_piece_not_placed) {
         return false;
     }
-    
+
     const at_least_one_surrounding_pieces_does_not_match_player = checkSurroundingsPieces(cell).some((piece) => piece.getPlayer != placed_piece_object.getPlayer);
-    if (at_least_one_surrounding_pieces_does_not_match_player){
+    if (at_least_one_surrounding_pieces_does_not_match_player) {
         return false;
     }
 
-    console.warn(`${placed_piece_object.getPlayer} player won by all pieces`);
-    return true;
+    return `${placed_piece_object.getPlayer} player won by placing all pieces`;
 
 }
 
 
-function checkGranKanFlower(piece){
+function checkGranKanFlower(piece) {
     //Checks if all placed pieces made the "Gran Kan flower".
     //The condition of Gran Kan flower is that 7 pieces must be clustered together, 
-    //it must include the Qudak piece,
+    const placed_pieces = PIECE_ARRAY.filter((filtered_piece) => filtered_piece.getPlayer == piece.getPlayer && filtered_piece.getCellId != null).length;
+    if (placed_pieces < 7) {
+        // Not enough pieces placed. 
+        // Since the following algorithm is memory intensive, it's preferable to skip if this condition is not matched.
+        return false;
+    }
+
     // There must be a center piece, and the remaining 6 pieces surrounding that piece.
     let granKanMade = false;
     let cellObject = CELL_ARRAY.find((cell) => cell.getCellId == piece.getCellId);
 
-    console.log('entro a validar flor gran kan')
+    console.log('entro a validar flor gran kan');
 
     //Gets an array based an all surrounding pieces.
     const surrounding_pieces = checkSurroundingsPieces(cellObject);
-    console.log('valido las siguientes celdas');
+    console.log('surrounding pieces ');
     console.log(surrounding_pieces);
+
+    let different_player = surrounding_pieces.some((piece) => piece.getPlayer != cellObject.getPlayer);
+    if (surrounding_pieces.length == 6 && !different_player) {
+        //Player is placing center piece.
+        return true;
+    }
+
     surrounding_pieces.some((surrounding_piece) => {
         //Checks for each surrounding piece it's surroundings
         const surrounding_piece_cell_position_object = CELL_ARRAY.find((recursive_cell) => recursive_cell.getCellId == surrounding_piece.getCellId);
         const surroundings_pieces_of_surrounding_cell = checkSurroundingsPieces(surrounding_piece_cell_position_object);
         console.log(`checking cell: ${surrounding_piece_cell_position_object.getCellId}`);
+        console.log('surrounding pieces of surrounding cells');
         console.log(surroundings_pieces_of_surrounding_cell);
 
         //Checks if all pieces are of the same player
         let different_player = surroundings_pieces_of_surrounding_cell.some((piece) => piece.getPlayer != surrounding_piece.getPlayer);
-        if (different_player){
+        if (different_player) {
             return false;
         }
 
-        if (surroundings_pieces_of_surrounding_cell.length == 6){
-            //it needs to check if the qudak is included
-            if(surroundings_pieces_of_surrounding_cell.some((piece) => piece.getPieceId == 5) || surrounding_piece.getPieceId == 5){
+        if (surroundings_pieces_of_surrounding_cell.length == 6) {
+            // Remember that the length is calculated by surrounding cells. It doesnt aknowledge self. 
+            // It's 6 surrounding pieces + self. 
+
+            granKanMade = true;
+
+            /*
+            //It doesn't need to include the Qudak piece, if the rules change, uncomment this
+            if (surroundings_pieces_of_surrounding_cell.some((piece) => piece.getPieceId == 5) || surrounding_piece.getPieceId == 5) {
                 granKanMade = true;
             }
+            */
         }
         return granKanMade;
     });
     return granKanMade;
+}
+
+function checkAndRemoveAdversaryPiece(piece_to_be_placed, surrounding_pieces) {
+    //This function checks if there's an adversary piece surrounding current piece
+    //If so, chechs if there's two or more current player pieces surrounding that adversary piece.
+    //If all checks, removes the adversary piece
+    console.log('goint to check if should remove adversary piece');
+    console.log('surrounding pieces array:');
+    console.log(surrounding_pieces);
+
+    //Checks if at least there are two same player pieces
+    const two_same_player_pieces = surrounding_pieces.some((surrounding_piece) => surrounding_piece.getPlayer == piece_to_be_placed.getPlayer);
+
+    if (!two_same_player_pieces) {
+        console.error('NOT two_same_player_pieces');
+        return false;
+    }
+
+    //Checks if there's an adversary player piece
+    const surrounding_adversary_piece = surrounding_pieces.find((surrounding_piece) => surrounding_piece.getPlayer != piece_to_be_placed.getPlayer)
+
+    if (!surrounding_adversary_piece) {
+        console.error('NOT surrounding_adversary_piece')
+        return false;
+    }
+
+    //Get's adversary piece surroundings 
+    const surroundings_of_surrounding_adversary_piece = checkSurroundingsPieces(surrounding_adversary_piece);
+
+    //Checks if the adversary piece is surrounded by player
+    const surrounded_piece = surroundings_of_surrounding_adversary_piece.filter((surrounding_piece) => surrounding_piece.getPlayer == piece_to_be_placed.getPlayer);
+
+    if (!surrounded_piece.length) {
+        console.error('NOT surrounded_piece.length');
+        return false;
+    }
+
+    //found a surrounded piece. Should remove from board
+    let cell_where_piece_was_placed = CELL_ARRAY.find((cell) => cell.getCellId === surrounded_piece.getCellId);
+    cell_where_piece_was_placed.setIsEmpty = true;
+    surrounded_piece.setCellId = null;
+    sychronizeWithArray(PIECE_ARRAY, surrounded_piece, DATA_TYPES.PIECE);
+    sychronizeWithArray(CELL_ARRAY, cell_where_piece_was_placed, DATA_TYPES.CELL);
+
+    const piece_element = returnPieceElementFromObjectEquivalent(surrounded_piece);
+    if (!piece_element) {
+        console.error('Could not find piece in board. This is an error');
+        return;
+    }
+
+    piece_element.style.position = 'absolute';
+    piece_element.style.top = document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - HEX_HEIGHT + document.querySelectorAll('#player1 h2')[0].offsetHeight;
+
+    if (surrounded_piece.getPlayer == PLAYERS.BLACK) {
+        piece_element.style.left = `${HEX_WIDTH}px`;
+    } else {
+        piece_element.style.right = `${HEX_WIDTH}px`;
+    }
+
+    console.warn('piece removed');
+
 }

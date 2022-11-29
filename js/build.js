@@ -107,16 +107,15 @@ function defineCellSurroundings(cellToBeSaved) {
 
 function checkEmptyPosition(position_X, position_Y) {
     //Checks if position in board is occupied, if so, reutns false
-    let position_empty = true;
 
-    for (let i = 0; i < CELL_ARRAY.length; i++) {
-        if (CELL_ARRAY[i].getPosX == position_X && CELL_ARRAY[i].getPosY == position_Y) {
-            position_empty = false;
-            return position_empty;
-        }
-    }
+    return !CELL_ARRAY.some((cell) => {
+        // checks surroundings wit +/- 0.01
 
-    return position_empty;
+        let x_pos_is_in_range = cell.getPosX <= position_X + 0.01 && cell.getPosX >= position_X - 0.01
+        let y_pos_is_in_range = cell.getPosY <= position_Y + 0.01 && cell.getPosY >= position_Y - 0.01
+
+        return x_pos_is_in_range && y_pos_is_in_range
+    });
 }
 
 let hexcount = 0;
@@ -144,9 +143,9 @@ function createPieces() {
     console.error('Tenemos que consultar si el usuario ya jugó antes (es decir, verificar si existe algo en el localStorage. Si es así, no debemos cargar el tablero de cero, sino utilizar la data que se encuentra en el localStorage.');
     let piecenumber = 1;
     let playercolor = PLAYERS.BLACK;
-    for (let i = 1; i <= 24; i++) {
+    for (let i = 1; i <= 22; i++) {
         PIECE_ARRAY.push(new Piece(piecenumber, playercolor));
-        if (piecenumber == 12) {
+        if (piecenumber == 11) {
             piecenumber = 1;
             playercolor = PLAYERS.WHITE;
         } else {
@@ -214,5 +213,5 @@ function initialize(max_layers) {
 window.onload = function () {
     console.log('inicializando...');
     initialize(LAYERS);
-    //console.log(CELL_ARRAY);
+
 };
