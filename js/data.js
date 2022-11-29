@@ -22,7 +22,7 @@ const PLAYERS = {
     WHITE: 'white',
 }
 
-let curren_player_turn = PLAYERS.WHITE;
+let current_player_turn = PLAYERS.WHITE;
 
 const DATA_TYPES = {
     CELL: 'CELL',

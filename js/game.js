@@ -35,12 +35,12 @@ function movePiece(e) {
         // This places a piece over a board cell. It does not validates if this movement can be done. For that, it calls the validation function
 
         e.stopPropagation();
-        if (!e.target.classList.contains('hex-clip') && !e.target.classList.contains('rotation_buttons')) {
+        if (!e.target.classList.contains('hex-clip') && !e.target.classList.contains('ui_operation_buttons')) {
             // If it's not a board cell, then the piece is dropped, but not snapped to any cell.
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('click', releasepiece);
             //Placing is done, enables movePiece again
-            allowMovementForPlayer(changeTurn());
+            changeTurn();
             removeRotationButtons();
             return;
         }
@@ -68,7 +68,7 @@ function movePiece(e) {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('click', releasepiece);
             //Placing is done, enables movePiece again
-            allowMovementForPlayer(changeTurn());
+            changeTurn();
 
             //Checks if it's win condition
             let win_message = checkWinCondition(selected_piece_object);
@@ -86,7 +86,9 @@ function movePiece(e) {
             const selected_cell = document.getElementById(e.target.id);
             if (selected_cell.classList.contains('hex-clip')) {
                 selected_cell.classList.remove("invalidPiecePlacement");
-                selected_cell.classList.add("invalidPiecePlacement");
+                setTimeout(() =>{
+                    selected_cell.classList.add("invalidPiecePlacement");
+                }, 10);
             }
         }
 
@@ -373,7 +375,7 @@ function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, 
 }
 
 function checkCurrentTurn() {
-    return curren_player_turn;
+    return current_player_turn;
 }
 
 function allowMovementForPlayer(player) {
@@ -407,5 +409,11 @@ function pieceMoviengDisableAllOther() {
 }
 
 function changeTurn() {
-    return curren_player_turn = curren_player_turn == PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
+    //There may be a piece currently moving, should finish that movement
+    
+    
+    rotateSkipButton();
+    current_player_turn = current_player_turn == PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
+    allowMovementForPlayer(current_player_turn);
+    return current_player_turn;
 }

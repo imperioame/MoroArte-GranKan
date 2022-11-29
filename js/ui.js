@@ -2,14 +2,14 @@ function addRotationButtons() {
     //Buttons are not present, here they will be created, assigned functionality, and placed
     let rotate_left_button_element = document.createElement('div');
     rotate_left_button_element.id = 'rotate_left';
-    rotate_left_button_element.classList.add('rotation_buttons');
+    rotate_left_button_element.classList.add('ui_operation_buttons');
     rotate_left_button_element.innerHTML = 'Rotate <br> left';
     rotate_left_button_element.addEventListener('click', rotatePieceLeft);
     CONTROLS_SELECTION.appendChild(rotate_left_button_element);
 
     let rotate_right_button_element = document.createElement('div');
     rotate_right_button_element.id = 'rotate_right';
-    rotate_right_button_element.classList.add('rotation_buttons');
+    rotate_right_button_element.classList.add('ui_operation_buttons');
     rotate_right_button_element.innerHTML = 'Rotate <br> right';
     rotate_right_button_element.addEventListener('click', rotatePieceRight);
     CONTROLS_SELECTION.appendChild(rotate_right_button_element);
@@ -84,4 +84,29 @@ function closeNotification(e) {
     }
 
     notification_container.remove();
+}
+
+
+function createSkipTurnButton() {
+    //Creates an ui button to skip turn
+    let div = document.createElement('div');
+    div.id = 'skip_button';
+    div.classList.add('ui_operation_buttons');
+    div.innerHTML = 'Skip <br> turn';
+    div.style.right = `${document.getElementsByClassName('pieces_board')[0].offsetWidth + HEX_WIDTH}px`;
+
+    div.addEventListener('click', changeTurn);
+    CONTROLS_SELECTION.appendChild(div);
+}
+
+function rotateSkipButton() {
+    //Rotates the ui 'skip turn' button to match player's side
+    const skip_button = document.getElementById('skip_button');
+    if (checkCurrentTurn() == PLAYERS.BLACK) {
+        skip_button.style.right = `${document.getElementsByClassName('pieces_board')[0].offsetWidth + HEX_WIDTH}px`;
+        skip_button.style.removeProperty('left');
+    } else {
+        skip_button.style.left = `${document.getElementsByClassName('pieces_board')[0].offsetWidth + HEX_WIDTH}px`;
+        skip_button.style.removeProperty('right');
+    }
 }

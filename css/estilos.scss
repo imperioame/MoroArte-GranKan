@@ -168,7 +168,7 @@ aside h2 {
     justify-content: center;
 }
 
-.rotation_buttons{
+.ui_operation_buttons{
     width: $hex_size;
     height: $hex_size;
     background-color: rgb(204, 204, 204);
@@ -180,7 +180,10 @@ aside h2 {
     justify-content:space-around;
     flex-direction: column;
     cursor: pointer;
+}
 
+#skip_button{
+    position: absolute;
 }
 
 #gray_overlay{

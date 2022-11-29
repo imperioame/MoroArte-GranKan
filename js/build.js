@@ -204,6 +204,7 @@ function createDomPiece(pieceObject) {
 function initialize(max_layers) {
     recursiveHexagon(CENTER_X, CENTER_Y, max_layers, RAD);
     createPieces();
+    createSkipTurnButton();
 }
 
 window.onload = function () {
