@@ -235,7 +235,6 @@ function checkWinCondition(placed_piece_object) {
     //This function checks if the current movement made the player win.
     //If true, returns win message.
     //First, it checks the flower, since it doesnt need all pieces, just 7 to be made.
-    console.log('checking win condition');
     let playerwon_by_gran_kan_flower = checkGranKanFlower(placed_piece_object);
     if (playerwon_by_gran_kan_flower) {
         return `${placed_piece_object.getPlayer} player won by gran kan flower`;
@@ -274,12 +273,8 @@ function checkGranKanFlower(piece) {
     let granKanMade = false;
     let cellObject = CELL_ARRAY.find((cell) => cell.getCellId == piece.getCellId);
 
-    console.log('entro a validar flor gran kan');
-
     //Gets an array based an all surrounding pieces.
     const surrounding_pieces = checkSurroundingsPieces(cellObject);
-    console.log('surrounding pieces ');
-    console.log(surrounding_pieces);
 
     let different_player = surrounding_pieces.some((piece) => piece.getPlayer != cellObject.getPlayer);
     if (surrounding_pieces.length == 6 && !different_player) {
@@ -291,10 +286,7 @@ function checkGranKanFlower(piece) {
         //Checks for each surrounding piece it's surroundings
         const surrounding_piece_cell_position_object = CELL_ARRAY.find((recursive_cell) => recursive_cell.getCellId == surrounding_piece.getCellId);
         const surroundings_pieces_of_surrounding_cell = checkSurroundingsPieces(surrounding_piece_cell_position_object);
-        console.log(`checking cell: ${surrounding_piece_cell_position_object.getCellId}`);
-        console.log('surrounding pieces of surrounding cells');
-        console.log(surroundings_pieces_of_surrounding_cell);
-
+     
         //Checks if all pieces are of the same player
         let different_player = surroundings_pieces_of_surrounding_cell.some((piece) => piece.getPlayer != surrounding_piece.getPlayer);
         if (different_player) {
@@ -336,12 +328,6 @@ function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, 
             return;
         }
 
-        //Up to this point, the "placed_piece_object" is not placed.
-        //So it doesnt get checked to be added. Must be done manually
-        if (surrounding_enemies_array[0].getPlayer == placed_piece_object.getPlayer) {
-            how_many_surrounding_enemies++;
-        }
-
         if (how_many_surrounding_enemies >= 2) {
             //piece surrounded by enemies.
             surrounded_piece_to_be_removed = surrounding_piece;
@@ -357,7 +343,6 @@ function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, 
         const surrounding_enemies_array = its_surroundings.filter((its_surrounding_piece) => its_surrounding_piece.getPlayer != placed_piece_object.getPlayer);
 
         let how_many_surrounding_enemies = surrounding_enemies_array.length;
-        console.warn(how_many_surrounding_enemies);
         if (!how_many_surrounding_enemies) {
             //nothing here. should return
             return;
@@ -370,7 +355,6 @@ function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, 
         }
 
         if (!surrounded_piece_to_be_removed) {
-            console.warn('nothing found');
             //nothig to do
             return;
         }
@@ -378,7 +362,6 @@ function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, 
 
     //found a surrounded piece. Should remove from board
     let cell_where_piece_was_placed = CELL_ARRAY.find((cell) => cell.getCellId === surrounded_piece_to_be_removed.getCellId);
-    console.warn(cell_where_piece_was_placed);
     if (cell_where_piece_was_placed != null && cell_where_piece_was_placed != undefined) {
         //Remember that if the surrounded piece was the current piece, it was not placed yet.
         cell_where_piece_was_placed.setIsEmpty = true;
@@ -396,5 +379,4 @@ function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, 
     piece_element.style.top = document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - HEX_HEIGHT + document.querySelectorAll('#player1 h2')[0].offsetHeight;
     piece_element.style.left = `${HEX_WIDTH}px`;
 
-    console.warn('piece removed');
 }
