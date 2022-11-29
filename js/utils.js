@@ -11,6 +11,13 @@ function returnPieceElementFromObjectEquivalent(piece_object) {
     return document.getElementById(`Player_${piece_object.getPlayer}-Piece_${piece_object.getPieceId}`);
 }
 
+function returnCellObjectFromElementEquivalent(cell_element){
+    //Recieves a dom element cell and returns it's equivalent's object
+    return CELL_ARRAY.find((cell) => {
+        return cell.getCellId == cell_element.id
+    });
+}
+
 function sychronizeWithArray(arrayToBeSynchronized, updatedObject, dataType) {
     //This function receives an array and an object that should be same type as array objects, finds it's own position in array and updates itself 
     arrayToBeSynchronized.forEach((element, index) => {

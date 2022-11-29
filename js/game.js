@@ -83,6 +83,8 @@ function movePiece(e) {
                 console.warn(win_message);
             }
 
+            //Now, after placing, it checks if some surrounding piece needs to be removed. It also checks if SELF needed to be removed (called 'suicide')
+            checkAndRemoveSurroundedPiece(selected_piece_object, checkSurroundingsPieces(selected_cell_object), selected_cell_object);
 
             removeRotationButtons();
         } else {
@@ -134,11 +136,6 @@ function validPiecePlacing(clickedCellElement, movingPieceObject) {
                 validPlacing = movingPieceObject[defined_getter] == value[defined_oposite_getter];
             }
         });
-
-        //If placing was valid, checks if it should remove an adversary piece
-        if (validPlacing) {
-            checkAndRemoveSurroundedPiece(selected_piece_object, piecesPlacedInSurroundingCellsArray);
-        }
 
         return validPlacing;
     }
@@ -322,11 +319,8 @@ function checkGranKanFlower(piece) {
     return granKanMade;
 }
 
-function checkAndRemoveSurroundedPiece(piece_to_be_placed, surrounding_pieces) {
+function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, placed_cell_object) {
     //This function checks if there's any player surrounding an adversary piece
-    console.log('goint to check if should remove adversary piece');
-    console.log('surrounding pieces array:');
-    console.log(surrounding_pieces);
 
     //It first checks for all surrounding pieces, if THEY are surrounded.
     let surrounded_piece_to_be_removed;
@@ -334,19 +328,17 @@ function checkAndRemoveSurroundedPiece(piece_to_be_placed, surrounding_pieces) {
         let cell_object = CELL_ARRAY.find((cell) => cell.getCellId == surrounding_piece.getCellId);
 
         const its_surroundings = checkSurroundingsPieces(cell_object);
-        console.warn(its_surroundings);
-        let surrounding_enemies_array = its_surroundings.filter((its_surrounding_piece) => its_surrounding_piece.getPlayer != surrounding_piece.getPlayer);
+        const surrounding_enemies_array = its_surroundings.filter((its_surrounding_piece) => its_surrounding_piece.getPlayer != surrounding_piece.getPlayer);
 
         let how_many_surrounding_enemies = surrounding_enemies_array.length;
         if (!how_many_surrounding_enemies) {
-            console.log('surrounding_enemies_array is empty. No enemies surround this piece')
             //nothing here. should return
             return;
         }
 
-        //Up to this point, the "piece_to_be_placed" is not placed.
+        //Up to this point, the "placed_piece_object" is not placed.
         //So it doesnt get checked to be added. Must be done manually
-        if (surrounding_enemies_array[0].getPlayer == piece_to_be_placed.getPlayer) {
+        if (surrounding_enemies_array[0].getPlayer == placed_piece_object.getPlayer) {
             how_many_surrounding_enemies++;
         }
 
@@ -357,18 +349,43 @@ function checkAndRemoveSurroundedPiece(piece_to_be_placed, surrounding_pieces) {
     });
 
     if (!surrounded_piece_to_be_removed) {
-        console.warn('nothing found');
-        //nothig to do
-        return;
+        //The algorithm checked if surrounding pieces where surrounded.
+        //Now, it has to check if self is surrounded
+        //By game rules, 'suicide' is allowed.
+
+        const its_surroundings = checkSurroundingsPieces(placed_cell_object);
+        const surrounding_enemies_array = its_surroundings.filter((its_surrounding_piece) => its_surrounding_piece.getPlayer != placed_piece_object.getPlayer);
+
+        let how_many_surrounding_enemies = surrounding_enemies_array.length;
+        console.warn(how_many_surrounding_enemies);
+        if (!how_many_surrounding_enemies) {
+            //nothing here. should return
+            return;
+        }
+
+        if (how_many_surrounding_enemies >= 2) {
+            //piece surrounded by enemies.
+            surrounded_piece_to_be_removed = placed_piece_object;
+            self_removed = true;
+        }
+
+        if (!surrounded_piece_to_be_removed) {
+            console.warn('nothing found');
+            //nothig to do
+            return;
+        }
     }
 
     //found a surrounded piece. Should remove from board
     let cell_where_piece_was_placed = CELL_ARRAY.find((cell) => cell.getCellId === surrounded_piece_to_be_removed.getCellId);
-    cell_where_piece_was_placed.setIsEmpty = true;
-    surrounded_piece_to_be_removed.setCellId = null;
+    console.warn(cell_where_piece_was_placed);
+    if (cell_where_piece_was_placed != null && cell_where_piece_was_placed != undefined) {
+        //Remember that if the surrounded piece was the current piece, it was not placed yet.
+        cell_where_piece_was_placed.setIsEmpty = true;
+        surrounded_piece_to_be_removed.setCellId = null;
+        sychronizeWithArray(CELL_ARRAY, cell_where_piece_was_placed, DATA_TYPES.CELL);
+    }
     sychronizeWithArray(PIECE_ARRAY, surrounded_piece_to_be_removed, DATA_TYPES.PIECE);
-    sychronizeWithArray(CELL_ARRAY, cell_where_piece_was_placed, DATA_TYPES.CELL);
-
     const piece_element = returnPieceElementFromObjectEquivalent(surrounded_piece_to_be_removed);
     if (!piece_element) {
         console.error('Could not find piece in board. This is an error');
@@ -377,66 +394,7 @@ function checkAndRemoveSurroundedPiece(piece_to_be_placed, surrounding_pieces) {
 
     piece_element.style.position = 'absolute';
     piece_element.style.top = document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - HEX_HEIGHT + document.querySelectorAll('#player1 h2')[0].offsetHeight;
-
-    if (surrounded_piece_to_be_removed.getPlayer == PLAYERS.BLACK) {
-        piece_element.style.left = `${HEX_WIDTH}px`;
-    } else {
-        piece_element.style.right = `${HEX_WIDTH}px`;
-    }
+    piece_element.style.left = `${HEX_WIDTH}px`;
 
     console.warn('piece removed');
-
-
-    /*
-        //Checks if at least there are two same player pieces
-        const two_same_player_pieces = surrounding_pieces.some((surrounding_piece) => surrounding_piece.getPlayer == piece_to_be_placed.getPlayer);
-
-        if (!two_same_player_pieces) {
-            console.error('NOT two_same_player_pieces');
-            return false;
-        }
-
-        //Checks if there's an adversary player piece
-        const surrounding_adversary_piece = surrounding_pieces.find((surrounding_piece) => surrounding_piece.getPlayer != piece_to_be_placed.getPlayer)
-
-        if (!surrounding_adversary_piece) {
-            console.error('NOT surrounding_adversary_piece')
-            return false;
-        }
-
-        //Get's adversary piece surroundings 
-        const surroundings_of_surrounding_adversary_piece = checkSurroundingsPieces(surrounding_adversary_piece);
-
-        //Checks if the adversary piece is surrounded by player
-        const surrounded_piece = surroundings_of_surrounding_adversary_piece.filter((surrounding_piece) => surrounding_piece.getPlayer == piece_to_be_placed.getPlayer);
-
-        if (!surrounded_piece.length) {
-            console.error('NOT surrounded_piece.length');
-            return false;
-        }
-
-        //found a surrounded piece. Should remove from board
-        let cell_where_piece_was_placed = CELL_ARRAY.find((cell) => cell.getCellId === surrounded_piece.getCellId);
-        cell_where_piece_was_placed.setIsEmpty = true;
-        surrounded_piece.setCellId = null;
-        sychronizeWithArray(PIECE_ARRAY, surrounded_piece, DATA_TYPES.PIECE);
-        sychronizeWithArray(CELL_ARRAY, cell_where_piece_was_placed, DATA_TYPES.CELL);
-
-        const piece_element = returnPieceElementFromObjectEquivalent(surrounded_piece);
-        if (!piece_element) {
-            console.error('Could not find piece in board. This is an error');
-            return;
-        }
-
-        piece_element.style.position = 'absolute';
-        piece_element.style.top = document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - HEX_HEIGHT + document.querySelectorAll('#player1 h2')[0].offsetHeight;
-
-        if (surrounded_piece.getPlayer == PLAYERS.BLACK) {
-            piece_element.style.left = `${HEX_WIDTH}px`;
-        } else {
-            piece_element.style.right = `${HEX_WIDTH}px`;
-        }
-
-        console.warn('piece removed');
-    */
 }
