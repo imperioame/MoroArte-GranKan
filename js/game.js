@@ -20,10 +20,8 @@ function movePiece(e) {
     }
 
     //Disables piece movement over all other pieces. Cannot move more than one piece at a time.
-    const allDomPieces = document.getElementsByClassName('cover_div');
-    for (let i = 0; i < allDomPieces.length; i++) {
-        allDomPieces[i].removeEventListener("click", movePiece);
-    }
+    pieceMoviengDisableAllOther();
+
 
     e.stopPropagation();
     selected_piece_element.style.position = 'fixed';
@@ -42,9 +40,7 @@ function movePiece(e) {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('click', releasepiece);
             //Placing is done, enables movePiece again
-            for (let i = 0; i < allDomPieces.length; i++) {
-                allDomPieces[i].addEventListener("click", movePiece);
-            }
+            allowMovementForPlayer(changeTurn());
             removeRotationButtons();
             return;
         }
@@ -72,9 +68,7 @@ function movePiece(e) {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('click', releasepiece);
             //Placing is done, enables movePiece again
-            for (let i = 0; i < allDomPieces.length; i++) {
-                allDomPieces[i].addEventListener("click", movePiece);
-            }
+            allowMovementForPlayer(changeTurn());
 
             //Checks if it's win condition
             let win_message = checkWinCondition(selected_piece_object);
@@ -183,7 +177,6 @@ function orderSurroundingPieces(cellObject, piecesArray) {
     return surroundingPiecesArray;
 }
 
-
 function rotatePieceRight() {
     //This function rotates a piece
     if (!selected_piece_element && !selected_piece_object) {
@@ -230,7 +223,6 @@ function rotatePieceLeft() {
     sychronizeWithArray(PIECE_ARRAY, selected_piece_object, DATA_TYPES.PIECE);
 }
 
-
 function checkWinCondition(placed_piece_object) {
     //This function checks if the current movement made the player win.
     //If true, returns win message.
@@ -257,7 +249,6 @@ function checkWinCondition(placed_piece_object) {
     return `${placed_piece_object.getPlayer} player won by placing all pieces`;
 
 }
-
 
 function checkGranKanFlower(piece) {
     //Checks if all placed pieces made the "Gran Kan flower".
@@ -286,7 +277,7 @@ function checkGranKanFlower(piece) {
         //Checks for each surrounding piece it's surroundings
         const surrounding_piece_cell_position_object = CELL_ARRAY.find((recursive_cell) => recursive_cell.getCellId == surrounding_piece.getCellId);
         const surroundings_pieces_of_surrounding_cell = checkSurroundingsPieces(surrounding_piece_cell_position_object);
-     
+
         //Checks if all pieces are of the same player
         let different_player = surroundings_pieces_of_surrounding_cell.some((piece) => piece.getPlayer != surrounding_piece.getPlayer);
         if (different_player) {
@@ -379,4 +370,42 @@ function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, 
     piece_element.style.top = document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - HEX_HEIGHT + document.querySelectorAll('#player1 h2')[0].offsetHeight;
     piece_element.style.left = `${HEX_WIDTH}px`;
 
+}
+
+function checkCurrentTurn() {
+    return curren_player_turn;
+}
+
+function allowMovementForPlayer(player) {
+    // This function recieves a player and adds function 'movepiece' for all pieces of that player
+    const allDomPieces = document.getElementsByClassName('cover_div');
+    for (let i = 0; i < allDomPieces.length; i++) {
+        if (allDomPieces[i].parentNode.dataset.piece_player_color == player) {
+            allDomPieces[i].addEventListener("click", movePiece);
+            allDomPieces[i].classList.remove('disabled_piece');
+        } else {
+            //Also disables opposite player movements
+            allDomPieces[i].removeEventListener("click", movePiece);
+            // Also grays out disabled pieces
+            allDomPieces[i].classList.add('disabled_piece');
+        }
+    }
+}
+
+function pieceMoviengDisableAllOther() {
+    //Disables piece movement for all pieces.
+    const allDomPieces = document.getElementsByClassName('cover_div');
+    for (let i = 0; i < allDomPieces.length; i++) {
+        //The only one that does not get grayed is self.
+        if (allDomPieces[i].parentNode != selected_piece_element){
+            allDomPieces[i].removeEventListener("click", movePiece);
+            //Adds grayed out to show it's locked
+            allDomPieces[i].classList.add('disabled_piece');
+        }
+
+    }
+}
+
+function changeTurn() {
+    return curren_player_turn = curren_player_turn == PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
 }

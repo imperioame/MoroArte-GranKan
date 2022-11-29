@@ -119,6 +119,10 @@ aside h2 {
     }
 }
 
+.disabled_piece{
+    background-color: rgba(105, 105, 105, 0.562);
+}
+
 .black_player_piece {
     color: $piece_white_color;
     background-color: $piece_black_color;

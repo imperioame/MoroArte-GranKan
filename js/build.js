@@ -153,6 +153,8 @@ function createPieces() {
         }
         //Create piece in DOM and distribute it in aside
         createDomPiece(PIECE_ARRAY[PIECE_ARRAY.length - 1]);
+        //Adds movement functionality for all FIRST PLAYER pieces.
+        allowMovementForPlayer(checkCurrentTurn());
     }
     //console.log(PIECE_ARRAY);
 }
@@ -192,13 +194,7 @@ function createDomPiece(pieceObject) {
     //Creates a transparent element to cover svg, and hosts functionality (onclicks)
     let coverDiv = document.createElement('div');
     coverDiv.className = 'cover_div';
-
-    //Removes previous event listeners (if it had)
-    //piece.replaceWith(piece.cloneNode(true));
-    coverDiv.addEventListener("click", movePiece);
-
     piece.appendChild(coverDiv);
-
 
     //Place it in correspondent players aside
     let playerAside = pieceObject.getPlayer == PLAYERS.BLACK ? document.getElementById('player1').getElementsByClassName('pieces_board')[0] : document.getElementById('player2').getElementsByClassName('pieces_board')[0];
