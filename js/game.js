@@ -40,7 +40,7 @@ function movePiece(e) {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('click', releasepiece);
             //Placing is done, enables movePiece again
-            changeTurn();
+            allowMovementForPlayer(checkCurrentTurn());
             removeRotationButtons();
             return;
         }
