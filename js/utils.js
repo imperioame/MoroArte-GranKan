@@ -8,7 +8,7 @@ function returnPieceObjectFromElementEquivalent(piece_element) {
 
 function returnPieceElementFromObjectEquivalent(piece_object) {
     //Recieves a piece object and returns it's equivalent's element
-    return document.getPieceId(`Player_${piece_object.getPlayer}-Piece_${piece_object.getPieceId}`);
+    return document.getElementById(`Player_${piece_object.getPlayer}-Piece_${piece_object.getPieceId}`);
 }
 
 function sychronizeWithArray(arrayToBeSynchronized, updatedObject, dataType) {
