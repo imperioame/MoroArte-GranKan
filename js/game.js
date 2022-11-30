@@ -5,6 +5,13 @@ function movePiece(e) {
     selected_piece_element = document.getElementById(correct_target_piece.id);
     selected_piece_object = returnPieceObjectFromElementEquivalent(selected_piece_element);
 
+    //If selected piece was placed in a cell, then it's a remove operation. 
+    //In this case, player can only do this action.
+    if (selected_piece_object.getCellId) {
+        releasepiece();
+        return;
+    }
+
     updatePieceZIndex(selected_piece_object);
     addRotationButtons();
 
@@ -46,6 +53,12 @@ function releasepiece(e) {
         allowMovementForPlayer(checkCurrentTurn());
         removeRotationButtons();
         moving_a_piece = false;
+
+        if (selected_piece_object.getCellId) {
+            //this is the situation where a piece is beign removed from the board.
+            removePiece(selected_piece_object);
+            changeTurn();
+        }
         return;
     }
 
@@ -110,6 +123,31 @@ function releasepiece(e) {
     }
 
     moving_a_piece = false;
+}
+
+function removePiece(pice_to_be_removed) {
+    let cell_where_piece_was_placed = CELL_ARRAY.find((cell) => cell.getCellId === pice_to_be_removed.getCellId);
+    if (cell_where_piece_was_placed != null && cell_where_piece_was_placed != undefined) {
+        //Remember that if the surrounded piece was the current piece, it was not placed yet.
+        cell_where_piece_was_placed.setIsEmpty = true;
+        pice_to_be_removed.setCellId = null;
+        sychronizeWithArray(CELL_ARRAY, cell_where_piece_was_placed, DATA_TYPES.CELL);
+    }
+    sychronizeWithArray(PIECE_ARRAY, pice_to_be_removed, DATA_TYPES.PIECE);
+    const piece_element = returnPieceElementFromObjectEquivalent(pice_to_be_removed);
+    if (!piece_element) {
+        console.error('Could not find piece in board. This is an error');
+        return;
+    }
+
+    // Movement done, it removes the 'follow mouse' functionality when piece is selected
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('click', releasepiece);
+
+    piece_element.style.position = 'absolute';
+    piece_element.style.top = document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - HEX_HEIGHT + document.querySelectorAll('#player1 h2')[0].offsetHeight;
+    piece_element.style.left = `${HEX_WIDTH}px`;
+
 }
 
 function validPiecePlacing(clickedCellElement, movingPieceObject) {
@@ -178,7 +216,7 @@ function checkSurroundingsPieces(cellObject) {
 
 function orderSurroundingPieces(cellObject, piecesArray) {
     //Recieves a pre-filtered array and a cell, and sorts the elements in the array according to position relative to cell.
-    //Returns new associative array with correct positions (relative to cell) 
+    //Returns new associative array with correct positions (relative to cell)
 
     const surroundingPiecesArray = new Map([
         [DIRECTION_TYPES.TOP_LEFT, piecesArray.find((piece) => piece.getCellId === cellObject.getcell_top_left) || null],
@@ -372,27 +410,11 @@ function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, 
     }
 
     //found a surrounded piece. Should remove from board
-    let cell_where_piece_was_placed = CELL_ARRAY.find((cell) => cell.getCellId === surrounded_piece_to_be_removed.getCellId);
-    if (cell_where_piece_was_placed != null && cell_where_piece_was_placed != undefined) {
-        //Remember that if the surrounded piece was the current piece, it was not placed yet.
-        cell_where_piece_was_placed.setIsEmpty = true;
-        surrounded_piece_to_be_removed.setCellId = null;
-        sychronizeWithArray(CELL_ARRAY, cell_where_piece_was_placed, DATA_TYPES.CELL);
-    }
-    sychronizeWithArray(PIECE_ARRAY, surrounded_piece_to_be_removed, DATA_TYPES.PIECE);
-    const piece_element = returnPieceElementFromObjectEquivalent(surrounded_piece_to_be_removed);
-    if (!piece_element) {
-        console.error('Could not find piece in board. This is an error');
-        return;
-    }
-
-    piece_element.style.position = 'absolute';
-    piece_element.style.top = document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - HEX_HEIGHT + document.querySelectorAll('#player1 h2')[0].offsetHeight;
-    piece_element.style.left = `${HEX_WIDTH}px`;
+    removePiece(surrounded_piece_to_be_removed);
 
     //If removed piece was Qudak, then is game over for that player.
     if (surrounded_piece_to_be_removed.getPieceId == 5) {
-        win_message = `${surrounded_piece_to_be_removed.getPlayer} Qudak piece was removed. <br> Player ${surrounded_piece_to_be_removed.getPlayer} <b>LOST</b> ` 
+        win_message = `${surrounded_piece_to_be_removed.getPlayer} Qudak piece was removed. <br> Player ${surrounded_piece_to_be_removed.getPlayer} <b>LOST</b> `
         showNotification(win_message, NOTIFICATION_TYPES.VICTORY_MODAL);
         console.warn(win_message);
     }

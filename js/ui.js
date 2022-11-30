@@ -18,8 +18,11 @@ function addRotationButtons() {
 function removeRotationButtons() {
     //Removes the buttons that allows rotation.
     const CONTROLS_SELECTION = document.getElementById('controls');
-    CONTROLS_SELECTION.removeChild(document.getElementById('rotate_right'));
-    CONTROLS_SELECTION.removeChild(document.getElementById('rotate_left'));
+    //This function may be called when removing a piece from board. this buttons may not exist
+    if (document.getElementById('rotate_right')) {
+        CONTROLS_SELECTION.removeChild(document.getElementById('rotate_right'));
+        CONTROLS_SELECTION.removeChild(document.getElementById('rotate_left'));
+    }
 }
 
 
