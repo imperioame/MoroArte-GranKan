@@ -256,6 +256,12 @@ function checkWinCondition(placed_piece_object) {
         return false;
     }
 
+    //Checks if there's an adversary piece next to this one
+    if (checkSurroundingsPieces(cell).some((piece) => piece.getPlayer != placed_piece_object.getPlayer)){
+        console.log('posicionada al lado de una oponente');
+        return false;
+    }
+
     const at_least_one_surrounding_pieces_does_not_match_player = checkSurroundingsPieces(cell).some((piece) => piece.getPlayer != placed_piece_object.getPlayer);
     if (at_least_one_surrounding_pieces_does_not_match_player) {
         return false;
