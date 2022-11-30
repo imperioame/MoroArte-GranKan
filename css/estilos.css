@@ -49,8 +49,8 @@ aside h2 {
 }
 
 .hex-clip {
-  width: 5vw;
-  height: 5vw;
+  width: max(5vw, 5vh);
+  height: max(5vw, 5vh);
   background-color: rgb(20, 117, 182);
   position: fixed;
   text-align: center;
@@ -78,8 +78,8 @@ aside h2 {
 }
 
 .piece {
-  width: 5vw;
-  height: 5vw;
+  width: max(5vw, 5vh);
+  height: max(5vw, 5vh);
   position: fixed;
   text-align: center;
   display: flex;
@@ -93,8 +93,8 @@ aside h2 {
 }
 
 .cover_div {
-  width: 5vw !important;
-  height: 5vw !important;
+  width: max(5vw, 5vh) !important;
+  height: max(5vw, 5vh) !important;
   position: absolute;
 }
 .cover_div::before {
@@ -151,18 +151,19 @@ aside h2 {
 }
 #controls {
   width: 100vw;
-  height: calc(5vw + 50px);
+  height: calc(max(5vw, 5vh) + 50px);
   padding: 25px 0;
   border-top: 5px solid rgb(245, 216, 135);
   position: fixed;
   bottom: 0;
   display: flex;
   justify-content: center;
+  background-color: rgb(253, 249, 213);
 }
 
 .ui_operation_buttons {
-  width: 5vw;
-  height: 5vw;
+  width: max(5vw, 5vh);
+  height: max(5vw, 5vh);
   background-color: rgb(204, 204, 204);
   border: 2px solid dimgray;
   border-radius: 8px;
@@ -200,7 +201,8 @@ aside h2 {
   justify-content: space-between;
   background-color: rgb(247, 245, 228);
 }
-.notification_modal div, .notification_modal header {
+.notification_modal div,
+.notification_modal header {
   display: flex;
   justify-content: center;
   text-align: center;
@@ -237,4 +239,45 @@ aside h2 {
   border-radius: 50%;
   padding: 1em;
   cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+  aside h2 {
+    margin-top: 1rem;
+  }
+  #player1,
+#player2 {
+    height: 15vh;
+    width: 100vw;
+    left: 0;
+  }
+  #player2 {
+    top: 85vh;
+    border-top: 10px double rgb(77, 6, 6);
+    border-left: 0;
+  }
+  #player1 {
+    top: 0;
+    border-right: 0;
+    border-bottom: 10px double rgb(77, 6, 6);
+    background-color: dimgray;
+  }
+  .rotated_player1 {
+    top: 85vh !important;
+    border-top: 10px double rgb(77, 6, 6) !important;
+    background-color: rgb(238, 200, 97) !important;
+    border-bottom: 0 !important;
+  }
+  .rotated_player2 {
+    top: 0 !important;
+    border-bottom: 10px double rgb(77, 6, 6) !important;
+    border-top: 0 !important;
+    background-color: dimgray !important;
+  }
+  #controls {
+    height: calc(max(5vw, 5vh) + 50px);
+    border-bottom: 5px solid rgb(245, 216, 135);
+    position: fixed;
+    top: 15vh;
+  }
 }/*# sourceMappingURL=estilos.css.map */

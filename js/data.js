@@ -1,12 +1,12 @@
 const BOARD = document.getElementById('board');
 const CONTROLS_SELECTION = document.getElementById('controls');
 
-//let w = Math.min(window.innerWidth, window.innerHeight);
+const DIRECTION = window.innerWidth >= window.innerHeight ? 'landscape' : 'portrait';
 //const RAD = w / 5;
 const TAU = Math.PI * 2;
 
 const LAYERS = 2;
-const HEX_WIDTH = window.innerWidth * 0.05;
+const HEX_WIDTH = Math.max(window.innerWidth, window.innerHeight) * 0.05;
 const HEX_HEIGHT = HEX_WIDTH;
 //const HEX_HEIGHT = window.innerHeight * 0.05 + 5;
 const RAD = HEX_WIDTH * 2;

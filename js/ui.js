@@ -96,7 +96,11 @@ function createSkipTurnButton() {
     div.id = 'skip_button';
     div.classList.add('ui_operation_buttons');
     div.innerHTML = 'Skip <br> turn';
-    div.style.right = `${document.getElementsByClassName('pieces_board')[0].offsetWidth + HEX_WIDTH}px`;
+    if (DIRECTION == 'landscape') {
+        div.style.right = `${document.getElementsByClassName('pieces_board')[0].offsetWidth + HEX_WIDTH}px`;
+    } else {
+        div.style.right = `${HEX_WIDTH}px`;
+    }
 
     div.addEventListener('click', changeTurn);
     CONTROLS_SELECTION.appendChild(div);
@@ -105,11 +109,23 @@ function createSkipTurnButton() {
 function rotateSkipButton() {
     //Rotates the ui 'skip turn' button to match player's side
     const skip_button = document.getElementById('skip_button');
+    if(DIRECTION != 'landscape'){
+        return;
+    }
+    
     if (checkCurrentTurn() == PLAYERS.BLACK) {
         skip_button.style.right = `${document.getElementsByClassName('pieces_board')[0].offsetWidth + HEX_WIDTH}px`;
         skip_button.style.removeProperty('left');
+
     } else {
         skip_button.style.left = `${document.getElementsByClassName('pieces_board')[0].offsetWidth + HEX_WIDTH}px`;
         skip_button.style.removeProperty('right');
     }
+}
+
+function rotateBoard() {
+    let player1 = document.getElementById('player1');
+    let player2 = document.getElementById('player2');
+    player1.classList.toggle('rotated_player1');
+    player2.classList.toggle('rotated_player2');
 }

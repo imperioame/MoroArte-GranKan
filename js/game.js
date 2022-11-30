@@ -489,5 +489,10 @@ function changeTurn() {
     rotateSkipButton();
     current_player_turn = current_player_turn == PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
     allowMovementForPlayer(checkCurrentTurn());
+
+    if (DIRECTION == 'portrait'){
+        rotateBoard();
+    }
+
     return current_player_turn;
 }

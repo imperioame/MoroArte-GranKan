@@ -168,10 +168,16 @@ function createDomPiece(pieceObject) {
     piece.dataset.piece_player_color = pieceObject.getPlayer;
 
     piece.style.position = 'absolute';
-    let y_axis = Math.ceil(pieceObject.getPieceId / 2) * (HEX_HEIGHT * 1.15) + document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - (HEX_HEIGHT * 3 * 1.15) + document.querySelectorAll('#player1 h2')[0].offsetHeight;
-    //let y_axis = Math.ceil(pieceObject.getPieceId / 2) * (HEX_HEIGHT * 2) + document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - (HEX_HEIGHT * 3 * 2) + document.querySelectorAll('#player1 h2')[0].offsetHeight;
-    let x_axis = (PIECE_ARRAY.indexOf(pieceObject) % 2) * (HEX_WIDTH * 1.15) + (HEX_WIDTH / 6);
+    let y_axis, x_axis;
+    if (DIRECTION == 'landscape'){
+        y_axis = Math.ceil(pieceObject.getPieceId / 2) * (HEX_HEIGHT * 1.15) + document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - (HEX_HEIGHT * 3 * 1.15) + document.querySelectorAll('#player1 h2')[0].offsetHeight;
+        x_axis = (PIECE_ARRAY.indexOf(pieceObject) % 2) * (HEX_WIDTH * 1.15) + (HEX_WIDTH / 6);
+    }else{
+        x_axis = Math.ceil(pieceObject.getPieceId / 2) * (HEX_WIDTH * 1.15) + document.getElementsByClassName('pieces_board')[0].offsetWidth / 2 - (HEX_WIDTH * 3 * 1.15);
+        y_axis = (PIECE_ARRAY.indexOf(pieceObject) % 2) * (HEX_HEIGHT * 1.15) + (HEX_HEIGHT / 6) + document.querySelectorAll('#player1 h2')[0].offsetHeight + HEX_HEIGHT / 2;
+    }
     piece.style.top = `${y_axis}px`;
+
 
     if (pieceObject.getPlayer == PLAYERS.BLACK) {
         piece.style.left = `${x_axis}px`;

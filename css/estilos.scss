@@ -1,6 +1,6 @@
 //Change size to set RELATIVE appearence
 //It doesnt affect position, just it's appearence. You'd want to modify js/data.js to correct positioning
-$hex_size: 5vw;
+$hex_size: max(5vw,5vh);
 
 
 $cell_color: rgb(20, 117, 182);
@@ -10,6 +10,8 @@ $piece_white_color: white;
 $piece_black_color: black;
 $piece_hover_color: rgb(128, 128, 128);
 $invalid_cell_placing_color: rgb(158, 6, 6);
+$main_background_color: rgb(253, 249, 213);
+$player_aside_color: rgb(238, 200, 97);
 
 * {
     margin: 0;
@@ -34,13 +36,13 @@ aside h2 {
 #board {
     width: 100vw;
     height: 100vh;
-    background-color: rgb(253, 249, 213);
+    background-color: $main_background_color;
     overflow: auto;
 }
 
 #player1,
 #player2 {
-    background-color: rgb(238, 200, 97);
+    background-color: $player_aside_color;
     height: 100vh;
     width: 15vw;
     position: fixed;
@@ -61,7 +63,6 @@ aside h2 {
     border-left: 10px double rgb(77, 6, 6);
 }
 
-// Método para hacerlo con un solo div y clipeado
 .hex-clip {
     width: $hex_size;
     height: $hex_size;
@@ -119,7 +120,7 @@ aside h2 {
     }
 }
 
-.disabled_piece{
+.disabled_piece {
     background-color: rgba(105, 105, 105, 0.562);
 }
 
@@ -141,23 +142,25 @@ aside h2 {
     }
 }
 
-.invalidPiecePlacement{
+.invalidPiecePlacement {
     animation: redHighlight 1s;
 }
 
 @keyframes redHighlight {
-    0%{
+    0% {
         background-color: $cell_color;
     }
-    50%{
+
+    50% {
         background-color: $invalid_cell_placing_color;
     }
-    100%{
+
+    100% {
         background-color: $cell_color;
     }
 }
 
-#controls{
+#controls {
     width: 100vw;
     height: calc($hex_size + 50px);
     padding: 25px 0;
@@ -166,9 +169,10 @@ aside h2 {
     bottom: 0;
     display: flex;
     justify-content: center;
+    background-color: $main_background_color;
 }
 
-.ui_operation_buttons{
+.ui_operation_buttons {
     width: $hex_size;
     height: $hex_size;
     background-color: rgb(204, 204, 204);
@@ -177,16 +181,16 @@ aside h2 {
     box-shadow: 0 0 2px black;
     text-align: center;
     display: flex;
-    justify-content:space-around;
+    justify-content: space-around;
     flex-direction: column;
     cursor: pointer;
 }
 
-#skip_button{
+#skip_button {
     position: absolute;
 }
 
-#gray_overlay{
+#gray_overlay {
     background-color: rgba(105, 105, 105, 0.473);
     width: 100vw;
     height: 100vh;
@@ -195,7 +199,7 @@ aside h2 {
     left: 0;
 }
 
-.notification_modal{
+.notification_modal {
     width: 50vw;
     height: 30vh;
     position: fixed;
@@ -208,34 +212,35 @@ aside h2 {
     justify-content: space-between;
     background-color: rgb(247, 245, 228);
 
-    & div, header{
+    & div,
+    header {
         display: flex;
         justify-content: center;
         text-align: center;
     }
 }
 
-#notifications #notification_header{
+#notifications #notification_header {
     padding: 0.5em;
     font-size: 2em;
 }
 
-#notifications .notification_header_victory{
+#notifications .notification_header_victory {
     color: green;
     font-weight: bold;
 }
 
-#notifications #notification_body{
+#notifications #notification_body {
     //text-align: center;
     //display: flex;
     //justify-content: center;
 }
 
-#notification_footer{
+#notification_footer {
     padding: 1em;
 }
 
-#notification_footer button{
+#notification_footer button {
     padding: 1em;
     border: 0;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.575);
@@ -252,4 +257,55 @@ aside h2 {
     border-radius: 50%;
     padding: 1em;
     cursor: pointer;
+}
+
+
+
+
+@media only screen and (max-width: 768px) {
+
+    aside h2 {
+        margin-top: 1rem;
+    }
+
+    #player1,
+    #player2 {
+        height: 15vh;
+        width: 100vw;
+        left: 0;
+    }
+
+    #player2 {
+        top: 85vh;
+        border-top: 10px double rgb(77, 6, 6);
+        border-left: 0;
+    }
+
+    #player1 {
+        top: 0;
+        border-right: 0;
+        border-bottom: 10px double rgb(77, 6, 6);
+        background-color: dimgray;
+    }
+
+    .rotated_player1{
+        top: 85vh !important;
+        border-top: 10px double rgb(77, 6, 6)  !important;
+        background-color: $player_aside_color !important;
+        border-bottom: 0 !important;
+    }
+
+    .rotated_player2{
+        top: 0  !important;
+        border-bottom: 10px double rgb(77, 6, 6)  !important;
+        border-top: 0 !important;
+        background-color: dimgray !important;
+    }
+
+    #controls {
+        height: calc($hex_size + 50px);
+        border-bottom: 5px solid rgb(245, 216, 135);
+        position: fixed;
+        top: 15vh;
+    }
 }
