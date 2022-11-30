@@ -12,7 +12,7 @@ function createHex(center_X, center_Y, id) {
         hex.style.top = `${center_Y}px`;
         hex.style.left = `${center_X}px`;
         //hex.setAttribute('style', `top: ${center_Y}px; left: ${center_X}px`);
-        hex.innerHTML = id;
+        //hex.innerHTML = id;
 
         saveToMemory(center_X_rounded, center_Y_rounded, id);
         BOARD.appendChild(hex);
