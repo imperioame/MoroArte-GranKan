@@ -241,6 +241,8 @@ function rotatePieceLeft() {
 function checkWinCondition(placed_piece_object) {
     //This function checks if the current movement made the player win.
     //If true, returns win message.
+    //There's another win condition, removing oppont qudak piece by invading from two sides. This condition is in checkAndRemoveSurroundedPiece() function.
+
     //First, it checks the flower, since it doesnt need all pieces, just 7 to be made.
     let playerwon_by_gran_kan_flower = checkGranKanFlower(placed_piece_object);
     if (playerwon_by_gran_kan_flower) {
@@ -257,7 +259,7 @@ function checkWinCondition(placed_piece_object) {
     }
 
     //Checks if there's an adversary piece next to this one
-    if (checkSurroundingsPieces(cell).some((piece) => piece.getPlayer != placed_piece_object.getPlayer)){
+    if (checkSurroundingsPieces(cell).some((piece) => piece.getPlayer != placed_piece_object.getPlayer)) {
         return false;
     }
 
@@ -265,7 +267,6 @@ function checkWinCondition(placed_piece_object) {
     if (at_least_one_surrounding_pieces_does_not_match_player) {
         return false;
     }
-
     return `${placed_piece_object.getPlayer} player won by placing all pieces`;
 }
 
@@ -388,6 +389,13 @@ function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, 
     piece_element.style.position = 'absolute';
     piece_element.style.top = document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - HEX_HEIGHT + document.querySelectorAll('#player1 h2')[0].offsetHeight;
     piece_element.style.left = `${HEX_WIDTH}px`;
+
+    //If removed piece was Qudak, then is game over for that player.
+    if (surrounded_piece_to_be_removed.getPieceId == 5) {
+        win_message = `${surrounded_piece_to_be_removed.getPlayer} Qudak piece was removed. <br> Player ${surrounded_piece_to_be_removed.getPlayer} <b>LOST</b> ` 
+        showNotification(win_message, NOTIFICATION_TYPES.VICTORY_MODAL);
+        console.warn(win_message);
+    }
 
 }
 
