@@ -209,10 +209,4 @@ function initialize(max_layers) {
 window.onload = function () {
     console.log('inicializando...');
     initialize(LAYERS);
-    if (DIRECTION == 'portrait') {
-        setTimeout(function () {
-            // This hides the address bar
-            window.scrollTo(0, 1);
-        }, 0);
-    }
 };
