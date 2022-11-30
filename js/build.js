@@ -6,14 +6,13 @@ function createHex(center_X, center_Y, id) {
     if (checkEmptyPosition(center_X_rounded, center_Y_rounded)) {
         let hex = document.createElement('div');
         hex.className = "hex-clip";
-        //hex.id = `hex${center_X}-${center_Y}`;
         hex.id = id;
         hex.dataset.xPosition = center_X_rounded;
         hex.dataset.yPosition = center_Y_rounded;
-        //hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEX_HEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEX_WIDTH / 2) + center_X}px`);
-        hex.setAttribute('style', `top: ${center_Y}px; left: ${center_X}px`);
+        hex.style.top = `${center_Y}px`;
+        hex.style.left = `${center_X}px`;
+        //hex.setAttribute('style', `top: ${center_Y}px; left: ${center_X}px`);
         hex.innerHTML = id;
-        //hex.innerHTML = `xPos${center_X_rounded}-yPos${center_Y_rounded}`;
 
         saveToMemory(center_X_rounded, center_Y_rounded, id);
         BOARD.appendChild(hex);
@@ -23,14 +22,8 @@ function createHex(center_X, center_Y, id) {
 function saveToMemory(position_X, position_Y, id) {
     //Creates an object, asignes position and save to array
     let cell = new Cell(position_X, position_Y, id);
-    //console.warn(cell.getCellId);
-    //console.warn(cell.getPosX);
-    //console.warn(cell.getPosY);
     CELL_ARRAY.length != 0 ? defineCellSurroundings(cell) : '';
-
     CELL_ARRAY.push(cell);
-    //console.log(CELL_ARRAY);
-
 }
 
 function defineCellSurroundings(cellToBeSaved) {
