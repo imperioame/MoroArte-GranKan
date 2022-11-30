@@ -169,10 +169,10 @@ function createDomPiece(pieceObject) {
 
     piece.style.position = 'absolute';
     let y_axis, x_axis;
-    if (DIRECTION == 'landscape'){
+    if (DIRECTION == 'landscape') {
         y_axis = Math.ceil(pieceObject.getPieceId / 2) * (HEX_HEIGHT * 1.15) + document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - (HEX_HEIGHT * 3 * 1.15) + document.querySelectorAll('#player1 h2')[0].offsetHeight;
         x_axis = (PIECE_ARRAY.indexOf(pieceObject) % 2) * (HEX_WIDTH * 1.15) + (HEX_WIDTH / 6);
-    }else{
+    } else {
         x_axis = Math.ceil(pieceObject.getPieceId / 2) * (HEX_WIDTH * 1.15) + document.getElementsByClassName('pieces_board')[0].offsetWidth / 2 - (HEX_WIDTH * 3 * 1.15);
         y_axis = (PIECE_ARRAY.indexOf(pieceObject) % 2) * (HEX_HEIGHT * 1.15) + (HEX_HEIGHT / 6) + document.querySelectorAll('#player1 h2')[0].offsetHeight + HEX_HEIGHT / 2;
     }
@@ -209,5 +209,12 @@ function initialize(max_layers) {
 window.onload = function () {
     console.log('inicializando...');
     initialize(LAYERS);
-
+    if (DIRECTION == 'portrait') {
+        window.addEventListener("load", function () {
+            setTimeout(function () {
+                // This hides the address bar
+                window.scrollTo(0, 1);
+            }, 0);
+        });
+    }
 };
