@@ -258,7 +258,6 @@ function checkWinCondition(placed_piece_object) {
 
     //Checks if there's an adversary piece next to this one
     if (checkSurroundingsPieces(cell).some((piece) => piece.getPlayer != placed_piece_object.getPlayer)){
-        console.log('posicionada al lado de una oponente');
         return false;
     }
 
@@ -268,7 +267,6 @@ function checkWinCondition(placed_piece_object) {
     }
 
     return `${placed_piece_object.getPlayer} player won by placing all pieces`;
-
 }
 
 function checkGranKanFlower(piece) {
