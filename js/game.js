@@ -1,8 +1,6 @@
-let selected_piece_element;
-let selected_piece_object;
-
 function movePiece(e) {
     //Adds the functionality, when called, to move object until it's released
+    moving_a_piece = true;
     const correct_target_piece = e.target.parentNode;
     selected_piece_element = document.getElementById(correct_target_piece.id);
     selected_piece_object = returnPieceObjectFromElementEquivalent(selected_piece_element);
@@ -25,78 +23,93 @@ function movePiece(e) {
 
     e.stopPropagation();
     selected_piece_element.style.position = 'fixed';
-    const onMouseMove = (e) => {
-        //Defines the function that allows piece to move to mouse
-        selected_piece_element.style.left = e.pageX /* - HEX_WIDTH / 2 */ + 'px';
-        selected_piece_element.style.top = e.pageY /* - HEX_HEIGHT / 2 */ + 'px';
-    }
-
-    function releasepiece(e) {
-        // This places a piece over a board cell. It does not validates if this movement can be done. For that, it calls the validation function
-
-        e.stopPropagation();
-        if (!e.target.classList.contains('hex-clip') && !e.target.classList.contains('ui_operation_buttons')) {
-            // If it's not a board cell, then the piece is dropped, but not snapped to any cell.
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('click', releasepiece);
-            //Placing is done, enables movePiece again
-            allowMovementForPlayer(checkCurrentTurn());
-            removeRotationButtons();
-            return;
-        }
-
-        if (validPiecePlacing(e.target, selected_piece_object)) {
-            // The movement is acceptable, it places the piece over the board cell
-
-            //Saves cell id on piece.getCellId on piece OBJECT
-            selected_piece_object.setCellId = CELL_ARRAY.find((cell) => cell.getCellId == e.target.id).getCellId;
-            //Syncrhonices with PIECE_ARRAY
-            sychronizeWithArray(PIECE_ARRAY, selected_piece_object, DATA_TYPES.PIECE);
-
-            //Saves cell position on PIECE position on DOM/element
-            selected_piece_element.style.left = e.target.dataset.xPosition + 'px';
-            selected_piece_element.style.top = e.target.dataset.yPosition + 'px';
-
-            //Sets cell "isempty" to false on cell OBJECT
-            const selected_cell_object = CELL_ARRAY.find((cell) => cell.getCellId === selected_piece_object.getCellId);
-            selected_cell_object.setIsEmpty = false;
-            //Syncrhonices with CELL_ARRAY
-            sychronizeWithArray(CELL_ARRAY, selected_cell_object, DATA_TYPES.CELL);
-
-
-            // Movement done, it removes the 'follow mouse' functionality when piece is selected
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('click', releasepiece);
-            //Placing is done, enables movePiece again
-            changeTurn();
-
-            //Checks if it's win condition
-            let win_message = checkWinCondition(selected_piece_object);
-            if (win_message) {
-                showNotification(win_message, NOTIFICATION_TYPES.VICTORY_MODAL);
-                console.warn(win_message);
-            }
-
-            //Now, after placing, it checks if some surrounding piece needs to be removed. It also checks if SELF needed to be removed (called 'suicide')
-            checkAndRemoveSurroundedPiece(selected_piece_object, checkSurroundingsPieces(selected_cell_object), selected_cell_object);
-
-            removeRotationButtons();
-        } else {
-            //Cannot be placed here. The current cell is highghted in red. li
-            const selected_cell = document.getElementById(e.target.id);
-            if (selected_cell.classList.contains('hex-clip')) {
-                selected_cell.classList.remove("invalidPiecePlacement");
-                setTimeout(() =>{
-                    selected_cell.classList.add("invalidPiecePlacement");
-                }, 10);
-            }
-        }
-
-
-    }
-
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('click', releasepiece);
+}
+
+const onMouseMove = (e) => {
+    //Defines the function that allows piece to move to mouse
+    selected_piece_element.style.left = e.pageX /* - HEX_WIDTH / 2 */ + 'px';
+    selected_piece_element.style.top = e.pageY /* - HEX_HEIGHT / 2 */ + 'px';
+}
+
+function releasepiece(e) {
+    // This places a piece over a board cell. It does not validates if this movement can be done. For that, it calls the validation function
+
+    if (!e) {
+        //There is no event data, this means that this function was called while the player was moving its piece
+        //(Usually by pressing 'skip turn' without releasing the piece)
+        // The piece is dropped, but not snapped to any cell.
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('click', releasepiece);
+        //Placing is done, enables movePiece again
+        allowMovementForPlayer(checkCurrentTurn());
+        removeRotationButtons();
+        moving_a_piece = false;
+        return;
+    }
+
+    e.stopPropagation();
+    if (!e.target.classList.contains('hex-clip') && !e.target.classList.contains('ui_operation_buttons')) {
+        // If it's not a board cell, then the piece is dropped, but not snapped to any cell.
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('click', releasepiece);
+        //Placing is done, enables movePiece again
+        allowMovementForPlayer(checkCurrentTurn());
+        removeRotationButtons();
+        moving_a_piece = false;
+        return;
+    }
+
+    if (validPiecePlacing(e.target, selected_piece_object)) {
+        // The movement is acceptable, it places the piece over the board cell
+
+        //Saves cell id on piece.getCellId on piece OBJECT
+        selected_piece_object.setCellId = CELL_ARRAY.find((cell) => cell.getCellId == e.target.id).getCellId;
+        //Syncrhonices with PIECE_ARRAY
+        sychronizeWithArray(PIECE_ARRAY, selected_piece_object, DATA_TYPES.PIECE);
+
+        //Saves cell position on PIECE position on DOM/element
+        selected_piece_element.style.left = e.target.dataset.xPosition + 'px';
+        selected_piece_element.style.top = e.target.dataset.yPosition + 'px';
+
+        //Sets cell "isempty" to false on cell OBJECT
+        const selected_cell_object = CELL_ARRAY.find((cell) => cell.getCellId === selected_piece_object.getCellId);
+        selected_cell_object.setIsEmpty = false;
+        //Syncrhonices with CELL_ARRAY
+        sychronizeWithArray(CELL_ARRAY, selected_cell_object, DATA_TYPES.CELL);
+
+
+        // Movement done, it removes the 'follow mouse' functionality when piece is selected
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('click', releasepiece);
+        //Placing is done, enables movePiece again
+        moving_a_piece = false;
+        changeTurn();
+
+        //Checks if it's win condition
+        let win_message = checkWinCondition(selected_piece_object);
+        if (win_message) {
+            showNotification(win_message, NOTIFICATION_TYPES.VICTORY_MODAL);
+            console.warn(win_message);
+        }
+
+        //Now, after placing, it checks if some surrounding piece needs to be removed. It also checks if SELF needed to be removed (called 'suicide')
+        checkAndRemoveSurroundedPiece(selected_piece_object, checkSurroundingsPieces(selected_cell_object), selected_cell_object);
+
+        removeRotationButtons();
+    } else {
+        //Cannot be placed here. The current cell is highghted in red.
+        const selected_cell = document.getElementById(e.target.id);
+        if (selected_cell.classList.contains('hex-clip')) {
+            selected_cell.classList.remove("invalidPiecePlacement");
+            setTimeout(() => {
+                selected_cell.classList.add("invalidPiecePlacement");
+            }, 10);
+        }
+    }
+
+    moving_a_piece = false;
 }
 
 function validPiecePlacing(clickedCellElement, movingPieceObject) {
@@ -381,15 +394,33 @@ function checkCurrentTurn() {
 function allowMovementForPlayer(player) {
     // This function recieves a player and adds function 'movepiece' for all pieces of that player
     const allDomPieces = document.getElementsByClassName('cover_div');
-    for (let i = 0; i < allDomPieces.length; i++) {
-        if (allDomPieces[i].parentNode.dataset.piece_player_color == player) {
-            allDomPieces[i].addEventListener("click", movePiece);
-            allDomPieces[i].classList.remove('disabled_piece');
+
+    //if is first turn of each player, it only allows Qudak piece
+    if (first_turn_black || first_turn_white) {
+        for (let dom_piece of allDomPieces) {
+            if (dom_piece.parentNode.dataset.piece_number == 5 && dom_piece.parentNode.dataset.piece_player_color == player) {
+                dom_piece.addEventListener("click", movePiece);
+                dom_piece.classList.remove('disabled_piece');
+            } else {
+                //Also disables all other piece movements
+                dom_piece.removeEventListener("click", movePiece);
+                // Also grays out disabled pieces
+                dom_piece.classList.add('disabled_piece');
+            }
+        }
+        return;
+    }
+
+    //It's not the first turn of any player. Everything continues normally.
+    for (let dom_piece of allDomPieces) {
+        if (dom_piece.parentNode.dataset.piece_player_color == player) {
+            dom_piece.addEventListener("click", movePiece);
+            dom_piece.classList.remove('disabled_piece');
         } else {
             //Also disables opposite player movements
-            allDomPieces[i].removeEventListener("click", movePiece);
+            dom_piece.removeEventListener("click", movePiece);
             // Also grays out disabled pieces
-            allDomPieces[i].classList.add('disabled_piece');
+            dom_piece.classList.add('disabled_piece');
         }
     }
 }
@@ -397,12 +428,12 @@ function allowMovementForPlayer(player) {
 function pieceMoviengDisableAllOther() {
     //Disables piece movement for all pieces.
     const allDomPieces = document.getElementsByClassName('cover_div');
-    for (let i = 0; i < allDomPieces.length; i++) {
+    for (let dom_piece of allDomPieces) {
         //The only one that does not get grayed is self.
-        if (allDomPieces[i].parentNode != selected_piece_element){
-            allDomPieces[i].removeEventListener("click", movePiece);
+        if (dom_piece.parentNode != selected_piece_element) {
+            dom_piece.removeEventListener("click", movePiece);
             //Adds grayed out to show it's locked
-            allDomPieces[i].classList.add('disabled_piece');
+            dom_piece.classList.add('disabled_piece');
         }
 
     }
@@ -410,10 +441,19 @@ function pieceMoviengDisableAllOther() {
 
 function changeTurn() {
     //There may be a piece currently moving, should finish that movement
-    
-    
+    if (moving_a_piece) {
+        releasepiece();
+    }
+
+    if (first_turn_white && checkCurrentTurn() == PLAYERS.WHITE) {
+        first_turn_white = false;
+    }
+    if (first_turn_black && checkCurrentTurn() == PLAYERS.BLACK) {
+        first_turn_black = false;
+    }
+
     rotateSkipButton();
     current_player_turn = current_player_turn == PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE;
-    allowMovementForPlayer(current_player_turn);
+    allowMovementForPlayer(checkCurrentTurn());
     return current_player_turn;
 }

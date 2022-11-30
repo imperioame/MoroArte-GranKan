@@ -13,6 +13,13 @@ const RAD = HEX_WIDTH * 2;
 const CENTER_X = window.innerWidth / 2 - (HEX_WIDTH / 2);
 const CENTER_Y = window.innerHeight / 2 - (HEX_HEIGHT / 2);
 
+let first_turn_white = true;
+let first_turn_black = true;
+
+
+let selected_piece_element;
+let selected_piece_object;
+let moving_a_piece = false;
 
 const CELL_ARRAY = [];
 const PIECE_ARRAY = [];
