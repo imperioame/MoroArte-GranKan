@@ -25,6 +25,19 @@ aside h2 {
   overflow: auto;
 }
 
+#about_button {
+  position: fixed;
+  height: calc(max(5vw, 5vh) / 2);
+  width: calc(max(5vw, 5vh) / 2);
+  right: calc(16vw + max(5vw, 5vh) / 4);
+  top: calc(max(5vw, 5vh) / 4);
+  cursor: pointer;
+}
+
+#about_button img {
+  max-width: 100%;
+}
+
 #player1,
 #player2 {
   background-color: rgb(238, 200, 97);
@@ -227,7 +240,11 @@ aside h2 {
   flex-grow: 100;
 }
 
-.notification_instructions #notification_footer {
+#instructions {
+  flex-grow: 1000;
+}
+
+.notification_instructions #notification_footer, .notification_instructions #notification_header {
   flex-grow: 1;
 }
 
@@ -289,6 +306,13 @@ aside h2 {
     border-right: 0;
     border-bottom: 10px double rgb(77, 6, 6);
     background-color: dimgray;
+  }
+  #about_button {
+    height: max(5vw, 5vh);
+    width: max(5vw, 5vh);
+    right: calc(100vw - max(5vw, 5vh) - max(5vw, 5vh) / 2);
+    top: calc(15vh + max(5vw, 5vh) / 2);
+    cursor: pointer;
   }
   .rotated_player1 {
     top: 85vh !important;

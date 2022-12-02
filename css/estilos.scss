@@ -41,6 +41,18 @@ aside h2 {
     overflow: auto;
 }
 
+#about_button{
+    position: fixed;
+    height: calc($hex_size / 2);
+    width: calc($hex_size / 2);
+    right: calc(16vw + $hex_size / 4);
+    top: calc($hex_size / 4);
+    cursor: pointer;
+}
+#about_button img {
+    max-width: 100%;
+}
+
 #player1,
 #player2 {
     background-color: $player_aside_color;
@@ -240,7 +252,11 @@ aside h2 {
     flex-grow: 100;
 }
 
-.notification_instructions #notification_footer{
+#instructions{
+    flex-grow: 1000;
+}
+
+.notification_instructions #notification_footer, .notification_instructions #notification_header{
     flex-grow: 1;
 }
 
@@ -307,6 +323,14 @@ aside h2 {
         border-right: 0;
         border-bottom: 10px double rgb(77, 6, 6);
         background-color: dimgray;
+    }
+
+    #about_button{
+        height: calc($hex_size);
+        width: calc($hex_size);
+        right: calc(100vw - $hex_size - $hex_size / 2);
+        top: calc(15vh + $hex_size / 2);
+        cursor: pointer;
     }
 
     .rotated_player1{

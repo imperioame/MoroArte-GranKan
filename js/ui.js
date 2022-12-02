@@ -6,6 +6,7 @@ function addRotationButtons() {
     rotate_left_button_element.id = 'rotate_left';
     rotate_left_button_element.classList.add('ui_operation_buttons');
     rotate_left_button_element.innerHTML = 'Rotar a la <br> izquierda';
+    rotate_left_button_element.title = 'Rotar a la izquierda';
     rotate_left_button_element.addEventListener('click', rotatePieceLeft);
     CONTROLS_SELECTION.appendChild(rotate_left_button_element);
 
@@ -19,6 +20,7 @@ function addRotationButtons() {
     rotate_right_button_element.id = 'rotate_right';
     rotate_right_button_element.classList.add('ui_operation_buttons');
     rotate_right_button_element.innerHTML = 'Rotar a la <br> derecha';
+    rotate_right_button_element.title = 'Rotar a la derecha';
     rotate_right_button_element.addEventListener('click', rotatePieceRight);
     CONTROLS_SELECTION.appendChild(rotate_right_button_element);
 
@@ -62,6 +64,7 @@ function showNotification(notification, type) {
     let notification_body_content;
     let notification_header;
     let second_line;
+    let embed;
 
     if (type == NOTIFICATION_TYPES.VICTORY_MODAL) {
         notification_header = document.createElement('header');
@@ -82,16 +85,29 @@ function showNotification(notification, type) {
         restart_button.addEventListener('click', reset_game);
         notification_footer.appendChild(restart_button);
 
-    } else if (type == NOTIFICATION_TYPES.INSTRUCTIONS) {
+    } else if(type == NOTIFICATION_TYPES.ABOUT){
+        notification_header = document.createElement('header');
+        notification_header.id = 'notification_header';
+        notification_header.classList.add('notification_header_victory');
+        notification_header.innerHTML = 'Acerca de:';
+
+        notification_body_content = document.createElement('p');
+        notification_body_content.innerHTML = 'Kan es un juego ideado por <b><a href="https://www.moroarte.com/" target="_blank">Diego Colombres</a><b> y desarrollado en versión digital por <b><a href="https://julianmmame.com.ar/" target="_blank">Julián Amé</a><b>';
+
+        second_line = document.createElement('p');
+        second_line.innerHTML = `<br><i>Versión ${SYSTEM_VERSION}</i>`;
+
+    }
+    if (type == NOTIFICATION_TYPES.INSTRUCTIONS || type == NOTIFICATION_TYPES.ABOUT) {
         notification_element.classList.add('notification_instructions');
 
-        let pdf = document.createElement('embed');
-        pdf.src = './imgs/KAN_Reglas.pdf#toolbar=0';
-        pdf.id = 'instructions';
-        notification_body.appendChild(pdf);
+        embed = document.createElement('embed');
+        embed.src = './imgs/KAN_Reglas.pdf#toolbar=0';
+        embed.id = 'instructions';
 
         let p = document.createElement('p');
-        p.innerHTML = 'Presiona aquí para empezar el juego'
+        
+        p.innerHTML = type == NOTIFICATION_TYPES.ABOUT ? 'Presiona aquí para continuar el juego' : 'Presiona aquí para empezar el juego';
         notification_footer.appendChild(p);
     }
 
@@ -99,6 +115,7 @@ function showNotification(notification, type) {
     if (close_button) notification_element.appendChild(close_button);
     if (notification_body_content) notification_body.appendChild(notification_body_content);
     if (second_line) notification_body.appendChild(second_line);
+    if (embed) notification_body.appendChild(embed);
     if (notification_body) notification_element.appendChild(notification_body);
     if (notification_footer) notification_element.appendChild(notification_footer);
 
@@ -125,6 +142,7 @@ function createSkipTurnButton() {
     div.id = 'skip_button';
     div.classList.add('ui_operation_buttons');
     div.innerHTML = 'Saltear <br> turno';
+    div.title = 'Saltear turno';
     if (DIRECTION == 'landscape') {
         div.style.right = `${document.getElementsByClassName('pieces_board')[0].offsetWidth + HEX_WIDTH}px`;
     } else {
@@ -157,4 +175,20 @@ function rotateBoard() {
     let player2 = document.getElementById('player2');
     player1.classList.toggle('rotated_player1');
     player2.classList.toggle('rotated_player2');
+}
+
+
+function createAboutButton(){
+    let div = document.createElement('div');
+    div.id = 'about_button';
+    let img = document.createElement('img');
+    img.src = './imgs/about.png';
+    img.title = 'Acerca del juego';
+
+    div.addEventListener('click', function(){
+        showNotification('', NOTIFICATION_TYPES.ABOUT);
+    });
+
+    div.appendChild(img);
+    document.getElementsByTagName('body')[0].appendChild(div);
 }
