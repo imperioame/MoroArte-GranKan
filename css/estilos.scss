@@ -200,11 +200,7 @@ aside h2 {
 }
 
 .notification_modal {
-    width: 50vw;
-    height: 30vh;
     position: fixed;
-    left: calc(50vw - 25vw);
-    top: calc(50vh - 30vh);
     border: 2px solid $cell_border_color;
     border-radius: 8px;
     display: flex;
@@ -220,6 +216,28 @@ aside h2 {
     }
 }
 
+.notification_victory {
+    width: 50vw;
+    height: 30vh;
+    left: calc(50vw - 25vw);
+    top: calc(50vh - 30vh);
+}
+
+.notification_instructions{
+    width: 80vw;
+    height: 80vh;
+    left: calc(50vw - 40vw);
+    top: calc(50vh - 40vh);
+}
+
+.notification_instructions *{
+    flex-grow: 100;
+}
+
+.notification_instructions #notification_footer{
+    flex-grow: 1;
+}
+
 #notifications #notification_header {
     padding: 0.5em;
     font-size: 2em;
@@ -230,14 +248,10 @@ aside h2 {
     font-weight: bold;
 }
 
-#notifications #notification_body {
-    //text-align: center;
-    //display: flex;
-    //justify-content: center;
-}
 
 #notification_footer {
     padding: 1em;
+    text-align: center;
 }
 
 #notification_footer button {
@@ -258,8 +272,6 @@ aside h2 {
     padding: 1em;
     cursor: pointer;
 }
-
-
 
 
 @media only screen and (max-width: 768px) {
@@ -307,5 +319,12 @@ aside h2 {
         border-bottom: 5px solid rgb(245, 216, 135);
         position: fixed;
         top: 15vh;
+    }
+
+    .notification_victory, .notification_instructions{
+        width: 90vw;
+        height: 90vh;
+        left: calc(50vw - 45vw);
+        top: calc(50vh - 45vh);
     }
 }

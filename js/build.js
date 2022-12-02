@@ -204,6 +204,7 @@ function initialize(max_layers) {
     recursiveHexagon(CENTER_X, CENTER_Y, max_layers, RAD);
     createPieces();
     createSkipTurnButton();
+    showNotification('',NOTIFICATION_TYPES.INSTRUCTIONS);
 }
 
 window.onload = function () {

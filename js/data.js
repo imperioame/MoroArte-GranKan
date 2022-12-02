@@ -73,6 +73,7 @@ const COLORS = {
 
 const NOTIFICATION_TYPES = {
     VICTORY_MODAL: 'victory modal',
+    INSTRUCTIONS: 'instructions',
 }
 
 class Piece {

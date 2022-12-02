@@ -189,11 +189,7 @@ aside h2 {
 }
 
 .notification_modal {
-  width: 50vw;
-  height: 30vh;
   position: fixed;
-  left: 25vw;
-  top: 20vh;
   border: 2px solid rgb(255, 242, 169);
   border-radius: 8px;
   display: flex;
@@ -208,6 +204,28 @@ aside h2 {
   text-align: center;
 }
 
+.notification_victory {
+  width: 50vw;
+  height: 30vh;
+  left: 25vw;
+  top: 20vh;
+}
+
+.notification_instructions {
+  width: 80vw;
+  height: 80vh;
+  left: 10vw;
+  top: 10vh;
+}
+
+.notification_instructions * {
+  flex-grow: 100;
+}
+
+.notification_instructions #notification_footer {
+  flex-grow: 1;
+}
+
 #notifications #notification_header {
   padding: 0.5em;
   font-size: 2em;
@@ -220,6 +238,7 @@ aside h2 {
 
 #notification_footer {
   padding: 1em;
+  text-align: center;
 }
 
 #notification_footer button {
@@ -279,5 +298,11 @@ aside h2 {
     border-bottom: 5px solid rgb(245, 216, 135);
     position: fixed;
     top: 15vh;
+  }
+  .notification_victory, .notification_instructions {
+    width: 90vw;
+    height: 90vh;
+    left: 5vw;
+    top: 5vh;
   }
 }/*# sourceMappingURL=estilos.css.map */

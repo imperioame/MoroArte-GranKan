@@ -36,11 +36,11 @@ function showNotification(notification, type) {
 
     let notification_element = document.createElement('div');
     notification_element.id = 'notifications';
-    let notification_header = document.createElement('header');
-    notification_header.id = 'notification_header';
+    notification_element.classList.add('notification_modal');
     let notification_body = document.createElement('div');
     notification_body.id = 'notification_body';
-    let notification_body_content = document.createElement('p');
+
+
     let notification_footer = document.createElement('div');
     notification_footer.id = 'notification_footer';
 
@@ -49,15 +49,18 @@ function showNotification(notification, type) {
     close_button.innerHTML = 'X';
     close_button.addEventListener('click', closeNotification);
 
-
-
-
+    let notification_body_content;
+    let notification_header;
 
     if (type == NOTIFICATION_TYPES.VICTORY_MODAL) {
-        notification_element.classList.add('notification_modal');
+        notification_header = document.createElement('header');
+        notification_header.id = 'notification_header';
+        notification_element.classList.add('notification_victory');
+
         notification_header.classList.add('notification_header_victory');
         notification_header.innerHTML = 'VICTORIA';
 
+        notification_body_content = document.createElement('p');
         notification_body_content.innerHTML = notification;
 
         let restart_button = document.createElement('button');
@@ -65,13 +68,24 @@ function showNotification(notification, type) {
         restart_button.addEventListener('click', reset_game);
         notification_footer.appendChild(restart_button);
 
+    } else if (type == NOTIFICATION_TYPES.INSTRUCTIONS) {
+        notification_element.classList.add('notification_instructions');
+
+        let pdf = document.createElement('embed');
+        pdf.src = './imgs/KAN_Reglas.pdf#toolbar=0';
+        pdf.id = 'instructions';
+        notification_body.appendChild(pdf);
+
+        let p = document.createElement('p');
+        p.innerHTML = 'Presiona aquí para empezar el juego'
+        notification_footer.appendChild(p);
     }
 
-    notification_element.appendChild(notification_header);
-    notification_element.appendChild(close_button);
-    notification_body.appendChild(notification_body_content);
-    notification_element.appendChild(notification_body);
-    notification_element.appendChild(notification_footer);
+    if (notification_header) notification_element.appendChild(notification_header);
+    if (close_button) notification_element.appendChild(close_button);
+    if (notification_body_content) notification_body.appendChild(notification_body_content);
+    if (notification_body) notification_element.appendChild(notification_body);
+    if (notification_footer) notification_element.appendChild(notification_footer);
 
     gray_overlay.appendChild(notification_element);
     document.getElementsByTagName('body')[0].appendChild(gray_overlay);
@@ -109,10 +123,10 @@ function createSkipTurnButton() {
 function rotateSkipButton() {
     //Rotates the ui 'skip turn' button to match player's side
     const skip_button = document.getElementById('skip_button');
-    if(DIRECTION != 'landscape'){
+    if (DIRECTION != 'landscape') {
         return;
     }
-    
+
     if (checkCurrentTurn() == PLAYERS.BLACK) {
         skip_button.style.right = `${document.getElementsByClassName('pieces_board')[0].offsetWidth + HEX_WIDTH}px`;
         skip_button.style.removeProperty('left');
