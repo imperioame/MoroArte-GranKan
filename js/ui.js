@@ -101,11 +101,8 @@ function showNotification(notification, type) {
     if (type == NOTIFICATION_TYPES.INSTRUCTIONS || type == NOTIFICATION_TYPES.ABOUT) {
         notification_element.classList.add('notification_instructions');
 
-        embed = document.createElement('embed');
-        embed.src = './imgs/KAN_Reglas.pdf';
-        if(DIRECTION == 'portrait'){
-            embed.src += '#toolbar=0';
-        }
+        embed = document.createElement('iframe');
+        embed.src = 'https://drive.google.com/file/d/1JN1uJtA6d8iyy6lMkkOdNlVBoBgV9D8v/preview';
         embed.id = 'instructions';
 
         let p = document.createElement('p');
