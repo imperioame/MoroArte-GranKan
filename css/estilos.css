@@ -1,9 +1,3 @@
-@charset "UTF-8";
-/*
-//Método DIV + before y after
-$hex_width: 104px;
-$hex_height: 60px;
-*/
 * {
   margin: 0;
   padding: 0;
@@ -28,6 +22,20 @@ aside h2 {
   width: 100vw;
   height: 100vh;
   background-color: rgb(253, 249, 213);
+  overflow: auto;
+}
+
+#about_button {
+  position: fixed;
+  height: calc(max(5vw, 5vh) / 2);
+  width: calc(max(5vw, 5vh) / 2);
+  right: calc(16vw + max(5vw, 5vh) / 4);
+  top: calc(max(5vw, 5vh) / 4);
+  cursor: pointer;
+}
+
+#about_button img {
+  max-width: 100%;
 }
 
 #player1,
@@ -37,6 +45,10 @@ aside h2 {
   width: 15vw;
   position: fixed;
   top: 0;
+  z-index: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 #player1 {
@@ -49,56 +61,9 @@ aside h2 {
   border-left: 10px double rgb(77, 6, 6);
 }
 
-/*
-// Método UNICODE
-.hex_unicode {
-    font-size: 135px;
-    color: $cell_color;
-    //text-shadow: 0px 0px 5px black;
-
-    &:hover {
-        color: $cell_hover_color;
-        transition: 1s;
-    }
-}
-*/
-/*
-// Método DIV + before y after
-.hex:hover{
-    transition: 1s;
-    color: red;
-}
-
-.hex:before {
-    content: " ";
-    width: 0; height: 0;
-    border-bottom: 30px solid $cell_color;
-    border-left: 52px solid transparent;
-    border-right: 52px solid transparent;
-    position: absolute;
-    top: -30px;
-}
-
-.hex {
-    width: $hex_width;
-    height: $hex_height;
-    background-color: $cell_color;
-    position: fixed;
-}
-
-.hex:after {
-    content: "";
-    width: 0;
-    position: absolute;
-    bottom: -30px;
-    border-top: 30px solid $cell_color;
-    border-left: 52px solid transparent;
-    border-right: 52px solid transparent;
-}
-*/
 .hex-clip {
-  width: 100px;
-  height: 100px;
+  width: max(5vw, 5vh);
+  height: max(5vw, 5vh);
   background-color: rgb(20, 117, 182);
   position: fixed;
   text-align: center;
@@ -119,27 +84,261 @@ aside h2 {
 }
 
 .pieces_board {
-  width: 100%;
-  height: 100%;
   margin: 0;
   padding: 0;
   overflow: auto;
+  flex-grow: 2;
 }
 
 .piece {
-  width: 100px;
-  height: 100px;
-  background-color: rgb(26, 26, 26);
-  color: red;
-  position: absolute;
+  width: max(5vw, 5vh);
+  height: max(5vw, 5vh);
+  position: fixed;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   cursor: pointer;
-  box-shadow: inset 0 0 25px 15px rgba(177, 43, 43, 0.4431372549);
 }
 .piece:hover {
-  background-color: rgb(54, 54, 54);
   transition: 1s;
+  background-color: rgb(128, 128, 128);
+}
+
+.cover_div {
+  width: max(5vw, 5vh) !important;
+  height: max(5vw, 5vh) !important;
+  position: absolute;
+}
+.cover_div::before {
+  content: " ";
+}
+
+.disabled_piece {
+  background-color: rgba(105, 105, 105, 0.562);
+}
+
+.black_player_piece {
+  color: white;
+  background-color: black;
+}
+.black_player_piece:hover {
+  color: black;
+}
+
+.white_player_piece {
+  color: black;
+  background-color: white;
+}
+.white_player_piece:hover {
+  color: white;
+}
+
+.invalidPiecePlacement {
+  -webkit-animation: redHighlight 1s;
+          animation: redHighlight 1s;
+}
+
+@-webkit-keyframes redHighlight {
+  0% {
+    background-color: rgb(20, 117, 182);
+  }
+  50% {
+    background-color: rgb(158, 6, 6);
+  }
+  100% {
+    background-color: rgb(20, 117, 182);
+  }
+}
+
+@keyframes redHighlight {
+  0% {
+    background-color: rgb(20, 117, 182);
+  }
+  50% {
+    background-color: rgb(158, 6, 6);
+  }
+  100% {
+    background-color: rgb(20, 117, 182);
+  }
+}
+#controls {
+  width: 100vw;
+  height: calc(max(5vw, 5vh) + 50px);
+  padding: 25px 0;
+  border-top: 5px solid rgb(245, 216, 135);
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(253, 249, 213);
+}
+
+.ui_operation_buttons {
+  width: max(5vw, 5vh);
+  height: max(5vw, 5vh);
+  background-color: rgb(204, 204, 204);
+  border: 2px solid dimgray;
+  border-radius: 8px;
+  box-shadow: 0 0 2px black;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.ui_operation_spacer {
+  width: max(5vw, 5vh);
+  height: max(5vw, 5vh);
+}
+
+#skip_button {
+  position: absolute;
+}
+
+#gray_overlay {
+  background-color: rgba(105, 105, 105, 0.473);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.notification_modal {
+  position: fixed;
+  border: 2px solid rgb(255, 242, 169);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgb(247, 245, 228);
+}
+.notification_modal div,
+.notification_modal header {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.notification_victory {
+  width: 50vw;
+  height: 30vh;
+  left: 25vw;
+  top: 20vh;
+}
+
+.notification_instructions {
+  width: 80vw;
+  height: 80vh;
+  left: 10vw;
+  top: 10vh;
+}
+
+.notification_instructions * {
+  flex-grow: 100;
+}
+
+#instructions {
+  flex-grow: 1000;
+}
+
+.notification_instructions #notification_footer, .notification_instructions #notification_header {
+  flex-grow: 1;
+}
+
+#notifications #notification_header {
+  padding: 0.5em;
+  font-size: 2em;
+}
+
+#notifications .notification_header_victory {
+  color: green;
+  font-weight: bold;
+}
+
+#notification_body {
+  flex-direction: column;
+}
+
+#notification_footer {
+  padding: 1em;
+  text-align: center;
+}
+
+#notification_footer button {
+  padding: 1em;
+  border: 0;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.575);
+  border-radius: 8px;
+}
+
+#notification_close_button {
+  position: absolute;
+  right: -1em;
+  top: -1em;
+  color: red;
+  background-color: rgb(247, 245, 228);
+  border: 1px solid red;
+  border-radius: 50%;
+  padding: 1em;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+  aside h2 {
+    margin-top: 1rem;
+  }
+  #player1,
+#player2 {
+    height: 15vh;
+    width: 100vw;
+    left: 0;
+  }
+  #player2 {
+    top: 85vh;
+    border-top: 10px double rgb(77, 6, 6);
+    border-left: 0;
+  }
+  #player1 {
+    top: 0;
+    border-right: 0;
+    border-bottom: 10px double rgb(77, 6, 6);
+    background-color: dimgray;
+  }
+  #about_button {
+    height: max(5vw, 5vh);
+    width: max(5vw, 5vh);
+    right: calc(100vw - max(5vw, 5vh) - max(5vw, 5vh) / 2);
+    top: calc(15vh + max(5vw, 5vh) / 2);
+    cursor: pointer;
+  }
+  .rotated_player1 {
+    top: 85vh !important;
+    border-top: 10px double rgb(77, 6, 6) !important;
+    background-color: rgb(238, 200, 97) !important;
+    border-bottom: 0 !important;
+  }
+  .rotated_player2 {
+    top: 0 !important;
+    border-bottom: 10px double rgb(77, 6, 6) !important;
+    border-top: 0 !important;
+    background-color: dimgray !important;
+  }
+  #controls {
+    height: calc(max(5vw, 5vh) + 50px);
+    border-bottom: 5px solid rgb(245, 216, 135);
+    position: fixed;
+    top: 15vh;
+  }
+  .notification_victory, .notification_instructions {
+    width: 90vw;
+    height: 90vh;
+    left: 5vw;
+    top: 5vh;
+  }
+  .ui_operation_buttons {
+    font-size: 0.7em;
+  }
 }/*# sourceMappingURL=estilos.css.map */

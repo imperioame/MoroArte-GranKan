@@ -6,75 +6,110 @@ function createHex(center_X, center_Y, id) {
     if (checkEmptyPosition(center_X_rounded, center_Y_rounded)) {
         let hex = document.createElement('div');
         hex.className = "hex-clip";
-        //hex.id = `hex${center_X}-${center_Y}`;
         hex.id = id;
         hex.dataset.xPosition = center_X_rounded;
         hex.dataset.yPosition = center_Y_rounded;
-        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEXHEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEXWIDTH/2) + center_X}px`);
-        hex.innerHTML = id;
-        //hex.innerHTML = `xPos${center_X_rounded}-yPos${center_Y_rounded}`;
+        hex.style.top = `${center_Y}px`;
+        hex.style.left = `${center_X}px`;
+        //hex.setAttribute('style', `top: ${center_Y}px; left: ${center_X}px`);
+        //hex.innerHTML = id;
 
-        saveToMemory(center_X_rounded, center_Y_rounded);
-
-
-        /*
-        // Fórmula para hacerlo con DIV + before y after
-        let hex = document.createElement('div');
-        hex.className = "hex";
-        hex.id = `hex${center_X}-${center_Y}`;
-        hex.dataset.xPosition = center_X;
-        hex.dataset.yPosition = center_Y;
-        //hex.innerHTML = `xPos${center_X}-yPos${center_Y}`;
-        hex.setAttribute('style', `top: ${window.innerHeight/2 - (HEXHEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEXWIDTH/2) + center_X}px`);
-        */
-
-        /*
-            // Fórmula para hacerlo con ELEMENTOS UNICODE
-            let hex = document.createElement('span');
-            hex.className = "hex_unicode";
-            hex.id = `hex${center_X}-${center_Y}`;
-            hex.dataset.xPosition = center_X;
-            hex.dataset.yPosition = center_Y;
-            hex.innerHTML = '&#x2B22;';
-            hex.setAttribute('style', `position: fixed; top: ${window.innerHeight/2 - (HEXHEIGHT/2) + center_Y}px; left: ${window.innerWidth/2 - (HEXWIDTH/2) + center_X}px;`);
-        */
-
-
+        saveToMemory(center_X_rounded, center_Y_rounded, id);
         BOARD.appendChild(hex);
     }
 }
 
-function saveToMemory(position_X, position_Y) {
+function saveToMemory(position_X, position_Y, id) {
     //Creates an object, asignes position and save to array
-    let cell = new Cell();
-    cell.setPosX = position_X;
-    cell.setPosY = position_Y;
+    let cell = new Cell(position_X, position_Y, id);
+    CELL_ARRAY.length != 0 ? defineCellSurroundings(cell) : '';
+    CELL_ARRAY.push(cell);
+}
 
-    CELLARRAY.push(cell);
+function defineCellSurroundings(cellToBeSaved) {
+    // checks all surroundings to set attributes
+    // Does path tracing
+    for (let direction = 1; direction <= 6; direction++) {
+        // Direction is used as math factor.
+        // Direction Datasheet:
+        // 1 = top_right;
+        // 2 = middle_right;
+        // 3 = bottom_right;
+        // 4 = bottom_left;
+        // 5 = middle_left;
+        // 6 = top_left;
 
+        let dY = cellToBeSaved.getPosY;
+        if (direction != 2 && direction != 5) {
+            //console.log('NO es desplazamiento horizontal');
+            dY = Math.round((cellToBeSaved.getPosY + (direction == 1 || direction == 6 ? -1 : 1) * HEX_HEIGHT) * 100) / 100;
+        }
+        let dX = Math.round((cellToBeSaved.getPosX + (direction < 4 ? 1 : -1) * HEX_WIDTH / 2) * 100) / 100;
+
+
+
+        CELL_ARRAY.forEach(looped_cell => {
+            //Checks if this cell's position is near (dx;dy)
+
+            if (looped_cell.getPosX <= dX + HEX_WIDTH / 2 + 5 && looped_cell.getPosX >= dX - HEX_WIDTH / 2 - 5) {
+                //console.log('validé dX')
+                if (looped_cell.getPosY <= dY + HEX_WIDTH / 2 + 5 && looped_cell.getPosY >= dY - HEX_WIDTH / 2 - 5) {
+                    //console.log('encontré una celda que es contigua a la celda que se está guardano.');
+                    //saves in cellToBeSaved the proximity attribute corresponding to what DIRECTION defines
+                    // It also saves OPPOSITE direction in looped_cell
+                    // remember that this function detects proximity for pieces previously saved. That means if there was a match in the ifs statements, the looped_cell did not have saved the proximity information
+                    switch (direction) {
+                        case 1:
+                            cellToBeSaved.setcell_top_right = looped_cell.getCellId;
+                            looped_cell.setcell_bottom_left = cellToBeSaved.getCellId;
+                            break;
+                        case 2:
+                            cellToBeSaved.setcell_middle_right = looped_cell.getCellId;
+                            looped_cell.setcell_middle_left = cellToBeSaved.getCellId;
+                            break;
+                        case 3:
+                            cellToBeSaved.setcell_bottom_right = looped_cell.getCellId;
+                            looped_cell.setcell_top_left = cellToBeSaved.getCellId;
+                            break;
+                        case 4:
+                            cellToBeSaved.setcell_bottom_left = looped_cell.getCellId;
+                            looped_cell.setcell_top_right = cellToBeSaved.getCellId;
+                            break;
+                        case 5:
+                            cellToBeSaved.setcell_middle_left = looped_cell.getCellId;
+                            looped_cell.setcell_middle_right = cellToBeSaved.getCellId;
+                            break;
+                        case 6:
+                            cellToBeSaved.setcell_top_left = looped_cell.getCellId;
+                            looped_cell.setcell_bottom_right = cellToBeSaved.getCellId;
+                            break;
+                        default:
+                            break;
+                    }
+
+
+
+                    //console.log(cellToBeSaved);
+                    //console.log(looped_cell);
+
+                }
+            }
+        });
+    }
 }
 
 function checkEmptyPosition(position_X, position_Y) {
     //Checks if position in board is occupied, if so, reutns false
-    //console.log('entro a consultar posiciones duplicadas');
-    //console.log(CELLARRAY.length);
 
-    let position_empty = true;
+    return !CELL_ARRAY.some((cell) => {
+        // checks surroundings wit +/- 0.01
 
+        let x_pos_is_in_range = cell.getPosX <= position_X + 0.01 && cell.getPosX >= position_X - 0.01
+        let y_pos_is_in_range = cell.getPosY <= position_Y + 0.01 && cell.getPosY >= position_Y - 0.01
 
-
-    for (let i = 0; i < CELLARRAY.length; i++) {
-        //console.log('consulto el array');
-        //console.log(`Xpos; ${CELLARRAY[i].getPosX} YPos ${CELLARRAY[i].getPosY}`);
-        if (CELLARRAY[i].getPosX == position_X && CELLARRAY[i].getPosY == position_Y) {
-            position_empty = false;
-            return position_empty;
-        }
-    }
-
-    return position_empty;
+        return x_pos_is_in_range && y_pos_is_in_range
+    });
 }
-
 
 let hexcount = 0;
 
@@ -95,77 +130,85 @@ function recursiveHexagon(center_X, center_Y, depth, r) {
     }
 }
 
-
-
 function createPieces() {
     // Create all pieces in memory
+
+    console.error('Tenemos que consultar si el usuario ya jugó antes (es decir, verificar si existe algo en el localStorage. Si es así, no debemos cargar el tablero de cero, sino utilizar la data que se encuentra en el localStorage.');
     let piecenumber = 1;
-    let playercolor = 'black';
-    for (let i = 1; i <= 24; i++) {
-        PIECEARRAY.push(new Piece(piecenumber, playercolor));
-        if (piecenumber == 12) {
+    let playercolor = PLAYERS.BLACK;
+    for (let i = 1; i <= 22; i++) {
+        PIECE_ARRAY.push(new Piece(piecenumber, playercolor));
+        if (piecenumber == 11) {
             piecenumber = 1;
-            playercolor = 'white';
+            playercolor = PLAYERS.WHITE;
         } else {
             piecenumber++;
         }
         //Create piece in DOM and distribute it in aside
-        createDomPiece(PIECEARRAY[PIECEARRAY.length - 1]);
+        createDomPiece(PIECE_ARRAY[PIECE_ARRAY.length - 1]);
+        //Adds movement functionality for all FIRST PLAYER pieces.
+        allowMovementForPlayer(checkCurrentTurn());
     }
-    //console.log(PIECEARRAY);
+    //console.log(PIECE_ARRAY);
 }
 
 function createDomPiece(pieceObject) {
     //This creates a piece element and places it in the dom
     let piece = document.createElement('div');
-    piece.className = "piece";
+    piece.className = `piece ${pieceObject.player == PLAYERS.BLACK ? 'black_player_piece' : 'white_player_piece'}`;
     piece.id = `Player_${pieceObject.getPlayer}-Piece_${pieceObject.getPieceId}`;
+    piece.dataset.piece_number = pieceObject.getPieceId;
+    piece.dataset.rotation = 0;
+    if (pieceObject.getPieceId == 5 || pieceObject.getPieceId == 16) {
+        piece.dataset.z_index = 24;
+    } else {
+        piece.dataset.z_index = PIECE_ARRAY.length - 1;
+    }
+    piece.style.zIndex = piece.dataset.z_index;
+    piece.dataset.piece_player_color = pieceObject.getPlayer;
+
+    piece.style.position = 'absolute';
+    let y_axis, x_axis;
+    if (DIRECTION == 'landscape') {
+        y_axis = Math.ceil(pieceObject.getPieceId / 2) * (HEX_HEIGHT * 1.15) + document.getElementsByClassName('pieces_board')[0].offsetHeight / 2 - (HEX_HEIGHT * 3 * 1.15) + document.querySelectorAll('#player1 h2')[0].offsetHeight;
+        x_axis = (PIECE_ARRAY.indexOf(pieceObject) % 2) * (HEX_WIDTH * 1.15) + (HEX_WIDTH / 6);
+    } else {
+        x_axis = Math.ceil(pieceObject.getPieceId / 2) * (HEX_WIDTH * 1.15) + document.getElementsByClassName('pieces_board')[0].offsetWidth / 2 - (HEX_WIDTH * 3 * 1.15);
+        y_axis = (PIECE_ARRAY.indexOf(pieceObject) % 2) * (HEX_HEIGHT * 1.15) + (HEX_HEIGHT / 6) + document.querySelectorAll('#player1 h2')[0].offsetHeight + HEX_HEIGHT / 2;
+    }
+    piece.style.top = `${y_axis}px`;
 
 
-    let y_axis = Math.round(Math.random() * 100 + 10);
-    let x_axis = Math.round(Math.random() * 100 + 10);
-    piece.setAttribute('style', `bottom: ${y_axis}px; left: ${x_axis}px`);
-    piece.innerHTML = pieceObject.getPieceId;
-    piece.addEventListener("click", movePiece);
+    if (pieceObject.getPlayer == PLAYERS.BLACK) {
+        piece.style.left = `${x_axis}px`;
+    } else {
+        piece.style.right = `${x_axis}px`;
+    }
 
+    let image = document.createElement('img');
+    image.src = pieceObject.getimgTitle;
+    piece.appendChild(image);
+    //piece.innerHTML = pieceObject.getPieceId;
+
+    //Creates a transparent element to cover svg, and hosts functionality (onclicks)
+    let coverDiv = document.createElement('div');
+    coverDiv.className = 'cover_div';
+    piece.appendChild(coverDiv);
 
     //Place it in correspondent players aside
-    let playerAside = pieceObject.getPlayer == 'black' ? document.getElementById('player1').getElementsByClassName('pieces_board')[0] : document.getElementById('player2').getElementsByClassName('pieces_board')[0];
+    let playerAside = pieceObject.getPlayer == PLAYERS.BLACK ? document.getElementById('player1').getElementsByClassName('pieces_board')[0] : document.getElementById('player2').getElementsByClassName('pieces_board')[0];
     playerAside.appendChild(piece);
 }
 
-function movePiece(e) {
-    //Adds the functionality, when called, to move object until it's released
-    //console.log('clicked piece');
-    let element = document.getElementById(e.target.id);
-    e.stopPropagation();
-    const onMouseMove = (e) => {
-        //Defines the function that allows piece to move to mouse
-        element.style.left = e.pageX + 'px';
-        element.style.top = e.pageY + 'px';
-    }
-
-    function releasepiece(e) {
-        //This removes the 'follow mouse' functionality when piece is selected
-        //console.log('releasing piece');
-        //console.log(e);
-        document.removeEventListener('mousemove', onMouseMove);
-    }
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('click', releasepiece);
-}
-
-
 function initialize(max_layers) {
-    let center_X = 0;
-    let center_Y = 0;
-    recursiveHexagon(center_X, center_Y, max_layers, RAD);
+    recursiveHexagon(CENTER_X, CENTER_Y, max_layers, RAD);
     createPieces();
+    createSkipTurnButton();
+    createAboutButton();
+    showNotification('',NOTIFICATION_TYPES.INSTRUCTIONS);
 }
 
 window.onload = function () {
     console.log('inicializando...');
     initialize(LAYERS);
-    //console.log(CELLARRAY);
 };
