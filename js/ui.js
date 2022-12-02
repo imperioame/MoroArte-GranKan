@@ -102,7 +102,10 @@ function showNotification(notification, type) {
         notification_element.classList.add('notification_instructions');
 
         embed = document.createElement('embed');
-        embed.src = './imgs/KAN_Reglas.pdf#toolbar=0';
+        embed.src = './imgs/KAN_Reglas.pdf';
+        if(DIRECTION == 'portrait'){
+            embed.src += '#toolbar=0';
+        }
         embed.id = 'instructions';
 
         let p = document.createElement('p');

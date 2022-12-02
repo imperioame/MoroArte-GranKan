@@ -1,4 +1,4 @@
-const SYSTEM_VERSION = '1.0.1';
+const SYSTEM_VERSION = '1.0.2';
 
 const BOARD = document.getElementById('board');
 const CONTROLS_SELECTION = document.getElementById('controls');
