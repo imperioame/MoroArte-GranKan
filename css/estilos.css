@@ -175,6 +175,11 @@ aside h2 {
   cursor: pointer;
 }
 
+.ui_operation_spacer {
+  width: max(5vw, 5vh);
+  height: max(5vw, 5vh);
+}
+
 #skip_button {
   position: absolute;
 }
@@ -234,6 +239,10 @@ aside h2 {
 #notifications .notification_header_victory {
   color: green;
   font-weight: bold;
+}
+
+#notification_body {
+  flex-direction: column;
 }
 
 #notification_footer {
@@ -304,5 +313,8 @@ aside h2 {
     height: 90vh;
     left: 5vw;
     top: 5vh;
+  }
+  .ui_operation_buttons {
+    font-size: 0.7em;
   }
 }/*# sourceMappingURL=estilos.css.map */

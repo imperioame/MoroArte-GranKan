@@ -25,8 +25,8 @@ const CELL_ARRAY = [];
 const PIECE_ARRAY = [];
 
 const PLAYERS = {
-    BLACK: 'black',
-    WHITE: 'white',
+    BLACK: 'negro',
+    WHITE: 'blanco',
 }
 
 let current_player_turn = PLAYERS.WHITE;
@@ -74,6 +74,7 @@ const COLORS = {
 const NOTIFICATION_TYPES = {
     VICTORY_MODAL: 'victory modal',
     INSTRUCTIONS: 'instructions',
+    ABOUT: 'about',
 }
 
 class Piece {

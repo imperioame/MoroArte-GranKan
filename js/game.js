@@ -284,7 +284,7 @@ function checkWinCondition(placed_piece_object) {
     //First, it checks the flower, since it doesnt need all pieces, just 7 to be made.
     let playerwon_by_gran_kan_flower = checkGranKanFlower(placed_piece_object);
     if (playerwon_by_gran_kan_flower) {
-        return `${placed_piece_object.getPlayer} player won by gran kan flower`;
+        return `El jugador <b>${placed_piece_object.getPlayer}</b> ganó por haber armado <br> la Flor Gran Kan`;
 
     }
 
@@ -305,7 +305,7 @@ function checkWinCondition(placed_piece_object) {
     if (at_least_one_surrounding_pieces_does_not_match_player) {
         return false;
     }
-    return `${placed_piece_object.getPlayer} player won by placing all pieces`;
+    return `El jugador <b>${placed_piece_object.getPlayer}</b> ganó por haber <br> colocado todas las piezas`;
 }
 
 function checkGranKanFlower(piece) {
@@ -414,7 +414,7 @@ function checkAndRemoveSurroundedPiece(placed_piece_object, surrounding_pieces, 
 
     //If removed piece was Qudak, then is game over for that player.
     if (surrounded_piece_to_be_removed.getPieceId == 5) {
-        win_message = `${surrounded_piece_to_be_removed.getPlayer} Qudak piece was removed. <br> Player ${surrounded_piece_to_be_removed.getPlayer} <b>LOST</b> `
+        win_message = `La pieza Qudak del jugador <b>${surrounded_piece_to_be_removed.getPlayer}</b> fue eliminada.<br> El jugador ${surrounded_piece_to_be_removed.getPlayer} <b>PERDIÓ</b> `
         showNotification(win_message, NOTIFICATION_TYPES.VICTORY_MODAL);
         console.warn(win_message);
     }

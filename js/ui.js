@@ -1,18 +1,27 @@
 function addRotationButtons() {
     //Buttons are not present, here they will be created, assigned functionality, and placed
+
+
     let rotate_left_button_element = document.createElement('div');
     rotate_left_button_element.id = 'rotate_left';
     rotate_left_button_element.classList.add('ui_operation_buttons');
-    rotate_left_button_element.innerHTML = 'Rotate <br> left';
+    rotate_left_button_element.innerHTML = 'Rotar a la <br> izquierda';
     rotate_left_button_element.addEventListener('click', rotatePieceLeft);
     CONTROLS_SELECTION.appendChild(rotate_left_button_element);
+
+    let empty_space = document.createElement('span');
+    empty_space.classList.add('ui_operation_spacer');
+    empty_space.innerHTML = ' ';
+    empty_space.id = 'ui_operation_spacer';
+    CONTROLS_SELECTION.appendChild(empty_space);
 
     let rotate_right_button_element = document.createElement('div');
     rotate_right_button_element.id = 'rotate_right';
     rotate_right_button_element.classList.add('ui_operation_buttons');
-    rotate_right_button_element.innerHTML = 'Rotate <br> right';
+    rotate_right_button_element.innerHTML = 'Rotar a la <br> derecha';
     rotate_right_button_element.addEventListener('click', rotatePieceRight);
     CONTROLS_SELECTION.appendChild(rotate_right_button_element);
+
 }
 
 function removeRotationButtons() {
@@ -22,6 +31,7 @@ function removeRotationButtons() {
     if (document.getElementById('rotate_right')) {
         CONTROLS_SELECTION.removeChild(document.getElementById('rotate_right'));
         CONTROLS_SELECTION.removeChild(document.getElementById('rotate_left'));
+        CONTROLS_SELECTION.removeChild(document.getElementById('ui_operation_spacer'));
     }
 }
 
@@ -51,6 +61,7 @@ function showNotification(notification, type) {
 
     let notification_body_content;
     let notification_header;
+    let second_line;
 
     if (type == NOTIFICATION_TYPES.VICTORY_MODAL) {
         notification_header = document.createElement('header');
@@ -62,6 +73,9 @@ function showNotification(notification, type) {
 
         notification_body_content = document.createElement('p');
         notification_body_content.innerHTML = notification;
+
+        second_line = document.createElement('p');
+        second_line.innerHTML = '<br><i>Haz click fuera de este modal para cerrarlo y continuar.</i>';
 
         let restart_button = document.createElement('button');
         restart_button.innerHTML = 'Reiniciar Juego';
@@ -84,6 +98,7 @@ function showNotification(notification, type) {
     if (notification_header) notification_element.appendChild(notification_header);
     if (close_button) notification_element.appendChild(close_button);
     if (notification_body_content) notification_body.appendChild(notification_body_content);
+    if (second_line) notification_body.appendChild(second_line);
     if (notification_body) notification_element.appendChild(notification_body);
     if (notification_footer) notification_element.appendChild(notification_footer);
 
@@ -109,7 +124,7 @@ function createSkipTurnButton() {
     let div = document.createElement('div');
     div.id = 'skip_button';
     div.classList.add('ui_operation_buttons');
-    div.innerHTML = 'Skip <br> turn';
+    div.innerHTML = 'Saltear <br> turno';
     if (DIRECTION == 'landscape') {
         div.style.right = `${document.getElementsByClassName('pieces_board')[0].offsetWidth + HEX_WIDTH}px`;
     } else {
