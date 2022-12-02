@@ -95,7 +95,7 @@ function showNotification(notification, type) {
         notification_body_content.innerHTML = 'Kan es un juego ideado por <b><a href="https://www.moroarte.com/" target="_blank">Diego Colombres</a><b> y desarrollado en versión digital por <b><a href="https://julianmmame.com.ar/" target="_blank">Julián Amé</a><b>';
 
         second_line = document.createElement('p');
-        second_line.innerHTML = `<br><i>Versión ${SYSTEM_VERSION}</i>`;
+        second_line.innerHTML = `<br><i>Versión ${SYSTEM_VERSION}</i><br><a href="https://github.com/imperioame/MoroArte-GranKan" target="_blank">Link al repositorio</a>`;
 
     }
     if (type == NOTIFICATION_TYPES.INSTRUCTIONS || type == NOTIFICATION_TYPES.ABOUT) {
